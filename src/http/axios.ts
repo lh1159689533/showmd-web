@@ -1,6 +1,11 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosInstance, Method } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
 
 export type RequestConfig = AxiosRequestConfig;
+export interface Response extends AxiosResponse {
+  code: number;
+  message?: string;
+  data: string | number | object;
+};
 
 let PREFIX = "/api",
   IP = "";
@@ -43,7 +48,7 @@ instance.interceptors.request.use(
 
 // respone拦截器
 instance.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<Response, any>) => {
     if (response.status === 200) {
       let data = response.data;
       let contentType = response.headers['content-type'];

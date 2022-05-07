@@ -6,9 +6,10 @@ export default defineComponent({
   name: 'Input',
   props: {
     type: String, // 前缀图标类型
+    modelValue: String,
   },
+  emits: ['update:modelValue'],
   components: { Icon },
-  setup() {},
 });
 </script>
 
@@ -21,6 +22,8 @@ export default defineComponent({
     :class='{ "pl-10": !!type }'
     class='border placeholder-gray-300 outline-none p-2 bg-opacity-50 block shadow-sm sm:text-sm rounded-md border-gray-300 focus:border-indigo-600'
     v-bind='$attrs'
+    :value='modelValue'
+    @input='(e) => $emit("update:modelValue", e.target.value)'
   />
 </template>
 

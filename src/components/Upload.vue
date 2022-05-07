@@ -1,16 +1,13 @@
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
-import Icon from '@components/Icon.vue';
-import List from '@components/List.vue';
 
 export default defineComponent({
   name: 'Upload',
-  components: { Icon, List },
   props: {
     accept: String, // 上传文件类型
     directory: Boolean, // true上传文件夹 false上传文件
   },
-  setup() {
+  setup(_, { emit }) {
     const inputRef = ref<HTMLInputElement>();
     const fileList = ref<string | any>([]);
 
@@ -21,16 +18,8 @@ export default defineComponent({
       inputFile?.addEventListener('change', () => {
         const { files } = inputFile;
         if (!files) return;
-        fileList.value = [].slice.call(files)?.map((f) => (f as any).name);
-        // const formData = new FormData();
-        // if (inputFile.files?.length) {
-        //   console.log(inputFile.files);
-        //   [...inputFile.files].forEach((f) => formData.append('file', f));
-        //   fetch('showmd/uploadProject', {
-        //     method: 'POST',
-        //     body: formData,
-        //   });
-        // }
+        fileList.value = [].slice.call(inputFile.files)?.map((f) => (f as any).name);
+        emit('fileChange', files);
       });
     };
 
@@ -50,17 +39,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='w-full h-40 flex flex-col items-center mt-28' v-bind='$attrs'>
+  <div class='w-full flex flex-col items-center mt-16' v-bind='$attrs'>
     <div
       @click='upload'
-      class='border border-dashed w-4/5 h-full rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6'
+      class='border border-dashed w-4/5 h-40 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6'
     >
       <Icon type='uploadFile' class='w-14 h-14 text-indigo-600' />
       <slot></slot>
       <slot name='hint'></slot>
     </div>
     <input ref='inputRef' type='file' :webkitdirectory='directory' :accept='accept' class='hidden' />
-    <List :dataList='fileList' class='w-4/5 mt-4'>
+    <List :dataList='fileList' class='w-4/5 mt-4 h-96'>
       <template v-slot:default='{ item, index, hoverIndex }'>
         <p class='mt-2 text-left flex items-center text-sm'>
           <Icon type='paperClip' class='text-gray-400 w-3.5 h-3.5 mr-2' />

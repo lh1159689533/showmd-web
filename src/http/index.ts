@@ -1,4 +1,4 @@
-import axios, { RequestConfig } from './axios';
+import axios, { RequestConfig, Response } from './axios';
 import * as apis from '../api';
 
 const services = new Map<string, string>();
@@ -14,16 +14,17 @@ interface RequestProps {
   apiurl: string;
   prefix?: string;
   headers?: JsonData;
-  data?: JsonData;
+  data?: JsonData | FormData;
   segment?: JsonData;
+  params?: JsonData;
 }
 
-function request(props: RequestProps) {
-  const { apiurl, data, headers, segment, prefix } = props;
+function request(props: RequestProps): Promise<[Error, Response]> {
+  const { apiurl, data, params, headers, segment, prefix } = props;
   let [method, url]: any = services.get(apiurl)?.split(' ') || [];
 
   if (segment) {
-    url = url.replace(/:(\w+)/g, (_:string, $1: string) => segment[$1].toString());
+    url = url.replace(/:(\w+)/g, (_: string, $1: string) => segment[$1].toString());
   }
 
   if (prefix) {
@@ -41,12 +42,16 @@ function request(props: RequestProps) {
     config.data = data;
   }
 
+  if (params) {
+    config.params = params;
+  }
+
   if (headers) {
     config.headers = headers;
   }
-  
+
   return new Promise(resolve => {
-    axios(config).then((result) => {
+    axios(config).then((result: Response) => {
       resolve([null, result]);
     }).catch((err) => {
       resolve([err, null]);

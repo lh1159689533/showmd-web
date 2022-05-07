@@ -1,13 +1,11 @@
 <script>
 import { defineComponent, ref } from 'vue';
-import Drawer from '@components/Drawer.vue';
-import Button from '@src/components/Button/Button.vue';
 import UploadProject from './UploadProject.vue';
 import NewProject from './New.vue';
 
 export default defineComponent({
   name: 'sider',
-  components: { Drawer, Button, UploadProject, NewProject },
+  components: { UploadProject, NewProject },
   setup() {
     const isShow = ref(false);
     const isShowUpload = ref(false);
@@ -36,8 +34,8 @@ export default defineComponent({
       <Button icon='new' @click='() => isShow = true'>新建项目</Button>
       <Button icon='upload' type='weak' class='mt-4' @click='() => isShowUpload = true'>导入项目</Button>
     </div>
-    <NewProject :visible='isShow' :close='() => isShow = false' />
-    <UploadProject :visible='isShowUpload' :close='() => isShowUpload = false' />
+    <NewProject :visible='isShow' @close='() => isShow = false' />
+    <UploadProject :visible='isShowUpload' @close='() => isShowUpload = false' />
   </div>
 </template>
 

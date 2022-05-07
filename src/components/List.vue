@@ -10,7 +10,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { dataList } = toRefs(props);
+    const { dataList }: any = toRefs(props);
     const hoverIndex = ref<number>(-1);
 
     return {
@@ -22,13 +22,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <ul id='list' v-bind='$attrs'>
+  <ul v-bind='$attrs' class='overflow-auto'>
     <li
       v-for='(item, index) in dataList'
-      :key='item'
+      :key='item.id || item.key'
       @mouseenter='() => hoverIndex = index'
       @mouseleave='() => hoverIndex = -1'
-      class='hover:bg-gray-100'
     >
       <slot :item='item' :index='index' :hoverIndex='hoverIndex'>
         <span>{{item}}</span>

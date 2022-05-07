@@ -1,14 +1,9 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Select from '@components/Select.vue';
-import List from '@src/components/List.vue';
+import { defineComponent, ref } from 'vue';
+import { findList } from './project';
 
 export default defineComponent({
   name: 'project',
-  components: {
-    Select,
-    List,
-  },
   setup() {
     const sortOptions = [
       { value: 'lastupdated', label: 'Last updated' },
@@ -17,11 +12,17 @@ export default defineComponent({
 
     const prefix = { icon: 'sortAsc', text: 'Sort: ' };
 
-    const projectList = [
-      'dsdsdsdsdadsadsfsfsdasdasd',
-      'dsdsdsdsdadsadsfsfsdasdasd',
-      'dsdsdsdsdadsadsfsfsdasdasd',
-    ];
+    const projectList = ref();
+    const projectNameList = ref();
+
+    findList().then((res) => {
+      if (res?.code === 0) {
+        projectList.value = res?.data;
+        projectNameList.value = projectList.value.map(
+          ({ projectName }: Record<string, string>) => projectName
+        );
+      }
+    });
 
     const sortChange = (val: string) => {
       console.log('sort change:', val);
@@ -32,7 +33,13 @@ export default defineComponent({
       sortChange,
       prefix,
       projectList,
+      projectNameList,
     };
+  },
+  methods: {
+    toDetail(projectId) {
+      this.$router.push(`/project/detail/${projectId}`);
+    },
   },
 });
 </script>
@@ -45,8 +52,11 @@ export default defineComponent({
     </header>
     <div class='list flex-1'>
       <List :dataList='projectList'>
-        <template v-slot:default='{ item }'>
-          <p class="py-3 px-10 text-left cursor-pointer font-medium">{{item}}</p>
+        <template #default='{ item }'>
+          <p
+            @click='() => toDetail(item.id)'
+            class='py-3 px-10 text-left cursor-pointer font-medium hover:bg-gray-50 border-b'
+          >{{item.projectName}}</p>
         </template>
       </List>
     </div>

@@ -6,15 +6,14 @@ export default defineComponent({
   name: 'New',
   props: {
     visible: Boolean,
-    close: Function,
   },
+  emits: ['close'],
   components: { Drawer },
-  setup() {},
 });
 </script>
 
 <template>
-  <Drawer :visible='visible' @close='close' title='新建项目' :footer='false' :size='800'>
+  <Drawer :visible='visible' @close='$emit("close")' title='新建项目' :footer='false' :size='800'>
     <template v-slot:footer>新建项目</template>
   </Drawer>
 </template>

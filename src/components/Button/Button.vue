@@ -7,17 +7,17 @@ export default defineComponent({
   props: {
     type: {
       type: String,
-      default: 'primary'
+      default: 'primary',
     },
     icon: String, // upload download new trash
   },
   components: { Icon },
-})
+});
 </script>
 
 <template>
-  <button class="new-project flex flex-row justify-center" :type="type">
-    <Icon :type='icon' class="mr-2" />
+  <button class='new-project flex flex-row justify-center' :type='type' v-bind='$attrs'>
+    <Icon v-if='icon' :type='icon' class='mr-2' />
     <slot></slot>
   </button>
 </template>

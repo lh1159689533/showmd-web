@@ -1,10 +1,8 @@
 <script>
 import { defineComponent } from 'vue';
-import Input from '@components/Input.vue';
 
 export default defineComponent({
   name: 'Header',
-  components: { Input },
   setup() {},
 });
 </script>
@@ -17,7 +15,7 @@ export default defineComponent({
           type='search'
           placeholder='Search projects'
           class='text-white bg-indigo-400 caret-white w-full'
-          style="border-width: 0"
+          style='border-width: 0'
         />
       </div>
     </header>

@@ -10,6 +10,7 @@ export default defineConfig({
       '@src': resolve('src'),
       '@views': resolve('src/views'),
       '@components': resolve('src/components'),
+      '@plugins': resolve('src/plugins'),
     }
   },
   server: {
@@ -18,6 +19,11 @@ export default defineConfig({
         target: 'http://localhost:1229',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/img': {
+        target: 'http://localhost:1229',
+        changeOrigin: true,
+        // rewrite: (path) => path.replace(/^\/img/, '')
       },
     }
   }

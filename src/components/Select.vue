@@ -34,12 +34,18 @@ export default defineComponent({
       type: String,
       default: 'primary',
     },
+    modelValue: String,
   },
   setup(props, { emit }) {
-    const { options } = props;
-    const selected = ref('');
+    const { options, modelValue } = props;
+    const selected = ref();
+
+    if (options) {
+      selected.value = options.find(o => (o as any).value === modelValue);
+    }
 
     watch(selected, (newVal) => {
+      emit('update:modelValue', (newVal as any)?.value);
       emit('change', (newVal as any)?.value);
     });
 
@@ -58,8 +64,8 @@ export default defineComponent({
         class='flex flex-row border-gray-300 border cursor-pointer w-full py-2 px-3 text-left bg-white rounded-md shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm'
       >
         <span class='block truncate flex-1'>
-          <Icon :type='prefix?.icon' class='w-5 h-5 mr-1 inline text-gray-400' />
-          {{prefix.text}}{{selected.label}}
+          <Icon v-if='prefix?.icon' :type='prefix?.icon' class='w-5 h-5 mr-1 inline text-gray-400' />
+          {{prefix.text}}{{selected?.label}}
         </span>
         <span ass='absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none'>
           <SelectorIcon class='w-5 h-5 text-gray-400' aria-hidden='true' />
