@@ -1,11 +1,5 @@
 <script lang='ts'>
-import {
-  defineComponent,
-  toRefs,
-  watch,
-  onMounted,
-  onBeforeUnmount,
-} from 'vue';
+import { defineComponent, toRefs, watch, onMounted, onBeforeUnmount } from 'vue';
 import Vditor from 'vditor/dist/method.min';
 import 'vditor/dist/index.css';
 
@@ -25,15 +19,10 @@ export default defineComponent({
       Vditor.preview(document.querySelector('#myPreviewEditor'), newVal, {
         after() {
           // 渲染文档大纲
-          Vditor.outlineRender(
-            document.querySelector('#myPreviewEditor'),
-            document.querySelector('#myPreviewEditorOutline')
-          );
+          Vditor.outlineRender(document.querySelector('#myPreviewEditor'), document.querySelector('#myPreviewEditorOutline'));
 
           // 获取大纲节点列表
-          const spanNodeList = document
-            .querySelector('#myPreviewEditorOutline')
-            .querySelectorAll('span[data-target-id]');
+          const spanNodeList = document.querySelector('#myPreviewEditorOutline').querySelectorAll('span[data-target-id]');
           outlineNodeList = spanNodeList ? [].slice.call(spanNodeList) : [];
 
           // 默认第一个选中
@@ -51,9 +40,7 @@ export default defineComponent({
 
           setTimeout(function () {
             // 获取大纲节点的top值
-            const targetIdList = outlineNodeList
-              .map((node) => node.getAttribute('data-target-id'))
-              .filter((id) => id !== '');
+            const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
 
             targetList = targetIdList.map((id) => {
               const node = document.getElementById(id);
@@ -85,15 +72,10 @@ export default defineComponent({
       } else if (scrollTop >= targetList.at(-1).top) {
         target = targetList.at(-1);
       } else {
-        target = targetList.find(
-          (node, i) =>
-            node.top < scrollTop && targetList[i + 1]?.top > scrollTop
-        );
+        target = targetList.find((node, i) => node.top < scrollTop && targetList[i + 1]?.top > scrollTop);
       }
       // 根据当前最顶部的内容(h1-6)的id找到对应的大纲节点，即当前选中大纲节点
-      const activeNode = outlineNodeList.find(
-        (node) => node.getAttribute('data-target-id') === target?.id
-      );
+      const activeNode = outlineNodeList.find((node) => node.getAttribute('data-target-id') === target?.id);
       if (activeNode) {
         // 当前选中大纲节点添加选中样式，其他大纲节点去掉选中样式
         outlineNodeList.map((node) => node.setAttribute('class', ''));
@@ -120,11 +102,7 @@ export default defineComponent({
     <div id='myPreviewEditorSider' class='fixed top-10 border right-44'>
       <nav style='height: 580px' class='relative overflow-hidden'>
         <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
-        <div
-          id='myPreviewEditorOutlineList'
-          class='overflow-y-auto overflow-x-hidden absolute right-0'
-          style='max-height: 530px;margin: 8px 4px 0 0;'
-        >
+        <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
           <div id='myPreviewEditorOutline' style='padding-left: 2px'></div>
         </div>
       </nav>
@@ -167,12 +145,12 @@ export default defineComponent({
   @apply bg-gray-50;
 }
 
-#myPreviewEditorOutline.vditor-outline li>span>span {
+#myPreviewEditorOutline.vditor-outline li > span > span {
   color: #333;
-  font-size: 0.9rem
+  font-size: 0.9rem;
 }
 
-#myPreviewEditorOutline.vditor-outline li>span.active>span {
+#myPreviewEditorOutline.vditor-outline li > span.active > span {
   @apply text-indigo-600;
 }
 </style>
