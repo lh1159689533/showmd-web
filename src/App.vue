@@ -1,7 +1,6 @@
 <template>
   <router-view />
 </template>
-
 <style>
 ::-webkit-scrollbar {
   width: 6px;
