@@ -4,7 +4,7 @@
 <style>
 ::-webkit-scrollbar {
   width: 6px;
-  height: 1px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
