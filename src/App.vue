@@ -2,6 +2,10 @@
   <router-view />
 </template>
 <style>
+#app {
+  background-color: #f4f5f5;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -1,0 +1,220 @@
+.showmd :is(code, pre) {
+  font-family: Menlo, Monaco, Consolas, Courier New, monospace !important;
+}
+
+.showmd :is(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.5;
+  margin-top: 35px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+}
+
+.showmd h1 {
+  margin-bottom: 5px;
+  color: #2f845e;
+  border-bottom: none !important;
+}
+
+.showmd h2 {
+  display: inline-block;
+  font-weight: 700;
+  background: #2f845e;
+  color: #fff;
+  padding: 6px 8px 0 0;
+  border-top-right-radius: 6px;
+  margin-right: 2px;
+  box-shadow: 6px 3px 0 0 rgb(47 132 194 / 20%);
+  padding-bottom: 0 !important;
+}
+
+.showmd h2:before {
+  content: " ";
+  display: inline-block;
+  width: 8px;
+}
+
+.showmd h2:after {
+  content: " ";
+  position: absolute;
+  display: block;
+  width: calc(100% - 80px);
+  border-bottom: 3px solid #2f845e;
+}
+
+.showmd h3 {
+  padding-bottom: 0;
+}
+
+.showmd h6 {
+  margin-top: 5px;
+}
+
+.showmd pre {
+  position: relative;
+  line-height: 1.75;
+}
+
+.showmd pre>code {
+  font-size: 0.87em;
+  padding: 15px 12px;
+  margin: 0;
+  word-break: normal;
+  display: block;
+  overflow-x: auto;
+  color: #262626;
+  border: 1px solid #2f845e;
+  border-top: 8px solid #2f845e;
+  background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent) !important;
+}
+
+.showmd .vditor-copy {
+  top: 8px;
+}
+
+.showmd ol li::marker,
+.showmd ul li::marker {
+  color: #2f845e;
+}
+
+.showmd blockquote {
+  padding: 1px 22px !important;
+  margin: 22px 0;
+  border-left: 6px solid #2f845e !important;
+  background-color: rgba(66, 185, 131, .1);
+  border-radius: 2px;
+  color: #282d36 !important;
+}
+
+.showmd blockquote.notice {
+  border-left: #ff9c19 6px solid !important;
+  background-color: #ffe8d5 !important;
+  color: #a02800 !important;
+}
+
+.showmd blockquote.notice strong {
+  color: #a02800 !important;
+}
+
+.showmd blockquote.notice code:not(.hljs):not(.highlight-chroma) {
+  background-color: #ffe8d5 !important;
+}
+
+.showmd blockquote>p {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.showmd code:not(.hljs):not(.highlight-chroma) {
+  word-break: break-word;
+  border-radius: 2px;
+  overflow-x: auto;
+  background-color: #fff5f5 !important;
+  color: #ff502c;
+  font-size: .87em;
+  padding: 0.065em 0.4em;
+}
+
+.showmd strong {
+  background-color: inherit;
+  color: #2f845e;
+}
+
+.showmd em {
+  background-color: inherit;
+  color: #949415;
+}
+
+.showmd a {
+  text-decoration: none;
+  color: #2f8e54;
+  border-bottom: 1px solid #3f9e64;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.showmd a:before {
+  content: "➤ ";
+}
+
+.showmd a:active,
+.showmd a:hover {
+  color: #3f9e64;
+}
+
+.showmd input[type=checkbox]:checked:before {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA/klEQVQ4T72TMU7DQBBF318XdFR06egQEnAXRINEGlqgowoIR8AF4AZOZ4JEGq5AC5EixBU4A55BNrEVHAcSBTHlaubt37/zxZKlcn7n6mDPXJvz8IJ89HzWu8t7C8D2dfsY52ae4apHnLx0ktsCsHXZjiUuFgG40x2eJ/H/AhztB+zDUTpLwWj8jGkzxSHiHaMPrDQC8sMoilKzLAUqiKQjmb+ZuAdW80tmelCHODoNgSfP7AFprTTaRTzsJN1GEyuIZ7uW6TEEHwCtyV/6EVBKJHhfzgC0Xv/iXwEFBF4FG0378bd7sPQq5xK/hSnk6sdlX3mZrKkwLZKBeu8n9XuWEUE7X+YAAAAASUVORK5CYII=);
+  position: relative;
+  top: -2px;
+  left: -1px;
+}
+
+.showmd p {
+  line-height: inherit;
+  margin-top: 22px;
+  margin-bottom: 22px !important;
+}
+
+ol {
+  display: block;
+  list-style-type: decimal !important;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+.vditor-reset hr {
+  height: 0;
+  margin: 0;
+}
+
+.showmd del {
+  color: #2f845e;
+}
+
+.showmd table {
+  display: inline-block !important;
+  font-size: 0.9em;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  border: 2px solid #2f8e54;
+  border-spacing: 2px;
+  border-collapse: separate;
+}
+
+.showmd thead {
+  background: #2f8e54;
+  color: #fff;
+  text-align: left;
+  font-weight: 700;
+}
+
+.showmd td,
+.showmd th {
+  width: 100%;
+  padding: 12px 7px !important;
+  line-height: 22px;
+  border: none !important;
+}
+
+.showmd table tr {
+  width: 100%;
+  padding: 12px 7px !important;
+  line-height: 22px;
+  background-color: transparent !important;
+}
+
+.showmd td {
+  min-width: 120px;
+}
+
+.showmd tr:nth-child(2n) {
+  background-color: rgba(153, 255, 188, .1) !important;
+}
+
+.showmd img {
+  max-width: 100%;
+  box-shadow: 6px 6px 6px #888;
+}

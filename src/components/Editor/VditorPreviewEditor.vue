@@ -27,8 +27,8 @@ export default defineComponent({
 
     watch(value, (newVal: string) => {
       document.documentElement.scrollTop = 0;
-      querySelector(document, '#myPreviewEditorOutlineList').scrollTop = 0;
-      Vditor.preview(querySelector(document, '#myPreviewEditor'), newVal, {
+      getElementById('myPreviewEditorOutlineList').scrollTop = 0;
+      Vditor.preview(getElementById('myPreviewEditor'), newVal, {
         hljs: {
           style: 'vs',
         },
@@ -37,12 +37,18 @@ export default defineComponent({
           outlineRender();
           // 代码复制
           codeCopy();
+
+          // addTheme();
         },
+        // theme: {
+        //   current: 'awesome-green',
+        //   path: 'http://localhost:1229/css/markdown/theme',
+        // },
         lazyLoadImage: 'https://cdn.jsdelivr.net/npm/vditor/dist/images/img-loading.svg',
         renderers: {
           renderBlockquote: (node, entering) => {
             const text = node.Text();
-            let className = 'explain';
+            let className = '';
             if (text?.trim()?.startsWith('注意')) {
               className = 'notice';
             }
@@ -54,6 +60,12 @@ export default defineComponent({
         },
       });
     });
+
+    function addTheme() {
+      const contentNode = getElementById('myPreviewEditor');
+      addClass(contentNode, 'showmd');
+      removeClass(contentNode, 'vditor-reset');
+    }
 
     /**
      * 代码片段复制按钮点击复制后显示 '已复制'
@@ -167,8 +179,8 @@ export default defineComponent({
 
 <template>
   <div v-bind='$attrs' class>
-    <div id='myPreviewEditor' class='min-h-screen px-12 absolute' style='width: calc(100% - 260px)'></div>
-    <div id='myPreviewEditorSider' class='fixed top-10 border right-44 hidden'>
+    <div id='myPreviewEditor' class='showmd min-h-screen px-12 absolute bg-white' style='width: calc(100% - 260px)'></div>
+    <div id='myPreviewEditorSider' class='fixed top-10 border right-44 hidden bg-white'>
       <nav style='height: 580px' class='relative overflow-hidden'>
         <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
         <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
@@ -176,11 +188,20 @@ export default defineComponent({
         </div>
       </nav>
     </div>
+    <div class='oprate flex flex-col fixed right-16 bottom-20'>
+      <button id='toTop' title='回到顶部' class='absolute w-4 h-4 bg-white p-4 rounded-full'></button>
+    </div>
   </div>
 </template>
 
 <style>
-@import url('./blockquote.css');
+/* @import url('./theme/awesome-green.css'); */
+@import url('./theme/Chinese-red.css');
+
+#toTop {
+  background-size: 100% 100%;
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjUyMjcxMDM2MjcwIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjU0ODciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+QGZvbnQtZmFjZSB7IGZvbnQtZmFtaWx5OiBmZWVkYmFjay1pY29uZm9udDsgc3JjOiB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LndvZmYyP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZjIiKSwgdXJsKCIvL2F0LmFsaWNkbi5jb20vdC9mb250XzEwMzExNThfdTY5dzh5aHhkdS53b2ZmP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZiIpLCB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LnR0Zj90PTE2MzAwMzM3NTk5NDQiKSBmb3JtYXQoInRydWV0eXBlIik7IH0KPC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTgzMiA2NEgxOTJjLTE3LjYgMC0zMiAxNC40LTMyIDMyczE0LjQgMzIgMzIgMzJoNjQwYzE3LjYgMCAzMi0xNC40IDMyLTMycy0xNC40LTMyLTMyLTMyek04NTIuNDg0IDUxOS40NjlMNTM4LjU5MiAyMDUuNTc3YTMwLjc5IDMwLjc5IDAgMCAwLTMuNjkzLTQuNDc2Yy02LjI0MS02LjI0MS0xNC41NTYtOS4yNTgtMjIuODk5LTkuMDktOC4zNDMtMC4xNjgtMTYuNjU4IDIuODQ5LTIyLjg5OSA5LjA5YTMwLjc3OCAzMC43NzggMCAwIDAtMy42OTMgNC40NzZMMTcxLjQxOSA1MTkuNTY2QzE2NC40NDkgNTI1LjQ0OCAxNjAgNTM0LjIyOCAxNjAgNTQ0YzAgMC4wNTggMC4wMDQgMC4xMTUgMC4wMDQgMC4xNzItMC4xMjQgOC4yODUgMi44OTkgMTYuNTI5IDkuMDk2IDIyLjcyNyA2LjIwMiA2LjIwMiAxNC40NTMgOS4yMjQgMjIuNzQzIDkuMDk2IDAuMDY2IDAgMC4xMzEgMC4wMDUgMC4xOTcgMC4wMDVIMzUydjMyMGMwIDM1LjIgMjguOCA2NCA2NCA2NGgxOTJjMzUuMiAwIDY0LTI4LjggNjQtNjRWNTc2aDE2MGMwLjA1OCAwIDAuMTE1LTAuMDA0IDAuMTcyLTAuMDA0IDguMjg1IDAuMTI0IDE2LjUyOS0yLjg5OSAyMi43MjctOS4wOTYgNi4xOTgtNi4xOTggOS4yMi0xNC40NDIgOS4wOTYtMjIuNzI3IDAtMC4wNTggMC4wMDQtMC4xMTUgMC4wMDQtMC4xNzIgMC4wMDEtOS44MjYtNC40ODktMTguNjUtMTEuNTE1LTI0LjUzMnoiIHAtaWQ9IjU0ODgiPjwvcGF0aD48L3N2Zz4=);
+}
 
 #myPreviewEditor .vditor-toolbar--hide {
   display: none !important;

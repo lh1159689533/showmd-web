@@ -35,7 +35,7 @@ export default defineComponent({
   },
   methods: {
     goBack() {
-      this.$router.back();
+      this.$router.push('/project');
     },
   },
 });
@@ -43,18 +43,29 @@ export default defineComponent({
 
 <template>
   <div class='project-detail relative w-4/5' style='margin: 0 auto'>
-    <div class='project-detail-sider bg-gray-50 shadow-lg pl-4 pt-4 fixed top-0 bottom-0' style='width: 240px'>
-      <a class='mb-3 flex items-center'>
+    <div class='project-detail-sider bg-white shadow-lg pt-4 fixed top-0 bottom-0 flex flex-col z-10' style='width: 240px'>
+      <a class='pb-3 flex items-center border-b'>
         <span class='pl-2'>{{ projectName }}</span>
         <Icon type='arrowLeft' class='hover:text-indigo-600 cursor-pointer ml-3' @click='goBack' />
       </a>
-      <List :dataList='pageList' class='project-sider-list'>
-        <template #default='{ item }'>
-          <p @click='() => showPageContent(item.id)' class='py-2 pl-4 cursor-pointer truncate hover:bg-indigo-600 hover:text-white relative' :class='[currentPageId === item.id ? "bg-indigo-600 text-white" : ""]' :title='item.pageName'>{{ item.pageName }}</p>
-        </template>
-      </List>
+      <div class='project-menu relative flex-1'>
+        <List :dataList='pageList' class='project-sider-list absolute w-full h-full'>
+          <template #default='{ item }'>
+            <div
+              @click='() => showPageContent(item.id)'
+              :class='[currentPageId === item.id ? "bg-gray-100 text-indigo-600" : "text-gray-700"]'
+              class='py-3 px-4 cursor-pointer border-b hover:bg-gray-100 relative'
+            >
+              <div class='flex justify-between text-xs text-gray-400'>
+                <span>lihui</span>
+                <span>2022.05.10</span>
+              </div>
+              <p :title='item.pageName' class='title truncate pt-2'>{{ item.pageName }}</p>
+            </div>
+          </template>
+        </List>
+      </div>
     </div>
-    <!-- <Editor :value='pageContent' class='flex-1'></Editor> -->
     <PreviewEditor :value='pageContent' class='left-60 relative min-h-screen' style='width: calc(100% - 240px)'></PreviewEditor>
   </div>
 </template>
