@@ -4,6 +4,7 @@
 <style>
 #app {
   background-color: #f4f5f5;
+  position: relative;
 }
 
 ::-webkit-scrollbar {

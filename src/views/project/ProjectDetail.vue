@@ -58,7 +58,7 @@ export default defineComponent({
             >
               <div class='flex justify-between text-xs text-gray-400'>
                 <span>lihui</span>
-                <span>2022.05.10</span>
+                <span>{{item.modifyTime ?? item.createTime }}</span>
               </div>
               <p :title='item.pageName' class='title truncate pt-2'>{{ item.pageName }}</p>
             </div>
@@ -66,7 +66,7 @@ export default defineComponent({
         </List>
       </div>
     </div>
-    <PreviewEditor :value='pageContent' class='left-60 relative min-h-screen' style='width: calc(100% - 240px)'></PreviewEditor>
+    <PreviewEditor :value='pageContent' class='left-60 relative' style='width: calc(100% - 240px)'></PreviewEditor>
   </div>
 </template>
 

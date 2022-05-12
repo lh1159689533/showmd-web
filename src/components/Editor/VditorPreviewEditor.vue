@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { defineComponent, toRefs, watch, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import {
   querySelector,
   querySelectorAll,
@@ -21,6 +21,7 @@ export default defineComponent({
   },
   setup(props) {
     const { value } = toRefs(props);
+    const isShowToTop = ref(false); // 是否显示回到顶部按钮
     let outlineNodeList = []; // 大纲节点列表
     let targetList = []; // 大纲节点列表
     let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
@@ -142,10 +143,15 @@ export default defineComponent({
      * 文档内容区滚动事件，主要处理与大纲的联动效果
      */
     function onScroll() {
-      // isOutlineClick=true说明是点击大纲节点触发的Vditor内部的滚动事件，不需要再执行以下自定义滚动事件
-      if (isOutlineClick) return (isOutlineClick = false);
-      // 根据滚动条top值与大纲每个节点top值做对比，找到当前最顶部的内容(主要是h1-6，因为只有h1-6才会显示到大纲，内容区h1-6的id与大纲节点data-target-id有关联)
       const scrollTop = document.documentElement.scrollTop;
+      if (scrollTop >= 500) {
+        isShowToTop.value = true;
+      } else {
+        isShowToTop.value = false;
+      }
+      // isOutlineClick=true说明是点击大纲节点触发的Vditor内部的滚动事件，不需要再执行以下自定义滚动事件
+      if (isOutlineClick || !targetList?.length) return (isOutlineClick = false);
+      // 根据滚动条top值与大纲每个节点top值做对比，找到当前最顶部的内容(主要是h1-6，因为只有h1-6才会显示到大纲，内容区h1-6的id与大纲节点data-target-id有关联)
       let target;
       if (scrollTop <= targetList[0].top) {
         target = targetList[0];
@@ -173,13 +179,22 @@ export default defineComponent({
     onBeforeUnmount(() => {
       document.removeEventListener('scroll', onScroll);
     });
+
+    const toTop = () => {
+      document.documentElement.scrollTop = 0;
+    };
+
+    return {
+      isShowToTop,
+      toTop,
+    };
   },
 });
 </script>
 
 <template>
   <div v-bind='$attrs' class>
-    <div id='myPreviewEditor' class='showmd min-h-screen px-12 absolute bg-white' style='width: calc(100% - 260px)'></div>
+    <div id='myPreviewEditor' class='showmd px-12 bg-white' style='width: calc(100% - 260px)'></div>
     <div id='myPreviewEditorSider' class='fixed top-10 border right-44 hidden bg-white'>
       <nav style='height: 580px' class='relative overflow-hidden'>
         <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
@@ -189,7 +204,9 @@ export default defineComponent({
       </nav>
     </div>
     <div class='oprate flex flex-col fixed right-16 bottom-20'>
-      <button id='toTop' title='回到顶部' class='absolute w-4 h-4 bg-white p-4 rounded-full'></button>
+      <div id='toTop' v-show='isShowToTop' @click='toTop' class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'>
+        <i title='回到顶部' class='absolute w-4 h-4'></i>
+      </div>
     </div>
   </div>
 </template>
@@ -198,9 +215,19 @@ export default defineComponent({
 /* @import url('./theme/awesome-green.css'); */
 @import url('./theme/Chinese-red.css');
 
-#toTop {
-  background-size: 100% 100%;
+#toTop > i {
+  background-size: 100%;
+  background-repeat: no-repeat;
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjUyMjcxMDM2MjcwIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjU0ODciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+QGZvbnQtZmFjZSB7IGZvbnQtZmFtaWx5OiBmZWVkYmFjay1pY29uZm9udDsgc3JjOiB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LndvZmYyP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZjIiKSwgdXJsKCIvL2F0LmFsaWNkbi5jb20vdC9mb250XzEwMzExNThfdTY5dzh5aHhkdS53b2ZmP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZiIpLCB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LnR0Zj90PTE2MzAwMzM3NTk5NDQiKSBmb3JtYXQoInRydWV0eXBlIik7IH0KPC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTgzMiA2NEgxOTJjLTE3LjYgMC0zMiAxNC40LTMyIDMyczE0LjQgMzIgMzIgMzJoNjQwYzE3LjYgMCAzMi0xNC40IDMyLTMycy0xNC40LTMyLTMyLTMyek04NTIuNDg0IDUxOS40NjlMNTM4LjU5MiAyMDUuNTc3YTMwLjc5IDMwLjc5IDAgMCAwLTMuNjkzLTQuNDc2Yy02LjI0MS02LjI0MS0xNC41NTYtOS4yNTgtMjIuODk5LTkuMDktOC4zNDMtMC4xNjgtMTYuNjU4IDIuODQ5LTIyLjg5OSA5LjA5YTMwLjc3OCAzMC43NzggMCAwIDAtMy42OTMgNC40NzZMMTcxLjQxOSA1MTkuNTY2QzE2NC40NDkgNTI1LjQ0OCAxNjAgNTM0LjIyOCAxNjAgNTQ0YzAgMC4wNTggMC4wMDQgMC4xMTUgMC4wMDQgMC4xNzItMC4xMjQgOC4yODUgMi44OTkgMTYuNTI5IDkuMDk2IDIyLjcyNyA2LjIwMiA2LjIwMiAxNC40NTMgOS4yMjQgMjIuNzQzIDkuMDk2IDAuMDY2IDAgMC4xMzEgMC4wMDUgMC4xOTcgMC4wMDVIMzUydjMyMGMwIDM1LjIgMjguOCA2NCA2NCA2NGgxOTJjMzUuMiAwIDY0LTI4LjggNjQtNjRWNTc2aDE2MGMwLjA1OCAwIDAuMTE1LTAuMDA0IDAuMTcyLTAuMDA0IDguMjg1IDAuMTI0IDE2LjUyOS0yLjg5OSAyMi43MjctOS4wOTYgNi4xOTgtNi4xOTggOS4yMi0xNC40NDIgOS4wOTYtMjIuNzI3IDAtMC4wNTggMC4wMDQtMC4xMTUgMC4wMDQtMC4xNzIgMC4wMDEtOS44MjYtNC40ODktMTguNjUtMTEuNTE1LTI0LjUzMnoiIHAtaWQ9IjU0ODgiPjwvcGF0aD48L3N2Zz4=);
+}
+
+#toTop {
+  box-shadow: 0px 1px 8px -5px #555;
+  animation: bounceInUp 600ms;
+}
+
+#toTop:hover {
+  box-shadow: 0px 1px 8px -2px #555;
 }
 
 #myPreviewEditor .vditor-toolbar--hide {

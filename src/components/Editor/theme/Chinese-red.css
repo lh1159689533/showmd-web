@@ -12,16 +12,92 @@
   background-image: linear-gradient(90deg, rgba(217, 234, 251, .25) 3%, transparent 0), linear-gradient(1turn, rgba(217, 234, 251, .25) 3%, transparent 0);
   background-size: 20px 20px;
   background-position: 50%;
+
+  /* th td 边框色 */
+  --table-thd-border-color: #f9f1db;
+  /* 偶数tr背景色 */
+  --table-tr-2n-bg-color: #fcfcfc;
+  /* tr选中背景色 */
+  --table-tr-hover-bg-color: #fff9f9;
+  /* thead背景色 */
+  --table-thead-bg-color: #fff9f9;
+
+  /* 任务列表边框色 */
+  --input-checkbox-border-color: #f07c82;
+  /* 任务列表文本色，可作用于icon图标 */
+  --input-checkbox-text-color: #f33b1f;
+
+  /* ul、ol列表序号色 */
+  --marker-text-color: #f33b1f;
+
+  /* 块引用文本色 */
+  --blockquote-text-color: #3d3d3d;
+  /* 块引用背景色 */
+  --blockquote-bg-color: #fff9f9;
+  /* 块引用边框色 */
+  --blockquote-border-color: #f07c82;
+  /* 块引用::before::after伪元素文本色 */
+  --blockquote-before-text-color: #f07c82;
+  /* 块引用.notice伪元素文本色 */
+  --blockquote-notice-before-text-color: #ff962f;
+  /* 块引用.notice代码背景色 */
+  --blockquote-notice-spancode-bg-color: #ffe8d5;
+  /* 块引用.notice背景色 */
+  --blockquote-notice-bg-color: #ffe8d5;
+  /* 块引用.notice边框色 */
+  --blockquote-notice-border-color: #ff962f;
+  /* 块引用.notice文本色 */
+  --blockquote-notice-text-color: #a02800;
+  /* 块引用.notice加粗文本色 */
+  --blockquote-notice-strong-text-color: #a02800;
+
+  /* 链接文本色 */
+  --link-text-color: #ff962f;
+  /* 链接边框色 */
+  --link-border-color: #ff962f;
+  /* 链接选中文本色 */
+  --link-active-text-color: #ee2746;
+  /* 链接选中边框色 */
+  --link-active-border-color: #ee2746;
+
+  /* 代码块阴影色 */
+  --pre-shadow-color: hsl(0deg 0% 43% / 45%);
+  /* 代码块背景色 */
+  --code-bg-color: #fff9f9;
+  /* 代码块文本色 */
+  --code-text-color: #333333;
+  /* 代码块复制按钮边框色 */
+  --code-copy-border-left-color: #f07c82;
+  /* 代码块复制按钮文本色 */
+  --code-copy-text-color: #f07c82;
+  /* 代码块复制按钮背景色 */
+  --code-copy-bg-color: #f07c82;
+  /* 代码文本色 */
+  --spancode-text-color: #ee2746;
+  /* 代码背景色 */
+  --spancode-bg-color: #fff9f9;
+
+  /* 标题文本色 */
+  --h1_6-text-color: #f33b1f;
+  /* 标题边框色 */
+  --h1_6-border-color: #36ace1;
+
+  /* 强调文本色 */
+  --strong-text-color: #ee3f4d;
+  /* 斜体文本色 */
+  --em-text-color: #f33b1f;
+  /* 删除线文本色 */
+  --del-text-color: #f33b1f;
 }
 
 .showmd strong {
   padding: 1px;
-  color: #ee3f4d;
+  color: var(--strong-text-color);
 }
 
 .showmd em {
   padding: 0 2px;
-  color: #f33b1f;
+  color: var(--em-text-color);
 }
 
 .showmd h1,
@@ -30,7 +106,7 @@
 .showmd h4,
 .showmd h5,
 .showmd h6 {
-  color: #f33b1f;
+  color: var(--h1_6-text-color);
   position: relative;
   margin-top: 30px;
   margin-bottom: 20px;
@@ -42,18 +118,14 @@
   position: relative;
   padding: 12px 38px;
   margin: 30px 0;
-  border-bottom: 1px solid #36ace1 !important;
+  border-bottom: 1px solid var(--h1_6-border-color) !important;
 }
 
 .showmd h2 {
-  border-bottom: 1px solid #36ace1 !important;
+  border-bottom: 1px solid var(--h1_6-border-color) !important;
   position: relative;
   padding: 12px 36px;
   margin: 28px 0;
-}
-
-.showmd h2::before {
-  color: #36ace1;
 }
 
 .showmd h3 {
@@ -122,8 +194,8 @@
   font-family: -apple-system, -apple-system-body, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, PingFang SC, "思源黑体 CN", "思源黑体", "JetBrains Mono", "Fira Code", Menlo, "Ubuntu Mono", Consolas, sans-serif;
   word-break: break-word;
   overflow-x: auto;
-  background-color: #fff9f9 !important;
-  color: #ee2746;
+  background-color: var(--spancode-bg-color) !important;
+  color: var(--spancode-text-color);
   border-radius: 2px;
   font-size: 16px;
   padding: 1px 2px;
@@ -134,7 +206,7 @@
   overflow: auto;
   position: relative;
   line-height: 1.75;
-  box-shadow: 0 0 8px hsl(0deg 0% 43% / 45%);
+  box-shadow: 0 0 8px var(--pre-shadow-color);
   border-radius: 4px;
   margin: 16px;
 }
@@ -157,13 +229,13 @@
   word-break: normal;
   display: block;
   overflow-x: auto;
-  color: #333;
-  background-color: #fff9f9 !important;
+  color: var(--code-text-color);
+  background-color: var(--code-bg-color) !important;
 }
 
 .showmd a {
-  color: #FF962F;
-  border-bottom: 1px solid #FF962F;
+  color: var(--link-text-color);
+  border-bottom: 1px solid var(--link-border-color);
   font-weight: 400;
   text-decoration: none;
   margin: 0 4px;
@@ -172,46 +244,46 @@
 
 .showmd a:hover,
 .showmd a:active {
-  border-bottom: 2px solid #ee2746;
-  color: #ee2746;
+  border-bottom: 2px solid var(--link-active-border-color);
+  color: var(--link-active-text-color);
 }
 
 .showmd blockquote {
-  color: #3d3d3d !important;
-  background-color: #fff9f9;
-  border-left: 3px solid #f07c82 !important;
+  color: var(--blockquote-text-color) !important;
+  background-color: var(--blockquote-bg-color);
+  border-left: 3px solid var(--blockquote-border-color) !important;
   margin: 2em 0;
   padding: 24px 32px;
   position: relative;
 }
 
 .showmd blockquote.notice {
-  border-left: #FF962F 3px solid !important;
-  background-color: #ffe8d5 !important;
-  color: #a02800 !important;
+  border-left: var(--blockquote-notice-border-color) 3px solid !important;
+  background-color: var(--blockquote-notice-bg-color) !important;
+  color: var(--blockquote-notice-text-color) !important;
 }
 
 .showmd blockquote.notice strong {
-  color: #a02800 !important;
+  color: var(--blockquote-notice-strong-text-color) !important;
 }
 
 .showmd blockquote.notice code:not(.hljs):not(.highlight-chroma) {
-  background-color: #ffe8d5 !important;
+  background-color: var(--blockquote-notice-spancode-bg-color) !important;
 }
 
 .showmd blockquote.notice::before {
-  color: #FF962F;
+  color: var(--blockquote-notice-before-text-color);
 }
 
 .showmd blockquote.notice::after {
-  color: #FF962F;
+  color: var(--blockquote-notice-before-text-color);
 }
 
 .showmd blockquote::before {
   content: "❝";
   top: 8px;
   left: 8px;
-  color: #f07c82;
+  color: var(--blockquote-before-text-color);
   font-size: 30px;
   line-height: 1;
   font-weight: 700;
@@ -225,7 +297,7 @@
   position: absolute;
   right: 8px;
   bottom: 0;
-  color: #f07c82;
+  color: var(--blockquote-before-text-color);
   opacity: .7;
 }
 
@@ -270,7 +342,7 @@
 }
 
 .showmd ::marker {
-  color: #f33b1f;
+  color: var(--marker-text-color);
 }
 
 .showmd .contains-task-list {
@@ -294,7 +366,7 @@
   right: 0;
   bottom: 0;
   background: white;
-  border: 1px solid #f07c82;
+  border: 1px solid var(--input-checkbox-border-color);
   border-radius: 3px;
   box-sizing: border-box;
   z-index: 1;
@@ -309,7 +381,7 @@
   bottom: 0;
   width: 0;
   height: 0;
-  color: #f33b1f;
+  color: var(--input-checkbox-text-color);
   font-size: 16px;
   font-weight: bold;
   z-index: 2;
@@ -326,7 +398,7 @@
 }
 
 .showmd table thead {
-  background: #fff9f9;
+  background: var(--table-thead-bg-color);
   color: black;
   text-align: left;
   font-size: 15px;
@@ -340,18 +412,19 @@
 }
 
 .showmd table tr:nth-child(2n) {
-  background-color: #fcfcfc !important;
+  background-color: var(--table-tr-2n-bg-color) !important;
 }
 
 .showmd table tr:hover {
-  background-color: #fff9f9 !important;
+  background-color: var(--table-tr-hover-bg-color) !important;
 }
 
 .showmd table th,
 .showmd table td {
   padding: 12px 7px;
   line-height: 24px;
-  border: 1px solid #f9f1db !important;
+  border: 1px solid var(--table-thd-border-color) !important;
+  white-space: normal !important;
 }
 
 .showmd table td {
@@ -388,7 +461,7 @@
 }
 
 .showmd del {
-  color: #f33b1f;
+  color: var(--del-text-color);
 }
 
 .vditor-reset hr {
@@ -401,15 +474,15 @@
 }
 
 .showmd .vditor-copy svg {
-  color: #f07c82 !important;
+  color: var(--code-copy-text-color) !important;
 }
 
 .showmd .vditor-copy>span::after {
-  background-color: #f07c82;
+  background-color: var(--code-copy-bg-color);
 }
 
 .showmd .vditor-copy>span::before {
-  border-left-color: #f07c82;
+  border-left-color: var(--code-copy-border-left-color);
 }
 
 @media (max-width: 720px) {

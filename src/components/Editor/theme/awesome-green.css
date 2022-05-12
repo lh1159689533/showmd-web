@@ -1,3 +1,78 @@
+@charset "UTF-8";
+
+.showmd {
+  --table-border-color: #2f8e54;
+  /* 偶数tr背景色 */
+  --table-tr-2n-bg-color: rgba(153, 255, 188, .1);
+  /* thead背景色 */
+  --table-thead-bg-color: #2f8e54;
+  /* thead文本色 */
+  --table-thead-text-color: #ffffff;
+
+  /* ul、ol列表序号色 */
+  --marker-text-color: #2f845e;
+
+  /* 块引用文本色 */
+  --blockquote-text-color: #282d36;
+  /* 块引用背景色 */
+  --blockquote-bg-color: rgba(66, 185, 131, .1);
+  /* 块引用边框色 */
+  --blockquote-border-color: #2f845e;
+  /* 块引用.notice代码背景色 */
+  --blockquote-notice-spancode-bg-color: #ffe8d5;
+  /* 块引用.notice背景色 */
+  --blockquote-notice-bg-color: #ffe8d5;
+  /* 块引用.notice边框色 */
+  --blockquote-notice-border-color: #ff9c19;
+  /* 块引用.notice文本色 */
+  --blockquote-notice-text-color: #a02800;
+  /* 块引用.notice加粗文本色 */
+  --blockquote-notice-strong-text-color: #a02800;
+
+  /* 链接文本色 */
+  --link-text-color: #2f8e54;
+  /* 链接边框色 */
+  --link-border-color: #3f9e64;
+  /* 链接选中文本色 */
+  --link-active-text-color: #3f9e64;
+
+  /* 代码块背景色 */
+  --code-bg-color: #fff9f9;
+  /* 代码块文本色 */
+  --code-text-color: #262626;
+  --code-border-color: #2f845e;
+  /* 代码块复制按钮边框色 */
+  --code-copy-border-left-color: #2f845e;
+  /* 代码块复制按钮背景色 */
+  --code-copy-bg-color: #2f845e;
+  /* 代码块复制按钮色 */
+  --code-copy-svg-color: #2f845e;
+  /* 代码文本色 */
+  --spancode-text-color: #ff502c;
+  /* 代码背景色 */
+  --spancode-bg-color: #fff5f5;
+
+  /* 标题文本色 */
+  --h1_6-text-color: #2f845e;
+  /* h2文本色 */
+  --h2-text-color: #ffffff;
+  /* h2阴影色 */
+  --h2-shadow-color: rgb(47 132 194 / 20%);
+  /* 标题边框色 */
+  --h1_6-border-color: #2f845e;
+  /* h1-h6背景色 */
+  --h1_6-bg-color: #2f845e;
+
+  /* 强调文本色 */
+  --strong-text-color: #2f845e;
+  /* 斜体文本色 */
+  --em-text-color: #949415;
+  /* 删除线文本色 */
+  --del-text-color: #2f845e;
+  /* 图片阴影色 */
+  --img-shadow-color: #888888;
+}
+
 .showmd :is(code, pre) {
   font-family: Menlo, Monaco, Consolas, Courier New, monospace !important;
 }
@@ -11,19 +86,19 @@
 
 .showmd h1 {
   margin-bottom: 5px;
-  color: #2f845e;
+  color: var(--h1_6-text-color);
   border-bottom: none !important;
 }
 
 .showmd h2 {
   display: inline-block;
   font-weight: 700;
-  background: #2f845e;
-  color: #fff;
+  background: var(--h1_6-bg-color);
+  color: var(--h2-text-color);
   padding: 6px 8px 0 0;
   border-top-right-radius: 6px;
   margin-right: 2px;
-  box-shadow: 6px 3px 0 0 rgb(47 132 194 / 20%);
+  box-shadow: 6px 3px 0 0 var(--h2-shadow-color);
   padding-bottom: 0 !important;
 }
 
@@ -37,8 +112,8 @@
   content: " ";
   position: absolute;
   display: block;
-  width: calc(100% - 80px);
-  border-bottom: 3px solid #2f845e;
+  width: calc(100% - 320px);
+  border-bottom: 3px solid var(--h1_6-border-color);
 }
 
 .showmd h3 {
@@ -61,9 +136,9 @@
   word-break: normal;
   display: block;
   overflow-x: auto;
-  color: #262626;
-  border: 1px solid #2f845e;
-  border-top: 8px solid #2f845e;
+  color: var(--code-text-color);
+  border: 1px solid var(--code-border-color);
+  border-top: 8px solid var(--code-border-color);
   background: linear-gradient(180deg, rgba(66, 185, 131, .1), transparent) !important;
 }
 
@@ -71,32 +146,44 @@
   top: 8px;
 }
 
+.showmd .vditor-copy svg {
+  color: var(--code-copy-svg-color) !important;
+}
+
+.showmd .vditor-copy>span::after {
+  background-color: var(--code-copy-bg-color);
+}
+
+.showmd .vditor-copy>span::before {
+  border-left-color: var(--code-copy-border-left-color);
+}
+
 .showmd ol li::marker,
 .showmd ul li::marker {
-  color: #2f845e;
+  color: var(--marker-text-color);
 }
 
 .showmd blockquote {
   padding: 1px 22px !important;
   margin: 22px 0;
-  border-left: 6px solid #2f845e !important;
-  background-color: rgba(66, 185, 131, .1);
+  border-left: 6px solid var(--blockquote-border-color) !important;
+  background-color: var(--blockquote-bg-color);
   border-radius: 2px;
-  color: #282d36 !important;
+  color: var(--blockquote-text-color) !important;
 }
 
 .showmd blockquote.notice {
-  border-left: #ff9c19 6px solid !important;
-  background-color: #ffe8d5 !important;
-  color: #a02800 !important;
+  border-left: var(--blockquote-notice-border-color) 6px solid !important;
+  background-color: var(--blockquote-notice-bg-color) !important;
+  color: var(--blockquote-notice-text-color) !important;
 }
 
 .showmd blockquote.notice strong {
-  color: #a02800 !important;
+  color: var(--blockquote-notice-strong-text-color) !important;
 }
 
 .showmd blockquote.notice code:not(.hljs):not(.highlight-chroma) {
-  background-color: #ffe8d5 !important;
+  background-color: var(--blockquote-notice-spancode-bg-color) !important;
 }
 
 .showmd blockquote>p {
@@ -108,26 +195,26 @@
   word-break: break-word;
   border-radius: 2px;
   overflow-x: auto;
-  background-color: #fff5f5 !important;
-  color: #ff502c;
+  background-color: var(--spancode-bg-color) !important;
+  color: var(--spancode-text-color);
   font-size: .87em;
   padding: 0.065em 0.4em;
 }
 
 .showmd strong {
   background-color: inherit;
-  color: #2f845e;
+  color: var(--strong-text-color);
 }
 
 .showmd em {
   background-color: inherit;
-  color: #949415;
+  color: var(--em-text-color);
 }
 
 .showmd a {
   text-decoration: none;
-  color: #2f8e54;
-  border-bottom: 1px solid #3f9e64;
+  color: var(--link-text-color);
+  border-bottom: 1px solid var(--link-border-color);
   font-weight: 400;
   font-size: 15px;
 }
@@ -138,7 +225,7 @@
 
 .showmd a:active,
 .showmd a:hover {
-  color: #3f9e64;
+  color: var(--link-active-text-color);
 }
 
 .showmd input[type=checkbox]:checked:before {
@@ -154,7 +241,7 @@
   margin-bottom: 22px !important;
 }
 
-ol {
+.showmd ol {
   display: block;
   list-style-type: decimal !important;
   margin-block-start: 1em;
@@ -170,7 +257,7 @@ ol {
 }
 
 .showmd del {
-  color: #2f845e;
+  color: var(--del-text-color);
 }
 
 .showmd table {
@@ -179,14 +266,14 @@ ol {
   width: 100%;
   max-width: 100%;
   overflow: auto;
-  border: 2px solid #2f8e54;
+  border: 2px solid var(--table-border-color);
   border-spacing: 2px;
   border-collapse: separate;
 }
 
 .showmd thead {
-  background: #2f8e54;
-  color: #fff;
+  background: var(--table-thead-bg-color);
+  color: var(--table-thead-text-color);
   text-align: left;
   font-weight: 700;
 }
@@ -211,10 +298,10 @@ ol {
 }
 
 .showmd tr:nth-child(2n) {
-  background-color: rgba(153, 255, 188, .1) !important;
+  background-color: var(--table-tr-2n-bg-color) !important;
 }
 
 .showmd img {
   max-width: 100%;
-  box-shadow: 6px 6px 6px #888;
+  box-shadow: 6px 6px 6px var(--img-shadow-color);
 }
