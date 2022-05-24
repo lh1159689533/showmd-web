@@ -1,7 +1,6 @@
 <script lang='ts'>
 import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import {
-  querySelector,
   querySelectorAll,
   addClass,
   removeClass,
@@ -10,6 +9,7 @@ import {
   getElementById,
   getComputedStyleOf,
   getBoundingClientRect,
+  initOutline,
 } from './vditorEditor';
 import Vditor from 'vditor/dist/method.min';
 import 'vditor/dist/index.css';
@@ -17,34 +17,26 @@ import 'vditor/dist/index.css';
 export default defineComponent({
   name: 'PreviewEditor',
   props: {
-    value: String,
+    page: Object,
   },
   setup(props) {
-    const { value } = toRefs(props);
+    const { page }: any = toRefs(props);
     const isShowToTop = ref(false); // 是否显示回到顶部按钮
     let outlineNodeList = []; // 大纲节点列表
     let targetList = []; // 大纲节点列表
     let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
 
-    watch(value, (newVal: string) => {
+    watch(page, (newVal) => {
       document.documentElement.scrollTop = 0;
       getElementById('myPreviewEditorOutlineList').scrollTop = 0;
-      Vditor.preview(getElementById('myPreviewEditor'), newVal, {
+      Vditor.preview(getElementById('myPreviewEditor'), newVal?.pageContent, {
         hljs: {
           style: 'vs',
         },
-        after() {
-          // 文档大纲渲染，并添加事件
-          outlineRender();
-          // 代码复制
-          codeCopy();
-
-          // addTheme();
+        theme: {
+          current: 'awesome-green',
+          path: 'http://localhost:1229/editor/theme',
         },
-        // theme: {
-        //   current: 'awesome-green',
-        //   path: 'http://localhost:1229/css/markdown/theme',
-        // },
         lazyLoadImage: 'https://cdn.jsdelivr.net/npm/vditor/dist/images/img-loading.svg',
         renderers: {
           renderBlockquote: (node, entering) => {
@@ -59,14 +51,16 @@ export default defineComponent({
             return ['</blockquote>', Lute.WalkContinue];
           },
         },
+        after() {
+          // 文档大纲渲染，并添加事件
+          outlineRender();
+          // 代码复制
+          codeCopy();
+
+          // addTheme();
+        },
       });
     });
-
-    function addTheme() {
-      const contentNode = getElementById('myPreviewEditor');
-      addClass(contentNode, 'showmd');
-      removeClass(contentNode, 'vditor-reset');
-    }
 
     /**
      * 代码片段复制按钮点击复制后显示 '已复制'
@@ -84,42 +78,51 @@ export default defineComponent({
     /**
      * 初始化大纲，并添加事件
      */
-    function initOutline(outline) {
-      // 获取大纲节点列表
-      outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
+    // function initOutline(outline) {
+    //   // 获取大纲节点列表
+    //   outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
 
-      // 默认第一个选中
-      addClass(outlineNodeList[0], 'active');
+    //   // 默认第一个选中
+    //   addClass(outlineNodeList[0], 'active');
 
-      // 遍历大纲节点，添加点击事件
-      outlineNodeList?.map((node) =>
-        node.addEventListener('click', function () {
-          isOutlineClick = true;
-          // 点击节点添加选中样式 active，其他节点去掉选中样式 active
-          const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-          removeClass(currentActiveNode, 'active');
-          addClass(this, 'active');
-        })
-      );
+    //   // 遍历大纲节点，添加点击事件
+    //   outlineNodeList?.map((node) =>
+    //     node.addEventListener('click', function () {
+    //       isOutlineClick = true;
+    //       // 点击节点添加选中样式 active，其他节点去掉选中样式 active
+    //       const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+    //       removeClass(currentActiveNode, 'active');
+    //       addClass(this, 'active');
+    //     })
+    //   );
 
-      setTimeout(function () {
-        // 获取大纲节点的top值
-        const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
+    //   setTimeout(function () {
+    //     // 获取大纲节点的top值
+    //     const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
 
-        targetList = targetIdList?.map((id) => {
-          const node = getElementById(id);
-          const prevNode = node?.previousElementSibling;
-          let top: number = 0;
-          if (node && prevNode) {
-            const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
-            const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
-            top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
-          }
-          return {
-            id,
-            top,
-          };
-        });
+    //     targetList = targetIdList?.map((id) => {
+    //       const node = getElementById(id);
+    //       const prevNode = node?.previousElementSibling;
+    //       let top: number = 0;
+    //       if (node && prevNode) {
+    //         const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
+    //         const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
+    //         top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
+    //       }
+    //       return {
+    //         id,
+    //         top,
+    //       };
+    //     });
+    //   }, 500);
+    // }
+
+    function outlineInit(outline) {
+      outline.style.display = 'block';
+      setTimeout(() => {
+        const { outlineNodeList: outlineNodes, outlineNodeTopList } = initOutline(outline, () => (isOutlineClick = true));
+        outlineNodeList = outlineNodes;
+        targetList = outlineNodeTopList;
       }, 500);
     }
 
@@ -133,7 +136,8 @@ export default defineComponent({
 
       if (outline.innerText.trim() !== '') {
         getElementById('myPreviewEditorSider').style.display = 'block';
-        initOutline(outline);
+        // initOutline(outline);
+        outlineInit(outline);
       } else {
         getElementById('myPreviewEditorSider').style.display = 'none';
       }
@@ -163,7 +167,7 @@ export default defineComponent({
       const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
       // 根据当前最顶部的内容(h1-6)的id找到对应的大纲节点，即当前选中大纲节点
       const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', target?.id);
-      if (newActiveNode) {
+      if (newActiveNode && currentActiveNode) {
         // 要选中的大纲节点添加选中样式，当前选中大纲节点去掉选中样式
         removeClass(currentActiveNode, 'active');
         addClass(newActiveNode, 'active');
@@ -189,19 +193,36 @@ export default defineComponent({
       toTop,
     };
   },
+  methods: {
+    edit() {
+      this.$router.push(`/page/edit/${this.page?.id}`);
+    },
+  },
 });
 </script>
 
 <template>
-  <div v-bind='$attrs' class>
-    <div id='myPreviewEditor' class='showmd px-12 bg-white' style='width: calc(100% - 260px)'></div>
-    <div id='myPreviewEditorSider' class='fixed top-10 border right-44 hidden bg-white'>
-      <nav style='height: 580px' class='relative overflow-hidden'>
-        <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
-        <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
-          <div id='myPreviewEditorOutline' style='padding-left: 2px'></div>
+  <div v-bind='$attrs' class='w-full flex flex-row'>
+    <div class='content bg-white' style='width: calc(100% - 260px);'>
+      <div class='pl-10'>
+        <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{page?.pageName}}</h1>
+        <div class='flex mt-3 text-gray-400 ml-2'>
+          <span class='user mr-6'>lihui</span>
+          <span class='createTime'>{{page?.modifyTime ?? page?.createTime}}</span>
+          <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
         </div>
-      </nav>
+      </div>
+      <div id='myPreviewEditor' class='showmd px-12'></div>
+    </div>
+    <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
+      <div id='myPreviewEditorSider' class='fixed top-10 border hidden bg-white'>
+        <nav style='height: 580px' class='relative overflow-hidden'>
+          <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
+          <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
+            <div id='myPreviewEditorOutline' style='padding-left: 2px'></div>
+          </div>
+        </nav>
+      </div>
     </div>
     <div class='oprate flex flex-col fixed right-16 bottom-20'>
       <div id='toTop' v-show='isShowToTop' @click='toTop' class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'>
@@ -213,7 +234,7 @@ export default defineComponent({
 
 <style>
 /* @import url('./theme/awesome-green.css'); */
-@import url('./theme/Chinese-red.css');
+/* @import url('./theme/Chinese-red.css'); */
 
 #toTop > i {
   background-size: 100%;
@@ -240,19 +261,19 @@ export default defineComponent({
   width: 260px;
 }
 
-#myPreviewEditorOutline.vditor-outline {
+/* .vditor-outline {
   display: block !important;
-}
+} */
 
-#myPreviewEditorOutline.vditor-outline ul {
+.vditor-outline ul {
   padding-left: 0 !important;
 }
 
-#myPreviewEditorOutline.vditor-outline li > span {
+.vditor-outline li > span {
   @apply relative;
 }
 
-#myPreviewEditorOutline.vditor-outline li > span.active::before {
+.vditor-outline li > span.active::before {
   content: '';
   position: absolute;
   width: 4px;
@@ -260,16 +281,16 @@ export default defineComponent({
   @apply bg-indigo-600 left-0 rounded-tr-lg rounded-br-lg;
 }
 
-#myPreviewEditorOutline.vditor-outline li > span:hover {
+.vditor-outline li > span:hover {
   @apply bg-gray-50;
 }
 
-#myPreviewEditorOutline.vditor-outline li > span > span {
+.vditor-outline li > span > span {
   color: #333;
   font-size: 0.9rem;
 }
 
-#myPreviewEditorOutline.vditor-outline li > span.active > span {
+.vditor-outline li > span.active > span {
   @apply text-indigo-600;
 }
 </style>

@@ -16,7 +16,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <button class='new-project flex flex-row justify-center' :type='type' v-bind='$attrs'>
+  <button class='new-project flex flex-row justify-center items-center' :type='type'>
     <Icon v-if='icon' :type='icon' class='mr-2' />
     <slot></slot>
   </button>

@@ -1,5 +1,5 @@
 button {
-  @apply w-full !p-2 rounded-md font-bold shadow-sm relative min-w-min truncate;
+  @apply !p-2 rounded-md font-bold shadow-sm relative min-w-min truncate;
   @apply !border-gray-300 border text-black;
 }
 

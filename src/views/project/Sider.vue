@@ -31,8 +31,8 @@ export default defineComponent({
       </div>
     </div>
     <div class='mt-12'>
-      <Button icon='new' @click='() => isShow = true'>新建项目</Button>
-      <Button icon='upload' type='weak' class='mt-4' @click='() => isShowUpload = true'>导入项目</Button>
+      <Button icon='new' @click='() => isShow = true' class='w-full'>新建项目</Button>
+      <Button icon='upload' type='weak' class='mt-4 w-full' @click='() => isShowUpload = true'>导入项目</Button>
     </div>
     <NewProject :visible='isShow' @close='() => isShow = false' />
     <UploadProject :visible='isShowUpload' @close='() => isShowUpload = false' />
