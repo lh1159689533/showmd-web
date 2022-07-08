@@ -93,52 +93,6 @@ function toArray<T>(arrayLike): T[] {
   return arrayLike?.length ? [].slice.call(arrayLike) : [];
 }
 
-/**
-     * 初始化大纲，并添加事件
-     */
-function initOutline(outline, cb?) {
-  // 获取大纲节点列表
-  const outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
-  (window as any).outlineNodeList = outlineNodeList;
-
-  // 默认第一个选中
-  addClass(outlineNodeList[0], 'active');
-
-  // 遍历大纲节点，添加点击事件
-  outlineNodeList?.map((node) =>
-    node.addEventListener('click', function () {
-      cb?.(this);
-      // 点击节点添加选中样式 active，其他节点去掉选中样式 active
-      const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-      removeClass(currentActiveNode, 'active');
-      addClass(this, 'active');
-    })
-  );
-
-  // 获取大纲节点的top值
-  const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
-
-  const outlineNodeTopList = targetIdList?.map((id) => {
-    const node = getElementById(id);
-    const prevNode = node?.previousElementSibling;
-    let top: number = 0;
-    if (node && prevNode) {
-      const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
-      const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
-      top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
-    }
-    return {
-      id,
-      top,
-    };
-  });
-
-  return {
-    outlineNodeList,
-    outlineNodeTopList
-  };
-}
-
 export {
   getNodeByClassName,
   getNodeByAttribute,
@@ -149,5 +103,4 @@ export {
   querySelectorAll,
   getComputedStyleOf,
   getBoundingClientRect,
-  initOutline
 };

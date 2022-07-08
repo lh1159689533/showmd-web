@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { defineComponent, ref, toRefs, onMounted, watch } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import {
   querySelector,
   getElementById,
@@ -15,11 +15,9 @@ import Vditor from 'vditor';
 import 'vditor/dist/index.css';
 
 export default defineComponent({
-  name: 'VditorEditor',
-  props: {
-    value: String,
-  },
-  setup(props) {
+  name: 'Editor',
+  props: ['value'],
+  setup(props, { emit }) {
     const editor = ref<Vditor | null>(null);
     let editorMode = 'both';
     let isEditorInited = false; // 编辑器是否初始化
@@ -99,6 +97,7 @@ export default defineComponent({
           preview: 'showmd',
         },
         preview: {
+          delay: 500,
           actions: [],
           theme: {
             current: 'Chinese-red',
@@ -123,6 +122,9 @@ export default defineComponent({
             outlineTitle.innerText = '目录';
           }
         },
+        input(value) {
+          emit('change', value);
+        }
       });
     });
 
@@ -318,7 +320,7 @@ export default defineComponent({
 }
 
 #myEditor #myEditorContent {
-  height: calc(100vh - 72px);
+  height: calc(100vh - 74px);
 }
 
 #myEditor #myEditorContent .vditor-content .vditor-preview .vditor-reset {
@@ -344,6 +346,10 @@ export default defineComponent({
   /* width: 50%; */
   vertical-align: top;
   flex: none;
+}
+
+#myEditor #myEditorContent .vditor-content .vditor-preview .showmd {
+  min-height: 100%;
 }
 
 #myEditor #myEditorContent .vditor-toolbar--pin {

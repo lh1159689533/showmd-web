@@ -8,6 +8,9 @@ export default defineComponent({
       type: Array,
       default: [],
     },
+    onClick: {
+      type: Function,
+    },
   },
   setup(props) {
     const { dataList }: any = toRefs(props);
@@ -22,10 +25,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <ul v-bind='$attrs' class='overflow-auto'>
+  <ul class='overflow-y-auto overflow-x-hidden'>
     <li
       v-for='(item, index) in dataList'
-      :key='item.id || item.key'
+      :key='item.id || item.key || index'
+      :class='$attrs.itemClass'
+      @click='() => onClick?.(item)'
       @mouseenter='() => hoverIndex = index'
       @mouseleave='() => hoverIndex = -1'
     >

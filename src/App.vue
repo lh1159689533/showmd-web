@@ -2,6 +2,17 @@
   <router-view />
 </template>
 <style>
+:root {
+  --el-color-primary: rgb(79 70 229) !important;
+  --el-color-primary-light-3: rgba(79, 70, 229, 0.7) !important;
+  --el-color-primary-light-7: rgba(79, 70, 229, 0.3) !important;
+  --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
+}
+
+body {
+  background-color: #f4f5f5;
+}
+
 #app {
   background-color: #f4f5f5;
   position: relative;

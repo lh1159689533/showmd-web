@@ -8,8 +8,8 @@ import Input from '@components/Input.vue';
 import List from '@components/List.vue';
 import Select from '@components/Select.vue';
 import Upload from '@components/Upload.vue';
-import VditorEditor from '@src/components/Editor/VditorEditor.vue';
-import VditorPreviewEditor from '@src/components/Editor/VditorPreviewEditor.vue';
+import Editor from '@src/components/Editor/Editor.vue';
+import PreviewEditor from '@src/components/Editor/PreviewEditor.vue';
 
 const Components = [
   Button,
@@ -19,8 +19,8 @@ const Components = [
   List,
   Select,
   Upload,
-  VditorEditor,
-  VditorPreviewEditor,
+  Editor,
+  PreviewEditor,
 ];
 
 export default {

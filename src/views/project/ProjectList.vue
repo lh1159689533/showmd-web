@@ -18,9 +18,7 @@ export default defineComponent({
     findList().then((res) => {
       if (res?.code === 0) {
         projectList.value = res?.data;
-        projectNameList.value = projectList.value.map(
-          ({ projectName }: Record<string, string>) => projectName
-        );
+        projectNameList.value = projectList.value.map(({ projectName }: Record<string, string>) => projectName);
       }
     });
 
@@ -53,10 +51,7 @@ export default defineComponent({
     <div class='list flex-1'>
       <List :dataList='projectList'>
         <template #default='{ item }'>
-          <p
-            @click='() => toDetail(item.id)'
-            class='py-3 px-10 text-left cursor-pointer font-medium hover:bg-gray-50 border-b'
-          >{{item.projectName}}</p>
+          <p @click='() => toDetail(item.id)' class='py-3 px-10 text-left cursor-pointer font-medium hover:bg-gray-50 border-b'>{{item.projectName}}</p>
         </template>
       </List>
     </div>

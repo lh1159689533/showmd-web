@@ -1,14 +1,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Section from '@components/Section.vue';
 export default defineComponent({
   name: 'home',
-  components: { Section },
 });
 </script>
 
 <template>
-  <div id='home'>
-    <Section />
+  <div id='home' class='container mx-auto'>
+    11111
   </div>
 </template>
+
+<style scoped>
+</style>

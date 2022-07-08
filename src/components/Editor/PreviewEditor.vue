@@ -1,16 +1,6 @@
 <script lang='ts'>
 import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import {
-  querySelectorAll,
-  addClass,
-  removeClass,
-  getNodeByClassName,
-  getNodeByAttribute,
-  getElementById,
-  getComputedStyleOf,
-  getBoundingClientRect,
-  initOutline,
-} from './vditorEditor';
+import { querySelectorAll, addClass, removeClass, getNodeByClassName, getNodeByAttribute, getElementById, getComputedStyleOf, getBoundingClientRect } from './vditorEditor';
 import Vditor from 'vditor/dist/method.min';
 import 'vditor/dist/index.css';
 
@@ -78,51 +68,42 @@ export default defineComponent({
     /**
      * 初始化大纲，并添加事件
      */
-    // function initOutline(outline) {
-    //   // 获取大纲节点列表
-    //   outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
+    function initOutline(outline) {
+      // 获取大纲节点列表
+      outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
 
-    //   // 默认第一个选中
-    //   addClass(outlineNodeList[0], 'active');
+      // 默认第一个选中
+      addClass(outlineNodeList[0], 'active');
 
-    //   // 遍历大纲节点，添加点击事件
-    //   outlineNodeList?.map((node) =>
-    //     node.addEventListener('click', function () {
-    //       isOutlineClick = true;
-    //       // 点击节点添加选中样式 active，其他节点去掉选中样式 active
-    //       const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-    //       removeClass(currentActiveNode, 'active');
-    //       addClass(this, 'active');
-    //     })
-    //   );
+      // 遍历大纲节点，添加点击事件
+      outlineNodeList?.map((node) =>
+        node.addEventListener('click', function () {
+          isOutlineClick = true;
+          // 点击节点添加选中样式 active，其他节点去掉选中样式 active
+          const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+          removeClass(currentActiveNode, 'active');
+          addClass(this, 'active');
+        })
+      );
 
-    //   setTimeout(function () {
-    //     // 获取大纲节点的top值
-    //     const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
+      setTimeout(function () {
+        // 获取大纲节点的top值
+        const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
 
-    //     targetList = targetIdList?.map((id) => {
-    //       const node = getElementById(id);
-    //       const prevNode = node?.previousElementSibling;
-    //       let top: number = 0;
-    //       if (node && prevNode) {
-    //         const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
-    //         const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
-    //         top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
-    //       }
-    //       return {
-    //         id,
-    //         top,
-    //       };
-    //     });
-    //   }, 500);
-    // }
-
-    function outlineInit(outline) {
-      outline.style.display = 'block';
-      setTimeout(() => {
-        const { outlineNodeList: outlineNodes, outlineNodeTopList } = initOutline(outline, () => (isOutlineClick = true));
-        outlineNodeList = outlineNodes;
-        targetList = outlineNodeTopList;
+        targetList = targetIdList?.map((id) => {
+          const node = getElementById(id);
+          const prevNode = node?.previousElementSibling;
+          let top: number = 0;
+          if (node && prevNode) {
+            const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
+            const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
+            top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
+          }
+          return {
+            id,
+            top,
+          };
+        });
       }, 500);
     }
 
@@ -136,8 +117,8 @@ export default defineComponent({
 
       if (outline.innerText.trim() !== '') {
         getElementById('myPreviewEditorSider').style.display = 'block';
-        // initOutline(outline);
-        outlineInit(outline);
+        outline.style.display = 'block';
+        initOutline(outline);
       } else {
         getElementById('myPreviewEditorSider').style.display = 'none';
       }

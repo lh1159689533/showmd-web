@@ -14,18 +14,21 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if='!!type' class='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-    <Icon :type='type' style='color: rgb(129 140 248)' />
-  </div>
   <input
     type='text'
     :class='{ "pl-10": !!type }'
-    class='border placeholder-gray-300 outline-none p-2 bg-opacity-50 block shadow-sm rounded-md border-gray-300 focus:border-indigo-600'
+    class='border placeholder-gray-300 outline-none h-full bg-opacity-50 block shadow-sm rounded-md border-gray-300 focus:border-indigo-600'
     v-bind='$attrs'
     :value='modelValue'
     @input='(e) => $emit("update:modelValue", e.target.value)'
   />
+  <div v-if='!!type' class='input-icon absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+    <Icon :type='type' style='color: inherit' />
+  </div>
 </template>
 
 <style scoped>
+input:focus + .input-icon {
+  @apply text-indigo-500;
+}
 </style>
