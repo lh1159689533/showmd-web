@@ -9,7 +9,7 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const inputRef = ref<HTMLInputElement>();
-    const fileList = ref<string | any>([]);
+    const fileList = ref<string[]>([]);
 
     const upload = () => {
       const inputFile = inputRef.value;
@@ -18,13 +18,13 @@ export default defineComponent({
       inputFile?.addEventListener('change', () => {
         const { files } = inputFile;
         if (!files) return;
-        fileList.value = [].slice.call(inputFile.files)?.map((f) => (f as any).name);
+        fileList.value = [].slice.call(inputFile.files)?.map((f) => f.name);
         emit('fileChange', files);
       });
     };
 
     // 根据下标移除待上传文件
-    const remove = (index: Number) => {
+    const remove = (index: number) => {
       fileList.value.splice(index, 1);
     };
 

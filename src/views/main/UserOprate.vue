@@ -31,12 +31,12 @@ export default defineComponent({
 
     // 显示用户操作栏
     const showUserOprate = () => {
+      function hide() {
+        isShowUserOprate.value = false;
+        document.removeEventListener('click', hide);
+      }
       isShowUserOprate.value = !isShowUserOprate.value;
       if (isShowUserOprate.value) {
-        function hide() {
-          isShowUserOprate.value = false;
-          document.removeEventListener('click', hide);
-        }
         document.addEventListener('click', hide);
       }
     };
@@ -59,11 +59,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <img
-    src='img/avatars.jpeg'
-    class='rounded-full w-8 h-8 ml-5 cursor-pointer'
-    @click.stop='showUserOprate'
-  />
+  <img src='img/avatars.jpeg' class='rounded-full w-8 h-8 ml-5 cursor-pointer' @click.stop='showUserOprate' />
   <List
     :dataList='userOprateList'
     v-show='isShowUserOprate'
@@ -72,10 +68,7 @@ export default defineComponent({
     itemClass='py-1 grid grid-cols-2 w-full items-center cursor-pointer hover:bg-gray-50'
   >
     <template #default='{ item }'>
-      <i
-        class='iconfont justify-self-center text-2xl'
-        :class='`icon-${item.icon}`'
-      />
+      <i class='iconfont justify-self-center text-2xl' :class='`icon-${item.icon}`' />
       <a class='py-1 min-w-max'>{{item.title}}</a>
     </template>
   </List>

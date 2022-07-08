@@ -24,8 +24,8 @@ export default defineComponent({
     let isOutlineInited = false; // 目录是否初始化
     let isShowOutline = false; // 是否显示目录
     let outlineNodeList = []; // 目录节点列表
-    let contentNodeTopList: { id: string; top: number }[] = []; // 编辑区h1-6节点id&top数据列表
-    let previewNodeTopList: { id: string; top: number }[] = []; // 预览区h1-6节点id&top数据列表
+    const contentNodeTopList: { id: string; top: number }[] = []; // 编辑区h1-6节点id&top数据列表
+    const previewNodeTopList: { id: string; top: number }[] = []; // 预览区h1-6节点id&top数据列表
     let isOutlineClick = false; // 是否是点击目录，如果是则不触发onScroll
 
     onMounted(() => {
@@ -245,7 +245,7 @@ export default defineComponent({
       targetIdList?.map((id) => {
         const content_tid = +id.replace('_', '') + 1;
         const targetContentNode = querySelector(contentNode, `div[data-block]:nth-of-type(${content_tid})`);
-        let cntop: number = 0;
+        let cntop = 0;
         if (targetContentNode) {
           cntop = getBoundingClientRect(targetContentNode)?.top - 36 - 76;
         }
@@ -253,7 +253,7 @@ export default defineComponent({
 
         const targetPreviewNode = getElementById(id);
         const prevNode = targetPreviewNode?.previousElementSibling;
-        let pntop: number = 0;
+        let pntop = 0;
         if (targetPreviewNode && prevNode) {
           const nodeMarginTop = getComputedStyleOf(targetPreviewNode, 'marginTop');
           const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');

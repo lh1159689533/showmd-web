@@ -1,6 +1,6 @@
 <script lang='ts'>
 import { defineComponent, ref, getCurrentInstance } from 'vue';
-import { newProject, uploadProject, findList } from './project';
+import { uploadProject, findList } from './project';
 
 export default defineComponent({
   name: 'UploadProject',

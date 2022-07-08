@@ -1,6 +1,5 @@
 <script lang='ts'>
-import { defineComponent, toRefs } from 'vue';
-import { TransitionRoot } from '@headlessui/vue';
+import { defineComponent } from 'vue';
 import Icon from '@components/Icon.vue';
 
 export default defineComponent({
@@ -19,16 +18,16 @@ export default defineComponent({
     visible: Boolean,
   },
   emits: ['close'],
-  components: { Icon, TransitionRoot },
+  components: { Icon },
   setup(props) {
-    let { size } = props;
+    let drawerSize = props?.size;
 
-    if (typeof size === 'number') {
-      size = `${size}px`;
+    if (typeof drawerSize === 'number') {
+      drawerSize = `${drawerSize}px`;
     }
 
     return {
-      size,
+      drawerSize,
     };
   },
 });
@@ -43,7 +42,7 @@ export default defineComponent({
       <div
         id='drawer'
         v-if='visible'
-        :style='[placement === "right" ? `width:${size}` : `height:${size}`]'
+        :style='[placement === "right" ? `width:${drawerSize}` : `height:${drawerSize}`]'
         :class='placement'
         class='absolute bg-white z-10 flex flex-col'
         style='top:48px;height:calc(100% - 48px)'

@@ -1,14 +1,13 @@
 <script lang='ts'>
 import { defineComponent, ref, watch } from 'vue';
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-  TransitionRoot,
-} from '@headlessui/vue';
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption, TransitionRoot } from '@headlessui/vue';
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
 import Icon from '@components/Icon.vue';
+
+interface IOption {
+  value: string;
+  label: string;
+}
 
 export default defineComponent({
   name: 'Select',
@@ -27,7 +26,7 @@ export default defineComponent({
     prefix: {
       // 下拉框选中项显示的前缀, icon为图标类型(必须是组件Icon支持的类型) text前缀文本
       type: Object,
-      default: {},
+      default: () => ({}),
     },
     type: {
       // 下拉框样式,目前仅支持primary
@@ -41,16 +40,15 @@ export default defineComponent({
     const selected = ref();
 
     if (options) {
-      selected.value = options.find(o => (o as any).value === modelValue);
+      selected.value = options.find((o) => (o as IOption).value === modelValue);
     }
 
-    watch(selected, (newVal) => {
-      emit('update:modelValue', (newVal as any)?.value);
-      emit('change', (newVal as any)?.value);
+    watch(selected, (newVal: IOption) => {
+      emit('update:modelValue', newVal?.value);
+      emit('change', newVal?.value);
     });
 
     return {
-      options,
       selected,
     };
   },
@@ -76,25 +74,13 @@ export default defineComponent({
         <ListboxOptions
           class='options absolute w-full min-w-max py-1 mt-1 overflow-auto text-base bg-white rounded-md max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'
         >
-          <ListboxOption
-            v-slot='{ selected }'
-            v-for='option in options'
-            :key='option.value'
-            :value='option'
-            as='template'
-          >
+          <ListboxOption v-slot='{ selected }' v-for='option in options' :key='option.value' :value='option' as='template'>
             <li :class='`option-text-${type}`' class='cursor-pointer select-none relative py-2 px-10'>
-              <span
-                :class='[
+              <span :class='[
                   selected ? "font-medium" : "font-normal",
                   "block truncate",
-                ]'
-              >{{ option.label }}</span>
-              <span
-                v-if='selected'
-                :class='`option-icon-${type}`'
-                class='absolute inset-y-0 left-0 flex items-center pl-3'
-              >
+                ]'>{{ option.label }}</span>
+              <span v-if='selected' :class='`option-icon-${type}`' class='absolute inset-y-0 left-0 flex items-center pl-3'>
                 <CheckIcon class='w-5 h-5' aria-hidden='true' />
               </span>
             </li>
