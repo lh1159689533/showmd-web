@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '@components/Icon.vue';
 
 export default defineComponent({

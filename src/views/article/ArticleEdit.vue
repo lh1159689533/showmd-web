@@ -15,6 +15,7 @@ export default defineComponent({
     const articleName = ref('');
     const articleContent = ref(null);
     const isShowPublish = ref(false);
+    // eslint-disable-next-line
     const { $message: message }: any = getCurrentInstance().proxy;
     const router = useRouter();
 
@@ -42,14 +43,14 @@ export default defineComponent({
 
     // 显示发布窗
     const showPublish = () => {
+      function hide() {
+        hidePublish();
+        document.removeEventListener('click', hide);
+      }
       if (isShowPublish.value) {
         hidePublish();
       } else {
         isShowPublish.value = true;
-        function hide() {
-          hidePublish();
-          document.removeEventListener('click', hide);
-        }
         // 点击其他区域隐藏
         document.addEventListener('click', hide);
       }

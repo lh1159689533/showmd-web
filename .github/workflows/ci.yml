@@ -1,24 +1,22 @@
 name: CI
+
 on:
   pull_request:
-    branches: master
+    branches: ["master"]
+
 jobs:
   CI:
     runs-on: ubuntu-latest
+
     steps:
-      # 拉取项目代码
       - name: Checkout repository
-      uses: actions/checkout@v2
-      # 给当前环境下载node
+        uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-      # 安装依赖
+          node-version: "14.x"
+          cache: "npm"
       - name: Installing Dependencies
-        run: yarn install
-      # 运行代码扫描
+        run: npm install
       - name: Running Lint
-        # 通过前面章节定义的命令行执行代码扫描
         run: npm run eslint
-  

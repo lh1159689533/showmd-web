@@ -1,23 +1,21 @@
 <script lang="ts">
-import { defineComponent, toRefs, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'List',
   props: {
     dataList: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     onClick: {
       type: Function,
     },
   },
-  setup(props) {
-    const { dataList }: any = toRefs(props);
+  setup() {
     const hoverIndex = ref<number>(-1);
 
     return {
-      dataList,
       hoverIndex,
     };
   },

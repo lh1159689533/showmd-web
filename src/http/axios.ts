@@ -1,11 +1,17 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
+import axios from 'axios';
 
-export type RequestConfig = AxiosRequestConfig;
-export interface Response extends AxiosResponse {
-  code: number;
-  message?: string;
-  data: string | number | object;
-};
+import { AxiosResponse, AxiosInstance, AxiosRequestConfig, Response } from './types';
+
+// export type RequestConfig = AxiosRequestConfig;
+// export type RequestMethod = Method;
+// export type JsonData = Record<string, string | number | boolean>;
+// export type RequestData = JsonData | FormData;
+// export type ResponseData = JsonData | string | number | boolean;
+// export interface Response extends AxiosResponse {
+//   code: number;
+//   message?: string;
+//   data: ResponseData;
+// }
 
 let PREFIX = "/api",
   IP = "";
@@ -48,10 +54,10 @@ instance.interceptors.request.use(
 
 // respone拦截器
 instance.interceptors.response.use(
-  (response: AxiosResponse<Response, any>) => {
+  (response: AxiosResponse<Response, AxiosRequestConfig>) => {
     if (response.status === 200) {
-      let data = response.data;
-      let contentType = response.headers['content-type'];
+      let data: Response = response.data;
+      const contentType = response.headers['content-type'];
       if (contentType && contentType.indexOf('application/json') !== -1 && typeof data === 'string') {
         data = JSON.parse(data);
       }

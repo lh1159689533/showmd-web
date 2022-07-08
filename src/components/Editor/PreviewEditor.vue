@@ -10,7 +10,7 @@ export default defineComponent({
     page: Object,
   },
   setup(props) {
-    const { page }: any = toRefs(props);
+    const { page } = toRefs(props);
     const isShowToTop = ref(false); // 是否显示回到顶部按钮
     let outlineNodeList = []; // 大纲节点列表
     let targetList = []; // 大纲节点列表
@@ -36,8 +36,10 @@ export default defineComponent({
               className = 'notice';
             }
             if (entering) {
+              // eslint-disable-next-line
               return [`<blockquote class='${className}'>`, Lute.WalkContinue];
             }
+            // eslint-disable-next-line
             return ['</blockquote>', Lute.WalkContinue];
           },
         },
@@ -57,7 +59,6 @@ export default defineComponent({
      */
     function codeCopy() {
       const copyNodeList = querySelectorAll(document, '.vditor-copy>span[aria-label="复制"]');
-      (window as any).copyNodeList = copyNodeList;
       [].slice.call(copyNodeList).map((node) => {
         node?.addEventListener('click', function () {
           this.setAttribute('aria-label', '已复制');
@@ -93,7 +94,7 @@ export default defineComponent({
         targetList = targetIdList?.map((id) => {
           const node = getElementById(id);
           const prevNode = node?.previousElementSibling;
-          let top: number = 0;
+          let top = 0;
           if (node && prevNode) {
             const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
             const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');

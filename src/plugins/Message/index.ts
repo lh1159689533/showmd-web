@@ -51,7 +51,7 @@ const api = {};
 typeKeys.map(key => {
   api[key] = (props: string | MessageProps) => {
     let content: string;
-    let duration: number = 3000;
+    let duration = 3000;
     if (typeof props === 'string') {
       content = props;
     } else {
