@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  parser: "vue-eslint-parser",
+  parser: 'vue-eslint-parser',
   extends: ['eslint:recommended', 'plugin:vue/essential', 'plugin:@typescript-eslint/recommended'],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -11,5 +11,15 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['vue', '@typescript-eslint'],
-  rules: {},
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    'vue/no-multiple-template-root': 'off',
+    'prefer-const': [
+      'error',
+      {
+        destructuring: 'all',
+        ignoreReadBeforeAssign: false,
+      },
+    ],
+  },
 };

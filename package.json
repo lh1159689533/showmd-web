@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "eslint": "eslint --ext .js,.ts,.vue ./src"
   },
   "lint-staged": {
     "src/*": "eslint --ext .js,.ts,.vue"
