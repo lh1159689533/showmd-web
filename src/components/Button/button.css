@@ -20,26 +20,26 @@ button:active {
   @apply opacity-100;
 }
 
-button[type=primary] {
+button[role=primary] {
   @apply bg-indigo-600 text-white;
 }
 
-button[type=weak] {
+button[role=weak] {
   @apply bg-white text-indigo-600;
 }
 
-button[type=weak]:hover {
+button[role=weak]:hover {
   @apply bg-gray-100;
 }
 
-button[type=error] {
+button[role=error] {
   @apply bg-indigo-600 text-white;
 }
 
-button[type=warn] {
+button[role=warn] {
   @apply bg-indigo-600 text-white;
 }
 
-button[type=link] {
+button[role=link] {
   @apply bg-indigo-600 text-white;
 }

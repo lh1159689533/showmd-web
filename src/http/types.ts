@@ -9,5 +9,5 @@ export type ResponseData = JsonData;
 export interface Response extends AxiosResponse {
   code: number;
   message?: string;
-  data: ResponseData;
+  data: any;
 }

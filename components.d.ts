@@ -12,7 +12,6 @@ declare module '@vue/runtime-core' {
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
@@ -26,7 +25,6 @@ declare module '@vue/runtime-core' {
     Section: typeof import('./src/components/Section.vue')['default']
     Select: typeof import('./src/components/Select.vue')['default']
     Upload: typeof import('./src/components/Upload.vue')['default']
-    VditorEditor: typeof import('./src/components/Editor/VditorEditor.vue')['default']
   }
 }
 

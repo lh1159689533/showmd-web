@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import UserOprate from './UserOprate.vue';
@@ -61,22 +61,13 @@ export default defineComponent({
   <div class='h-14 bg-white border-b sticky top-0 z-50'>
     <header class='container mx-auto h-full flex items-center'>
       <div class='logo mr-8 text-2xl font-bold text-indigo-500 cursor-pointer'>Lanis</div>
-      <List
-        :dataList='navList'
-        :onClick='changeNav'
-        class='flex text-black mr-16 h-full flex-1'
-        itemClass='nav-list text-gray-800 min-w-max hover:text-black'
-      >
+      <List :dataList='navList' :onClick='changeNav' class='flex text-black mr-16 h-full flex-1' itemClass='nav-list text-gray-800 min-w-max hover:text-black'>
         <template #default='{ item }'>
           <span :class='[item.key === activeKey ? "text-indigo-500 font-bold" : ""]'>{{item.title}}</span>
         </template>
       </List>
       <div class='flex items-center h-10 relative w-80'>
-        <Input
-          type='search'
-          placeholder='Search projects'
-          class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400'
-        />
+        <Input type='search' placeholder='Search projects' class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400' />
       </div>
       <div class='notice flex ml-16 items-center h-full'>
         <span class='message relative cursor-pointer'>

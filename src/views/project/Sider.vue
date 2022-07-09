@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 import { defineComponent, ref } from 'vue';
 import UploadProject from './UploadProject.vue';
 import NewProject from './New.vue';
@@ -21,7 +21,7 @@ export default defineComponent({
 <template>
   <div id='sider' class='w-1/6 px-10 py-6'>
     <div id='user-info' class='flex flex-row'>
-      <img src='img/avatars.jpeg' class='rounded-full w-12 h-12' />
+      <img class='rounded-full w-12 h-12' />
       <div class='flex-col ml-3 text-left'>
         <span class='font-bold text-lg'>Liuh</span>
         <div class='text-sm text-gray-500'>
