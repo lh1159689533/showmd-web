@@ -1,4 +1,4 @@
-<script>
+<script lang='ts'>
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -59,7 +59,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <img src='img/avatars.jpeg' class='rounded-full w-8 h-8 ml-5 cursor-pointer' @click.stop='showUserOprate' />
+  <img class='rounded-full w-8 h-8 ml-5 cursor-pointer' @click.stop='showUserOprate' />
   <List
     :dataList='userOprateList'
     v-show='isShowUserOprate'
