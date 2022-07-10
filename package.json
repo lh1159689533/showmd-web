@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.5.0",
-    "@heroicons/vue": "^1.0.5",
     "animate.css": "^4.1.1",
     "editor.md": "^1.5.0",
     "element-plus": "^2.2.2",
+    "unplugin-icons": "^0.14.6",
     "vditor": "^3.8.13",
     "vue": "^3.2.25",
     "vue-router": "^4.0.13"
