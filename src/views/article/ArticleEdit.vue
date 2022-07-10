@@ -96,7 +96,7 @@ export default defineComponent({
 <template>
   <div id='myEditor' class='flex flex-col'>
     <div class='tool flex items-center p-3 px-8 bg-white'>
-      <Input v-model='articleName' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl' />
+      <el-input v-model='articleName' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl' />
       <div class='rightGroups flex py-1 relative'>
         <el-button>草稿箱</el-button>
         <el-button type='primary' @click.stop='showPublish'>发布</el-button>

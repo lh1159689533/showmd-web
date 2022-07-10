@@ -1,6 +1,7 @@
 <script lang='ts'>
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { Search } from '@element-plus/icons-vue';
 import UserOprate from './UserOprate.vue';
 
 export default defineComponent({
@@ -52,6 +53,7 @@ export default defineComponent({
       navList,
       activeKey,
       changeNav,
+      Search
     };
   },
 });
@@ -67,7 +69,7 @@ export default defineComponent({
         </template>
       </List>
       <div class='flex items-center h-10 relative w-80'>
-        <Input type='search' placeholder='Search projects' class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400' />
+        <el-input :prefix-icon="Search" placeholder='Search projects' class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400' />
       </div>
       <div class='notice flex ml-16 items-center h-full'>
         <span class='message relative cursor-pointer'>

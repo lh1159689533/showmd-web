@@ -40,11 +40,10 @@ export default defineComponent({
 
 <template>
   <div class='w-full flex flex-col items-center mt-16' v-bind='$attrs'>
-    <div
-      @click='upload'
-      class='border border-dashed w-4/5 h-40 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6'
-    >
-      <Icon type='uploadFile' class='w-14 h-14 text-indigo-600' />
+    <div @click='upload' class='border border-dashed w-4/5 h-40 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6'>
+      <el-icon>
+        <Upload class='w-14 h-14 text-indigo-600' />
+      </el-icon>
       <slot></slot>
       <slot name='hint'></slot>
     </div>
@@ -52,14 +51,17 @@ export default defineComponent({
     <List :dataList='fileList' class='w-4/5 mt-4 h-96'>
       <template v-slot:default='{ item, index, hoverIndex }'>
         <p class='mt-2 text-left flex items-center text-sm'>
-          <Icon type='paperClip' class='text-gray-400 w-3.5 h-3.5 mr-2' />
+          <el-icon>
+            <Paperclip class='text-gray-400 w-3.5 h-3.5 mr-2' />
+          </el-icon>
           <span class='file-name flex-1 relative'>{{item}}</span>
-          <Icon
-            type='close'
-            @click='() => remove(index)'
-            :class='[index === hoverIndex ? "block" : "hidden"]'
-            class='remove-file text-gray-500 w-3.5 h-3.5 mr-2 hover:text-indigo-500 cursor-pointer'
-          />
+          <el-icon>
+            <Close
+              @click='() => remove(index)'
+              :class='[index === hoverIndex ? "block" : "hidden"]'
+              class='remove-file text-gray-500 w-3.5 h-3.5 mr-2 hover:text-indigo-500 cursor-pointer'
+            />
+          </el-icon>
         </p>
       </template>
     </List>
