@@ -14,19 +14,8 @@ jobs:
         with:
           node-version: "14.x"
           cache: "npm"
-      # 缓存
-      - name: Cache
-        uses: actions/cache@v3
-        id: npm_cache
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       # 安装依赖
       - name: Installing Dependencies
-        if: ${{ steps.npm_cache.outputs.cache-hit == 'false' }}
         run: npm install
         continue-on-error: false
       # 打包
