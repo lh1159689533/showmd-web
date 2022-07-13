@@ -9,12 +9,14 @@ jobs:
       # 切换到目标分支
       - name: Checkout repository
         uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: "14.x"
           cache: "npm"
       # 缓存
-      - uses: actions/cache@v3
+      - name: Cache
+        uses: actions/cache@v3
         id: npm_cache
         with:
           path: |
@@ -26,11 +28,13 @@ jobs:
       - name: Installing Dependencies
         if: ${{ steps.npm_cache.outputs.cache-hit == 'false' }}
         run: npm install
+        continue-on-error: false
       # 打包
       - name: Building
         run: |
           npm run build
           zip -q -r dist.zip ./dist/*
+        continue-on-error: false
       # 读取版本号,用于后面新建Release
       - name: Read Version
         id: version
@@ -59,8 +63,10 @@ jobs:
           release_name: v${{ steps.version.outputs.value }}
           draft: false
           prerelease: false
-      # 更新Release包,上一步失败或取消,则跳过这一步
-      - if: ${{ !success() }}
+      # 更新Release包
+      - name: Update Release
+        # 上一步失败或取消,则跳过这一步
+        if: ${{ !success() }}
         id: update_release
         uses: actions/upload-release-asset@v1
         env:
