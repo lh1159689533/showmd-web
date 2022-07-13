@@ -25,6 +25,35 @@ jobs:
         run: |
           npm run build
           zip -q -r dist.zip ./dist/*
+      - name: Get The Latest Release
+        id: latest_release
+        uses: joutvhu/get-release@v1
+        with:
+          latest: true
+          pattern: '^v.*'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Create GitHub Release
+        if: endsWith(steps.latest_release.outputs.tag_name, steps.version.outputs.value) === false
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.value }}
+          release_name: v${{ steps.version.outputs.value }}
+          draft: false
+          prerelease: false
+      - name: Update Release
+        id: update_release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist.zip
+          asset_name: dist.zip
+          asset_content_type: application/zip
       - name: Deploy Server
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
