@@ -13,7 +13,8 @@ export default defineComponent({
   },
   setup(props) {
     const articleName = ref('');
-    const articleContent = ref(null);
+    const articleContent = ref('');
+    const isShowEditor = ref(false);
     const isShowPublish = ref(false);
     // eslint-disable-next-line
     const { $message: message }: any = getCurrentInstance().proxy;
@@ -24,7 +25,10 @@ export default defineComponent({
       findById(props.id).then((res) => {
         articleName.value = res.name;
         articleContent.value = decodeURIComponent(res.content);
+        isShowEditor.value = true;
       });
+    } else {
+      isShowEditor.value = true;
     }
 
     const initPublishForm = reactive({
@@ -88,24 +92,46 @@ export default defineComponent({
       onChange,
       onPublish,
       initPublishForm,
+      isShowEditor,
     };
   },
 });
 </script>
 
 <template>
-  <div id='myEditor' class='flex flex-col'>
-    <div class='tool flex items-center p-3 px-8 bg-white'>
-      <el-input v-model='articleName' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl' />
-      <div class='rightGroups flex py-1 relative'>
+  <div
+    id="myEditor"
+    class="flex flex-col"
+  >
+    <div class="tool flex items-center p-3 px-8 bg-white">
+      <input
+        v-model="articleName"
+        placeholder="请输入文章标题..."
+        class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none"
+      >
+      <div class="rightGroups flex py-1 relative">
         <el-button>草稿箱</el-button>
-        <el-button type='primary' @click.stop='showPublish'>发布</el-button>
-        <PublishArticle v-show='isShowPublish' :initValue='initPublishForm' @publish='onPublish' @close='hidePublish' />
+        <el-button
+          type="primary"
+          @click.stop="showPublish"
+        >
+          发布
+        </el-button>
+        <PublishArticle
+          v-show="isShowPublish"
+          :init-value="initPublishForm"
+          @publish="onPublish"
+          @close="hidePublish"
+        />
       </div>
     </div>
-    <Editor v-if='articleContent' :value='articleContent' @change='onChange' />
+    <Editor
+      v-if="isShowEditor"
+      :value="articleContent"
+      @change="onChange"
+    />
   </div>
 </template>
 
-<style scoped>
+<style scope>
 </style>

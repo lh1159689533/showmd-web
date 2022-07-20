@@ -11,7 +11,10 @@
     "tsc": "vue-tsc --noEmit"
   },
   "lint-staged": {
-    "src/*": "eslint --ext .js,.ts,.vue"
+    "./src/**/*.{js,ts,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "@headlessui/vue": "^1.5.0",

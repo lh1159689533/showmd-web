@@ -26,8 +26,16 @@ async function findArticleList() {
   return res.data;
 }
 
+// 查询文章列表
+async function uploadImg(formData) {
+  const [err, res] = await http.request({ apiurl: 'article/uploadImg', data: formData });
+  if (err && res.code !== 0) return 0;
+  return res.data;
+}
+
 export {
   findById,
   saveArticle,
-  findArticleList
+  findArticleList,
+  uploadImg
 }

@@ -17,6 +17,7 @@ import 'vditor/dist/index.css';
 export default defineComponent({
   name: 'Editor',
   props: ['value'],
+  emits: ['change'],
   setup(props, { emit }) {
     const editor = ref<Vditor | null>(null);
     let editorMode = 'both';
@@ -124,7 +125,26 @@ export default defineComponent({
         },
         input(value) {
           emit('change', value);
-        }
+        },
+        // 上传图片
+        upload: {
+          accept: 'image/*',
+          url: '/api/showmd/file/upload',
+          format(_, res) {
+            // 对服务端返回的数据进行转换，以满足内置的数据结构
+            const { data } = JSON.parse(res);
+            const { name, path } = data;
+            return JSON.stringify({
+              code: 0,
+              data: {
+                errFiles: [],
+                succMap: {
+                  [`${name}`]: `/api/${path}`,
+                },
+              },
+            });
+          },
+        },
       });
     });
 
@@ -302,8 +322,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='myEditor'>
-    <div id='myEditorContent' v-bind='$attrs'></div>
+  <div id="myEditor">
+    <div
+      id="myEditorContent"
+      v-bind="$attrs"
+    />
   </div>
 </template>
 
@@ -334,7 +357,7 @@ export default defineComponent({
 }
 
 #myEditor #myEditorContent .vditor-content .vditor-sv {
-  padding: 0 60px;
+  padding: 10px 60px;
   display: inline-block;
   /* width: 50%; */
   vertical-align: top;
@@ -366,5 +389,9 @@ export default defineComponent({
   float: none;
   flex: 1;
   border-left: none;
+}
+#myEditor .vditor-messageElementtip,
+#myEditor .vditor-tip {
+  display: none;
 }
 </style>
