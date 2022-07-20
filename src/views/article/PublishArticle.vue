@@ -4,6 +4,7 @@ import { defineComponent, reactive, ref } from 'vue';
 export default defineComponent({
   name: 'PublishArticle',
   props: ['initValue'],
+  emits: ['publish', 'close'],
   setup(props, { emit }) {
     // 分类
     const categoryList = [

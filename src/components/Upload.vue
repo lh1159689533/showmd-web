@@ -7,6 +7,7 @@ export default defineComponent({
     accept: String, // 上传文件类型
     directory: Boolean, // true上传文件夹 false上传文件
   },
+  emits: ['fileChange'],
   setup(_, { emit }) {
     const inputRef = ref<HTMLInputElement>();
     const fileList = ref<string[]>([]);
@@ -44,17 +45,17 @@ export default defineComponent({
       <el-icon>
         <Upload class='w-14 h-14 text-indigo-600' />
       </el-icon>
-      <slot></slot>
-      <slot name='hint'></slot>
+      <slot />
+      <slot name='hint' />
     </div>
     <input ref='inputRef' type='file' :webkitdirectory='directory' :accept='accept' class='hidden' />
-    <List :dataList='fileList' class='w-4/5 mt-4 h-96'>
-      <template v-slot:default='{ item, index, hoverIndex }'>
+    <List :data-list='fileList' class='w-4/5 mt-4 h-96'>
+      <template #default='{ item, index, hoverIndex }'>
         <p class='mt-2 text-left flex items-center text-sm'>
           <el-icon>
             <Paperclip class='text-gray-400 w-3.5 h-3.5 mr-2' />
           </el-icon>
-          <span class='file-name flex-1 relative'>{{item}}</span>
+          <span class='file-name flex-1 relative'>{{ item }}</span>
           <el-icon>
             <Close
               @click='() => remove(index)'

@@ -322,11 +322,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="myEditor">
-    <div
-      id="myEditorContent"
-      v-bind="$attrs"
-    />
+  <div id='myEditor'>
+    <div id='myEditorContent' v-bind='$attrs' />
   </div>
 </template>
 

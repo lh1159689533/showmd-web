@@ -27,13 +27,13 @@ export default defineComponent({
     <li
       v-for='(item, index) in dataList'
       :key='item.id || item.key || index'
-      :class='$attrs.itemClass'
+      :class='$attrs["item-class"]'
       @click='() => onClick?.(item)'
       @mouseenter='() => hoverIndex = index'
       @mouseleave='() => hoverIndex = -1'
     >
-      <slot :item='item' :index='index' :hoverIndex='hoverIndex'>
-        <span>{{item}}</span>
+      <slot :item='item' :index='index' :hover-index='hoverIndex'>
+        <span>{{ item }}</span>
       </slot>
     </li>
   </ul>

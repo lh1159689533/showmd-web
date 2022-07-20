@@ -187,28 +187,28 @@ export default defineComponent({
   <div v-bind='$attrs' class='w-full flex flex-row'>
     <div class='content bg-white' style='width: calc(100% - 260px);'>
       <div class='pl-10'>
-        <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{page?.pageName}}</h1>
+        <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ page?.pageName }}</h1>
         <div class='flex mt-3 text-gray-400 ml-2'>
           <span class='user mr-6'>lihui</span>
-          <span class='createTime'>{{page?.modifyTime ?? page?.createTime}}</span>
+          <span class='createTime'>{{ page?.modifyTime ?? page?.createTime }}</span>
           <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
         </div>
       </div>
-      <div id='myPreviewEditor' class='showmd px-12'></div>
+      <div id='myPreviewEditor' class='showmd px-12' />
     </div>
     <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
       <div id='myPreviewEditorSider' class='fixed top-10 border hidden bg-white'>
         <nav style='height: 580px' class='relative overflow-hidden'>
           <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
           <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
-            <div id='myPreviewEditorOutline' style='padding-left: 2px'></div>
+            <div id='myPreviewEditorOutline' style='padding-left: 2px' />
           </div>
         </nav>
       </div>
     </div>
     <div class='oprate flex flex-col fixed right-16 bottom-20'>
       <div id='toTop' v-show='isShowToTop' @click='toTop' class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'>
-        <i title='回到顶部' class='absolute w-4 h-4'></i>
+        <i title='回到顶部' class='absolute w-4 h-4' />
       </div>
     </div>
   </div>

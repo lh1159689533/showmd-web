@@ -71,63 +71,34 @@ export default defineComponent({
 </script>
 
 <template>
-  <div
-    id='study'
-    class
-  >
+  <div id='study' class>
     <nav class='fixed w-full h-12 left-0 top-14 z-10 shadow bg-white'>
-      <List
-        :dataList='categoryList'
-        class='category-list h-full flex items-center text-sm text-gray-800'
-      >
+      <List :data-list='categoryList' class='category-list h-full flex items-center text-sm text-gray-800'>
         <template #default='{ item }'>
-          <span
-            @click='() => activeKey = item.key'
-            :class='[item.key === activeKey ? "text-indigo-500" : ""]'
-            class='pr-6 cursor-pointer hover:text-indigo-500'
-          >{{item.title}}</span>
+          <span @click='() => activeKey = item.key' :class='[item.key === activeKey ? "text-indigo-500" : ""]' class='pr-6 cursor-pointer hover:text-indigo-500'>{{ item.title }}</span>
         </template>
       </List>
     </nav>
     <section class='mt-16'>
-      <List
-        :dataList='tagList'
-        style='font-size: 0.85rem'
-        class='sub-category-list flex items-center text-gray-800'
-        itemClass='mr-4'
-      >
+      <List :data-list='tagList' style='font-size: 0.85rem' class='sub-category-list flex items-center text-gray-800' item-class='mr-4'>
         <template #default='{ item }'>
           <span
             @click='() => tagActiveKey = item.key'
             :class='[item.key === tagActiveKey ? "bg-indigo-500 text-white hover:text-white" : ""]'
             class='cursor-pointer hover:text-indigo-500 bg-white rounded-full px-2 py-1 inline-block'
-          >{{item.title}}</span>
+          >{{ item.title }}</span>
         </template>
       </List>
       <div class='mt-4 relative'>
-        <div
-          class='content-list bg-white'
-          style='width: 73%'
-        >
-          <List
-            :dataList='sortList'
-            class='sort-list flex text-gray-800 p-3'
-            style='font-size: 0.85rem'
-          >
+        <div class='content-list bg-white' style='width: 73%'>
+          <List :data-list='sortList' class='sort-list flex text-gray-800 p-3' style='font-size: 0.85rem'>
             <template #default='{ item }'>
-              <span
-                @click='() => sort = item.key'
-                :class='[item.key === sort ? "text-indigo-500" : ""]'
-                class='cursor-pointer hover:text-indigo-500 px-4'
-              >{{item.title}}</span>
+              <span @click='() => sort = item.key' :class='[item.key === sort ? "text-indigo-500" : ""]' class='cursor-pointer hover:text-indigo-500 px-4'>{{ item.title }}</span>
             </template>
           </List>
           <ArticleList />
         </div>
-        <aside
-          class='content-aside right-0 top-0 absolute bg-white'
-          style='width: 25%'
-        >222</aside>
+        <aside class='content-aside right-0 top-0 absolute bg-white' style='width: 25%'>222</aside>
       </div>
     </section>
   </div>

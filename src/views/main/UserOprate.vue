@@ -61,15 +61,15 @@ export default defineComponent({
 <template>
   <img class='rounded-full w-8 h-8 ml-5 cursor-pointer' @click.stop='showUserOprate' />
   <List
-    :dataList='userOprateList'
+    :data-list='userOprateList'
     v-show='isShowUserOprate'
-    :onClick='oprate'
+    :on-click='oprate'
     class='user-oprate-list py-2 grid grid-rows-3 justify-items-center text-gray-600 text-sm absolute top-14 right-0 border rounded-sm bg-white'
-    itemClass='py-1 grid grid-cols-2 w-full items-center cursor-pointer hover:bg-gray-50'
+    item-class='py-1 grid grid-cols-2 w-full items-center cursor-pointer hover:bg-gray-50'
   >
     <template #default='{ item }'>
       <i class='iconfont justify-self-center text-2xl' :class='`icon-${item.icon}`' />
-      <a class='py-1 min-w-max'>{{item.title}}</a>
+      <a class='py-1 min-w-max'>{{ item.title }}</a>
     </template>
   </List>
 </template>
