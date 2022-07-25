@@ -1,15 +1,16 @@
-import { createApp } from 'vue'
-import router from './router'
-import App from './App.vue'
-import Components from '@plugins/Components'
-import 'animate.css'
-import './index.css'
+import { createApp } from 'vue';
+import router from './router';
+import App from './App.vue';
+import Components from '@plugins/Components';
+import 'element-plus/theme-chalk/el-message.css';
+import 'animate.css';
+import './index.css';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router)
+app.use(router);
 
 // use自定义全局组件
-app.use(Components)
+app.use(Components);
 
-app.mount('#app')
+app.mount('#app');

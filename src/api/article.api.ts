@@ -3,6 +3,6 @@ export default {
 
   findList: 'get showmd/article/list',
   findById: 'get showmd/article/findById',
-  save: 'post showmd/article/new',
+  save: 'post showmd/article/create',
   uploadImg: 'post showmd/file/upload'
 };

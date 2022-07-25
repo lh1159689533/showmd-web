@@ -1,8 +1,12 @@
 import http, { ResponseData } from '@src/http';
 
-interface IArticle extends ResponseData  {
+interface IArticle extends ResponseData {
   name?: string;
   content?: string;
+  category: string,
+  tags: string,
+  summary?: string,
+  cover?: File,
 }
 
 async function findById(id: string) {

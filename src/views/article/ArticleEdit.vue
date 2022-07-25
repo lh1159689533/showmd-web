@@ -1,9 +1,10 @@
 <script lang='ts'>
-import { defineComponent, ref, reactive, getCurrentInstance } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import PublishArticle from './PublishArticle.vue';
 import { findById, saveArticle } from './article';
 import storage from '@utils/storage';
+import { ElMessage as message } from "element-plus";
 
 export default defineComponent({
   name: 'PageEdit',
@@ -16,29 +17,34 @@ export default defineComponent({
     const articleContent = ref('');
     const isShowEditor = ref(false);
     const isShowPublish = ref(false);
-    // eslint-disable-next-line
-    const { $message: message }: any = getCurrentInstance().proxy;
     const router = useRouter();
-
-    if (props.id) {
-      // 编辑文章,获取文章内容
-      findById(props.id).then((res) => {
-        articleName.value = res.name;
-        articleContent.value = decodeURIComponent(res.content);
-        isShowEditor.value = true;
-      });
-    } else {
-      isShowEditor.value = true;
-    }
 
     const initPublishForm = reactive({
       name: '',
       content: '',
       category: '',
-      tags: '',
+      tags: [],
       summary: '',
-      cover: '',
+      cover: [],
     });
+
+    if (props.id) {
+      // 编辑文章,获取文章内容
+      findById(props.id).then((res) => {
+        if (!res) {
+          return message.error('文章不存在');
+        }
+        articleName.value = res.name;
+        articleContent.value = decodeURIComponent(res.content);
+        isShowEditor.value = true;
+        initPublishForm.category = res.category;
+        initPublishForm.tags = res.tags?.split(',');
+        initPublishForm.summary = res.summary;
+        initPublishForm.cover = [res.cover];
+      });
+    } else {
+      isShowEditor.value = true;
+    }
 
     // 隐藏发布窗
     const hidePublish = () => {
@@ -72,10 +78,15 @@ export default defineComponent({
     // 发布
     const onPublish = async (article) => {
       article.name = articleName.value;
-      article.creator_id = '1';
-      article.creator = 'liuh';
+      article.userId = 1;
       article.content = encodeURIComponent(article.content);
-      const result = await saveArticle(article);
+      article.tags = article.tags?.join(',');
+      const formData = new FormData();
+      if (article.cover.length) {
+        formData.append('cover', article.cover[0].raw);
+      }
+      formData.append('article', JSON.stringify(article));
+      const result = await saveArticle(formData);
       if (result) {
         storage.setJson('publishedArticle', { ...article, id: result });
         message.success('文章发布成功');

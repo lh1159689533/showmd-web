@@ -66,18 +66,18 @@ export default defineComponent({
 
     // 上传文章封面
     const handleChange = (file) => {
-      publishForm.cover = file?.raw;
+      publishForm.cover = [file];
     };
 
     // 删除文章封面
     const handleRemove = () => {
-      publishForm.cover = '';
+      publishForm.cover = [];
     };
 
     const submitForm = async (formEl) => {
       const value = await formEl.validate();
       if (value) {
-        emit("publish", publishForm);
+        emit("publish", { ...publishForm });
       }
     };
 
@@ -115,7 +115,7 @@ export default defineComponent({
         </el-form-item>
         <el-form-item label='封面'>
           <el-upload
-            :class='{ isUpload: publishForm.cover !== "" }'
+            :class='{ isUpload: publishForm.cover?.length }'
             list-type='picture-card'
             :on-change='handleChange'
             :on-preview='handlePreview'
@@ -123,6 +123,7 @@ export default defineComponent({
             :limit='1'
             action='#'
             :auto-upload='false'
+            :file-list='publishForm.cover'
           >
             <div class='flex flex-col'>
               <i class='iconfont icon-plus text-center'></i>
