@@ -14,9 +14,33 @@ import {
 import Vditor from 'vditor';
 import 'vditor/dist/index.css';
 
+interface IContentTheme {
+  label: string;
+  value: string;
+  path: string;
+}
+
+interface ICodeTheme {
+  label: string;
+  value: string;
+}
+
 export default defineComponent({
   name: 'Editor',
-  props: ['value'],
+  props: {
+    // 内容
+    data: Object,
+    // 内容主题列表
+    contentThemeList: {
+      type: Array,
+      default: () => [],
+    },
+    // 代码主题列表
+    codeThemeList: {
+      type: Array,
+      default: () => [],
+    },
+  },
   emits: ['change'],
   setup(props, { emit }) {
     const editor = ref<Vditor | null>(null);
@@ -29,7 +53,15 @@ export default defineComponent({
     const previewNodeTopList: { id: string; top: number }[] = []; // 预览区h1-6节点id&top数据列表
     let isOutlineClick = false; // 是否是点击目录，如果是则不触发onScroll
 
+    const currentTheme = 'classic';
+    const currentTontentTheme = ref(props.data?.contentTheme ?? 'Chinese-red');
+    const currentCodeTheme = ref(props.data?.codeTheme ?? 'github');
+
     onMounted(() => {
+      const previewThemeList = {};
+      props.contentThemeList.forEach((t: IContentTheme) => {
+        previewThemeList[t.label] = t.value;
+      });
       editor.value = new Vditor('myEditorContent', {
         toolbarConfig: {
           pin: true,
@@ -48,8 +80,33 @@ export default defineComponent({
           'strike',
           'check',
           'table',
-          'code-theme',
-          'content-theme',
+          {
+            name: 'codeTheme',
+            tip: '代码主题',
+            tipPosition: 'n',
+            className: 'right toolbar__item',
+            icon: '<svg width="1em" height="1em" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M25.785 24.935c1.681 0 3.054-1.392 3.054-3.096 0-2.058-3.054-5.416-3.054-5.416s-3.054 3.358-3.054 5.416c0 1.704 1.373 3.096 3.054 3.096zM11.28 23.239c0.273 0.273 0.715 0.273 0.985 0l9.851-9.847c0.273-0.273 0.273-0.715 0-0.985l-9.847-9.847c-0.023-0.023-0.050-0.046-0.077-0.065l-3.008-3.008c-0.063-0.062-0.15-0.101-0.246-0.101s-0.183 0.039-0.246 0.101l-1.846 1.846c-0.062 0.063-0.101 0.15-0.101 0.246s0.039 0.183 0.101 0.246l2.585 2.585-7.993 7.997c-0.273 0.273-0.273 0.715 0 0.985l9.843 9.847zM11.777 5.984l6.881 6.881h-13.759l6.878-6.881zM31.078 27.693h-30.157c-0.169 0-0.308 0.138-0.308 0.308v3.077c0 0.169 0.138 0.308 0.308 0.308h30.157c0.169 0 0.308-0.138 0.308-0.308v-3.077c0-0.169-0.138-0.308-0.308-0.308z"></path></svg>',
+            toolbar: props.codeThemeList.map((t: ICodeTheme) => ({
+              icon: t.label,
+              name: t.value,
+              className: `${currentCodeTheme.value}`,
+              click: () => setCodeTheme(t.value),
+            })),
+            click: () => {},
+          },
+          {
+            name: 'contentTheme',
+            tip: '内容主题',
+            tipPosition: 'n',
+            className: 'right toolbar__item',
+            icon: '<svg width="1em" height="1em" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M30.249 0.637h-8.207c-0.693 0-1.309 0.474-1.473 1.166-0.497 2.102-2.38 3.61-4.569 3.61s-4.072-1.508-4.569-3.61c-0.161-0.673-0.758-1.166-1.47-1.166-0.001 0-0.002 0-0.003 0h-8.207c-0.967 0-1.751 0.784-1.751 1.751v0 10.030c0 0.967 0.784 1.751 1.751 1.751v0h2.985v15.443c0 0.967 0.784 1.751 1.751 1.751v0h19.025c0.967 0 1.751-0.784 1.751-1.751v0-15.443h2.985c0.967 0 1.751-0.784 1.751-1.751v0-10.030c0-0.967-0.784-1.751-1.751-1.751v0zM29.134 11.303h-4.736v17.194h-16.796v-17.194h-4.736v-7.801h6.101c1.122 2.834 3.881 4.776 7.033 4.776s5.91-1.942 7.033-4.776h6.102v7.801z"></path></svg>',
+            toolbar: props.contentThemeList.map((t: IContentTheme) => ({
+              icon: t.label,
+              name: t.value,
+              click: () => setContentTheme(t.value, t.path),
+            })),
+            click: () => {},
+          },
           '|',
           {
             name: 'Outline',
@@ -101,9 +158,12 @@ export default defineComponent({
           delay: 500,
           actions: [],
           theme: {
-            current: 'Chinese-red',
-            list: { 'Chinese-red': 'Chinese-red', 'awesome-green': 'awesome-green' },
+            current: props?.data?.contentTheme ?? 'Chinese-red',
             path: 'http://localhost:1229/editor/theme',
+            list: previewThemeList,
+          },
+          hljs: {
+            style: props?.data?.codeTheme ?? 'github',
           },
           mode: 'both', // editor both
         },
@@ -111,7 +171,7 @@ export default defineComponent({
         cache: {
           enable: false,
         },
-        value: props?.value ?? '',
+        value: props?.data?.content ?? '',
         after() {
           if (isEditorInited) return;
           isEditorInited = true;
@@ -124,7 +184,10 @@ export default defineComponent({
           }
         },
         input(value) {
-          emit('change', value);
+          const data = {
+            content: value,
+          };
+          emit('change', data);
         },
         // 上传图片
         upload: {
@@ -147,6 +210,18 @@ export default defineComponent({
         },
       });
     });
+
+    function setContentTheme(contentTheme, contentThemePath) {
+      emit('change', { contentTheme });
+      currentTontentTheme.value = contentTheme;
+      editor.value.setTheme(currentTheme, contentTheme, currentCodeTheme.value, contentThemePath);
+    }
+
+    function setCodeTheme(codeTheme) {
+      emit('change', { codeTheme });
+      currentCodeTheme.value = codeTheme;
+      editor.value.setTheme(currentTheme, currentTontentTheme.value, codeTheme);
+    }
 
     /**
      * 根据编辑区滚动，联动目录区
@@ -390,5 +465,10 @@ export default defineComponent({
 #myEditor .vditor-messageElementtip,
 #myEditor .vditor-tip {
   display: none;
+}
+
+#myEditor .toolbar__item > div {
+  max-height: 600px;
+  overflow-y: auto;
 }
 </style>

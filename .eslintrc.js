@@ -30,5 +30,6 @@ module.exports = {
     'vue/attributes-order': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'vue/html-self-closing': 'off',
+    '@typescript-eslint/no-empty-function': 'off'
   },
 };

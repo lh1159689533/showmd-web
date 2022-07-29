@@ -1,49 +1,77 @@
 <script lang='ts'>
 import { defineComponent, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { ElMessage as message } from 'element-plus';
 import PublishArticle from './PublishArticle.vue';
-import { findById, saveArticle } from './article';
 import storage from '@utils/storage';
-import { ElMessage as message } from "element-plus";
+import { findById, saveArticle } from '@service/article';
+import { listContentTheme, listCodeTheme } from '@service/theme';
+
+interface IArticle {
+  id?: number;
+  name?: string;
+  content?: string;
+  category?: string;
+  tags?: string;
+  summary?: string;
+  cover?: File[];
+  contentTheme?: string;
+  codeTheme?: string;
+}
 
 export default defineComponent({
-  name: 'PageEdit',
+  name: 'ArticleEdit',
   components: { PublishArticle },
   props: {
     id: String,
   },
   setup(props) {
-    const articleName = ref('');
-    const articleContent = ref('');
     const isShowEditor = ref(false);
     const isShowPublish = ref(false);
+    const contentThemeList = ref([]);
+    const codeThemeList = ref([]);
     const router = useRouter();
 
-    const initPublishForm = reactive({
+    const article = ref<IArticle>({
       name: '',
       content: '',
+      category: '',
+      tags: '',
+      summary: '',
+      cover: [],
+      contentTheme: 'Chinese-red',
+      codeTheme: 'github',
+    });
+
+    const initPublishForm = reactive({
       category: '',
       tags: [],
       summary: '',
       cover: [],
     });
 
-    if (props.id) {
-      // 编辑文章,获取文章内容
-      findById(props.id).then((res) => {
-        if (!res) {
+    async function init() {
+      contentThemeList.value = await listContentTheme();
+      codeThemeList.value = await listCodeTheme();
+      if (props.id) {
+        // 编辑文章,获取文章内容
+        const data = await findById(props.id);
+        if (!data) {
           return message.error('文章不存在');
         }
-        articleName.value = res.name;
-        articleContent.value = decodeURIComponent(res.content);
+        article.value = {
+          ...data,
+          content: decodeURIComponent(data.content),
+          cover: data.cover ? [data.cover] : [],
+        };
+        initPublishForm.category = data.category;
+        initPublishForm.tags = data.tags.split(',');
+        initPublishForm.cover = data.cover ? [data.cover] : [];
+        initPublishForm.summary = data.summary;
         isShowEditor.value = true;
-        initPublishForm.category = res.category;
-        initPublishForm.tags = res.tags?.split(',');
-        initPublishForm.summary = res.summary;
-        initPublishForm.cover = [res.cover];
-      });
-    } else {
-      isShowEditor.value = true;
+      } else {
+        isShowEditor.value = true;
+      }
     }
 
     // 隐藏发布窗
@@ -68,42 +96,63 @@ export default defineComponent({
 
     // 文章内容变化
     const onChange = (value) => {
-      initPublishForm.summary = value
-        .replace(/\s+/g, ' ')
-        .replace(/[^a-zA-Z0-9\s]+/g, '')
-        .substr(0, 100);
-      initPublishForm.content = value;
+      if (value.content) {
+        article.value.summary = value.content
+          .replace(/\s+/g, ' ')
+          .replace(/[^a-zA-Z0-9\s]+/g, '')
+          .substr(0, 100);
+        article.value.content = value.content;
+      } else if (value.contentTheme) {
+        article.value.contentTheme = value.contentTheme;
+      } else if (value.codeTheme) {
+        article.value.codeTheme = value.codeTheme;
+      }
     };
 
     // 发布
-    const onPublish = async (article) => {
-      article.name = articleName.value;
-      article.userId = 1;
-      article.content = encodeURIComponent(article.content);
-      article.tags = article.tags?.join(',');
+    const onPublish = async (art) => {
+      console.log('art:', art);
+      art = {
+        ...article.value,
+        ...art,
+        userId: 1,
+        content: encodeURIComponent(article.value.content),
+        tags: art.tags?.join(','),
+        coverMark: 'changed',
+      };
       const formData = new FormData();
-      if (article.cover.length) {
-        formData.append('cover', article.cover[0].raw);
+      if (art.cover?.length) {
+        const coverFile = art.cover[0].raw ?? art.cover[0];
+        if (coverFile instanceof File) {
+          formData.append('cover', coverFile);
+        } else {
+          art.coverMark = 'noChange';
+        }
+      } else {
+        art.coverMark = 'deleted';
       }
-      formData.append('article', JSON.stringify(article));
+      formData.append('article', JSON.stringify(art));
       const result = await saveArticle(formData);
       if (result) {
-        storage.setJson('publishedArticle', { ...article, id: result });
+        storage.setJson('publishedArticle', { ...art, id: result });
         message.success('文章发布成功');
         router.push('/published');
       }
     };
 
+    init();
+
     return {
-      articleName,
-      articleContent,
+      article,
       isShowPublish,
       showPublish,
       hidePublish,
       onChange,
       onPublish,
-      initPublishForm,
       isShowEditor,
+      contentThemeList,
+      codeThemeList,
+      initPublishForm,
     };
   },
 });
@@ -112,14 +161,14 @@ export default defineComponent({
 <template>
   <div id='myEditor' class='flex flex-col'>
     <div class='tool flex items-center p-3 px-8 bg-white'>
-      <input v-model='articleName' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none' />
+      <input v-model='article.name' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none' />
       <div class='rightGroups flex py-1 relative'>
         <el-button>草稿箱</el-button>
-        <el-button type='primary' @click.stop='showPublish'>发布</el-button>
+        <el-button type='primary' @click.stop='showPublish'>{{ id ? '更新' : '发布' }}</el-button>
         <PublishArticle v-show='isShowPublish' :init-value='initPublishForm' @publish='onPublish' @close='hidePublish' />
       </div>
     </div>
-    <Editor v-if='isShowEditor' :value='articleContent' @change='onChange' />
+    <Editor v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
   </div>
 </template>
 

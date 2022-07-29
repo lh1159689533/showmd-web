@@ -1,6 +1,13 @@
 <script lang='ts'>
 import { defineComponent, reactive, ref } from 'vue';
 
+interface IPublishForm {
+  category?: string;
+  tags?: string[];
+  summary?: string;
+  cover?: File[];
+}
+
 export default defineComponent({
   name: 'PublishArticle',
   props: ['initValue'],
@@ -46,7 +53,7 @@ export default defineComponent({
     ];
     const ruleFormRef = ref();
     // 发布信息form
-    const publishForm = reactive(props.initValue);
+    const publishForm = reactive<IPublishForm>(props.initValue);
     // form规则
     const publishRules = reactive({
       category: [{ required: true, message: '请选择一个分类', trigger: 'blur' }],

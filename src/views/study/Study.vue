@@ -107,7 +107,7 @@ export default defineComponent({
 <style scoped>
 #study,
 #study .category-list {
-  max-width: 1120px;
+  max-width: 1380px;
   margin: 0 auto;
 }
 

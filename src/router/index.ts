@@ -20,6 +20,7 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+  { path: '/article/preview/:id', component: () => import('@views/article/ArticlePreview.vue'), props: true },
   { path: '/article/new', component: () => import('@views/article/ArticleEdit.vue') },
   { path: '/article/edit/:id', component: () => import('@views/article/ArticleEdit.vue'), props: true },
 ]

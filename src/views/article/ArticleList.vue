@@ -1,11 +1,13 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { findArticleList } from './article';
+import { useRouter } from 'vue-router';
+import { findArticleList } from '../../service/article';
 
 export default defineComponent({
   name: 'ArticleList',
   setup() {
     const articleList = ref();
+    const router = useRouter();
 
     findArticleList().then((result) => {
       articleList.value = result?.map((item) => ({
@@ -14,8 +16,18 @@ export default defineComponent({
       }));
     });
 
+    const toDetail = (id) => {
+      router.push(`/article/preview/${id}`);
+    };
+
+    const toUserDetail = (id) => {
+      console.log(id);
+    };
+
     return {
       articleList,
+      toDetail,
+      toUserDetail,
     };
   },
 });
@@ -25,10 +37,10 @@ export default defineComponent({
   <div id='articleList' class='article-list'>
     <List :data-list='articleList'>
       <template #default='{ item }'>
-        <div class='article-list-item flex flex-col text-sm text-gray-800 px-6 py-4 cursor-pointer border-t hover:bg-gray-50'>
+        <div @click='() => toDetail(item.id)' class='article-list-item flex flex-col text-sm text-gray-800 px-6 py-4 cursor-pointer border-t hover:bg-gray-50'>
           <div class='article-list-item-header flex'>
-            <a class='pr-3 cursor-pointer hover:text-indigo-500'>{{ item.creator }}</a>
-            <span class='modify-time relative px-3 flex items-center'>{{ item.modifyTime }}</span>
+            <a @click='toUserDetail' class='pr-3 cursor-pointer hover:text-indigo-500'>{{ item.user.name }}</a>
+            <span class='modify-time relative px-3 flex items-center'>{{ item.updateTime }}</span>
             <span class='tag-list pl-3 flex items-center'>
               <a
                 v-for='(tag, index) in item.tags'

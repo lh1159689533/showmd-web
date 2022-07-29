@@ -6,25 +6,23 @@ import 'vditor/dist/index.css';
 
 export default defineComponent({
   name: 'PreviewEditor',
-  props: {
-    page: Object,
-  },
+  props: ['data'],
   setup(props) {
-    const { page } = toRefs(props);
+    const { data } = toRefs(props);
     const isShowToTop = ref(false); // 是否显示回到顶部按钮
     let outlineNodeList = []; // 大纲节点列表
     let targetList = []; // 大纲节点列表
     let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
 
-    watch(page, (newVal) => {
+    watch(data, (newVal) => {
       document.documentElement.scrollTop = 0;
       getElementById('myPreviewEditorOutlineList').scrollTop = 0;
-      Vditor.preview(getElementById('myPreviewEditor'), newVal?.pageContent, {
+      Vditor.preview(getElementById('myPreviewEditor'), newVal?.content, {
         hljs: {
-          style: 'vs',
+          style: props.data?.codeTheme ?? 'github',
         },
         theme: {
-          current: 'awesome-green',
+          current: props.data?.contentTheme ?? 'Chinese-red',
           path: 'http://localhost:1229/editor/theme',
         },
         lazyLoadImage: 'https://cdn.jsdelivr.net/npm/vditor/dist/images/img-loading.svg',
@@ -177,7 +175,7 @@ export default defineComponent({
   },
   methods: {
     edit() {
-      this.$router.push(`/page/edit/${this.page?.id}`);
+      this.$router.push(`/article/edit/${this.data?.id}`);
     },
   },
 });
@@ -187,14 +185,14 @@ export default defineComponent({
   <div v-bind='$attrs' class='w-full flex flex-row'>
     <div class='content bg-white' style='width: calc(100% - 260px);'>
       <div class='pl-10'>
-        <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ page?.pageName }}</h1>
+        <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ data?.name }}</h1>
         <div class='flex mt-3 text-gray-400 ml-2'>
-          <span class='user mr-6'>lihui</span>
-          <span class='createTime'>{{ page?.modifyTime ?? page?.createTime }}</span>
+          <span class='user mr-6'>{{ data?.user?.name }}</span>
+          <span class='createTime'>{{ data?.updateTime ?? data?.createTime }}</span>
           <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
         </div>
       </div>
-      <div id='myPreviewEditor' class='showmd px-12' />
+      <div id='myPreviewEditor' class='showmd px-12 mt-8' style='min-height: 1140px;' />
     </div>
     <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
       <div id='myPreviewEditorSider' class='fixed top-10 border hidden bg-white'>
