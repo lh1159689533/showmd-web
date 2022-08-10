@@ -1,5 +1,7 @@
 <script lang='ts'>
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, watchEffect } from 'vue';
+
+import { listCategory } from '@service/category';
 
 interface IPublishForm {
   category?: string;
@@ -13,45 +15,14 @@ export default defineComponent({
   props: ['initValue'],
   emits: ['publish', 'close'],
   setup(props, { emit }) {
-    // 分类
-    const categoryList = [
-      {
-        key: 'front-dev',
-        title: '前端',
-      },
-      {
-        key: 'backend-dev',
-        title: '后端',
-      },
-    ];
-    // 标签
-    const tagList = [
-      {
-        key: 'js',
-        title: 'JavaScript',
-      },
-      {
-        key: 'vue',
-        title: 'Vue.js',
-      },
-      {
-        key: 'react',
-        title: 'React.js',
-      },
-      {
-        key: 'css',
-        title: 'CSS',
-      },
-      {
-        key: 'node',
-        title: 'Node.js',
-      },
-      {
-        key: 'ts',
-        title: 'TypeScript',
-      },
-    ];
+    const categoryAllList = ref([]);
+    const categoryList = ref([]);
+    const subCategoryList = ref([]);
     const ruleFormRef = ref();
+    // 是否预览已上传的文章封面图
+    const isPreview = ref(false);
+    // 已上传的文章封面图预览地址
+    const previewUrl = ref();
     // 发布信息form
     const publishForm = reactive<IPublishForm>(props.initValue);
     // form规则
@@ -60,10 +31,11 @@ export default defineComponent({
       tags: [{ required: true, message: '请选择一个标签', trigger: 'blur' }],
     });
 
-    // 是否预览已上传的文章封面图
-    const isPreview = ref(false);
-    // 已上传的文章封面图预览地址
-    const previewUrl = ref();
+    async function init() {
+      categoryAllList.value = await listCategory();
+      categoryList.value = categoryAllList.value.filter((c) => c.parent === '0' && c.key !== 'all');
+      subCategoryList.value = categoryAllList.value.filter((c) => c.parent !== '0');
+    }
 
     // 隐藏预览
     const handlePreview = ({ url }) => {
@@ -84,13 +56,25 @@ export default defineComponent({
     const submitForm = async (formEl) => {
       const value = await formEl.validate();
       if (value) {
-        emit("publish", { ...publishForm });
+        emit('publish', { ...publishForm });
       }
     };
 
+    const onCategoryChang = (category) => {
+      subCategoryList.value = categoryAllList.value.filter((c) => c.parent === category);
+    };
+
+    init();
+
+    watchEffect(() => {
+      if (publishForm.category) {
+        onCategoryChang(publishForm.category);
+      }
+    });
+
     return {
       categoryList,
-      tagList,
+      subCategoryList,
       ruleFormRef,
       publishForm,
       publishRules,
@@ -100,6 +84,7 @@ export default defineComponent({
       handleChange,
       handleRemove,
       submitForm,
+      onCategoryChang,
     };
   },
 });
@@ -111,13 +96,13 @@ export default defineComponent({
     <div class='form py-4 pr-20'>
       <el-form ref='ruleFormRef' :model='publishForm' :rules='publishRules' label-width='120px'>
         <el-form-item label='分类' prop='category'>
-          <el-select v-model='publishForm.category' clearable placeholder='请选择分类'>
+          <el-select v-model='publishForm.category' @change='onCategoryChang' clearable placeholder='请选择分类'>
             <el-option v-for='category in categoryList' :key='category.key' :label='category.title' :value='category.key' />
           </el-select>
         </el-form-item>
         <el-form-item label='标签' prop='tags'>
           <el-select v-model='publishForm.tags' multiple :multiple-limit='3' clearable placeholder='请选择标签'>
-            <el-option v-for='tag in tagList' :key='tag.key' :label='tag.title' :value='tag.key'></el-option>
+            <el-option v-for='tag in subCategoryList' :key='tag.key' :label='tag.title' :value='tag.key'></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label='封面'>

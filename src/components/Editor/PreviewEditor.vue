@@ -103,7 +103,7 @@ export default defineComponent({
             top,
           };
         });
-      }, 500);
+      }, 1000);
     }
 
     /**
@@ -186,16 +186,22 @@ export default defineComponent({
     <div class='content bg-white' style='width: calc(100% - 260px);'>
       <div class='pl-10'>
         <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ data?.name }}</h1>
-        <div class='flex mt-3 text-gray-400 ml-2'>
-          <span class='user mr-6'>{{ data?.user?.name }}</span>
-          <span class='createTime'>{{ data?.updateTime ?? data?.createTime }}</span>
-          <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
+        <div class='flex mt-3 text-gray-400 items-center'>
+          <img :src='data?.user?.avatar' class='w-10 h-10 rounded-full mr-4 cursor-pointer' />
+          <div class='flex flex-col'>
+            <span class='user mr-6 text-xl text-gray-600 cursor-pointer'>{{ data?.user?.name }}</span>
+            <div>
+              <span class='createTime'>{{ data?.updateTime ?? data?.createTime }}</span>
+              <span class='ml-6'>阅读 {{ data?.readCount ?? 0 }}</span>
+              <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
+            </div>
+          </div>
         </div>
       </div>
-      <div id='myPreviewEditor' class='showmd px-12 mt-8' style='min-height: 1140px;' />
+      <div id='myPreviewEditor' class='showmd px-12 mt-4' style='min-height: 1140px;' />
     </div>
     <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
-      <div id='myPreviewEditorSider' class='fixed top-10 border hidden bg-white'>
+      <div id='myPreviewEditorSider' class='fixed border hidden bg-white'>
         <nav style='height: 580px' class='relative overflow-hidden'>
           <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
           <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
@@ -239,6 +245,7 @@ export default defineComponent({
   box-shadow: 0px 0px 8px -6px #000;
   border-radius: 3px;
   width: 260px;
+  top: 4.5rem;
 }
 
 /* .vditor-outline {

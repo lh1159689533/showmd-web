@@ -1,5 +1,16 @@
 import http, { ResponseData } from '@src/http';
 
+export interface ICover {
+  name?: string;
+  url?: string;
+}
+
+interface IUser {
+  id?: string;
+  name?: string;
+  avatar?: string;
+}
+
 export interface IArticle extends ResponseData {
   id?: number;
   name?: string;
@@ -7,9 +18,12 @@ export interface IArticle extends ResponseData {
   category: string;
   tags: string;
   summary?: string;
-  cover?: File;
+  cover?: ICover;
   contentTheme?: string;
   codeTheme?: string;
+  user?: IUser;
+  createTime?: Date;
+  updateTime?: Date;
 }
 
 async function findById(id: string) {

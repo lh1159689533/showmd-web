@@ -2,9 +2,9 @@
 import { defineComponent, ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage as message } from 'element-plus';
-import PublishArticle from './PublishArticle.vue';
+import PublishArticle from './ArticlePublish.vue';
 import storage from '@utils/storage';
-import { findById, saveArticle } from '@service/article';
+import { findById, saveArticle, ICover } from '@service/article';
 import { listContentTheme, listCodeTheme } from '@service/theme';
 
 interface IArticle {
@@ -14,7 +14,7 @@ interface IArticle {
   category?: string;
   tags?: string;
   summary?: string;
-  cover?: File[];
+  cover?: ICover[];
   contentTheme?: string;
   codeTheme?: string;
 }
