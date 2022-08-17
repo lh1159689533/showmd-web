@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    404: typeof import('./src/components/404.vue')['default']
     Editor: typeof import('./src/components/Editor/Editor.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -21,6 +22,7 @@ declare module '@vue/runtime-core' {
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    Empty: typeof import('./src/components/Empty.vue')['default']
     List: typeof import('./src/components/List.vue')['default']
     PreviewEditor: typeof import('./src/components/Editor/PreviewEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

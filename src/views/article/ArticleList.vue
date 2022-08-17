@@ -1,24 +1,19 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import dayjs from 'dayjs';
-import { findArticleList } from '../../service/article';
+import Empty from '@components/Empty.vue';
 
 export default defineComponent({
   name: 'ArticleList',
+  components: { Empty },
+  props: {
+    data: {
+      type: Array,
+      default: () => [],
+    },
+  },
   setup() {
-    const articleList = ref(null);
     const router = useRouter();
-
-    async function getArticleList() {
-      findArticleList().then((result) => {
-        articleList.value = result?.map((item) => ({
-          ...item,
-          tags: [{ 'front-dev': '前端', 'backend-dev': '后端' }[item.category], ...item.tags.split(',')],
-          updateTime: dayjs(item.updateTime).fromNow()
-        }));
-      });
-    }
 
     const toDetail = (id) => {
       const { href } = router.resolve(`/article/preview/${id}`);
@@ -29,10 +24,7 @@ export default defineComponent({
       console.log(id);
     };
 
-    getArticleList();
-
     return {
-      articleList,
       toDetail,
       toUserDetail,
     };
@@ -42,8 +34,8 @@ export default defineComponent({
 
 <template>
   <div id='articleList' class='article-list'>
-    <el-skeleton v-if='!articleList' :rows='3' animated class='p-6' />
-    <List v-else :data-list='articleList'>
+    <el-skeleton v-if='!data' :rows='3' animated class='p-6' />
+    <List v-else-if='data?.length' :data-list='data'>
       <template #default='{ item }'>
         <div @click='() => toDetail(item.id)' class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-6 pb-4 cursor-pointer border-t hover:bg-gray-50'>
           <div class='flex flex-col'>
@@ -63,15 +55,12 @@ export default defineComponent({
               <div class='title text-lg mb-3 text-gray-900'>{{ item.name }}</div>
               <div class='desc truncate'>{{ item.summary }}</div>
             </div>
-            <!-- <div class='article-list-item-footer flex items-center'>
-              <i class='iconfont icon-eye text-gray-500 text-2xl' />
-              <span class='read-count ml-1'>{{ item.readCount }}</span>
-            </div> -->
           </div>
           <img style='width: 140px; height: 120px;' :src='item.cover' />
         </div>
       </template>
     </List>
+    <Empty v-else class='border-t' />
   </div>
 </template>
 

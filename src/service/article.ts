@@ -41,8 +41,8 @@ async function saveArticle(article) {
 }
 
 // 查询文章列表
-async function findArticleList() {
-  const [err, res] = await http.request({ apiurl: 'article/findList' });
+async function findArticleList(data?) {
+  const [err, res] = await http.request({ apiurl: 'article/findList', data });
   if (err && res.code !== 0) return 0;
   return res.data;
 }

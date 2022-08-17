@@ -5,7 +5,8 @@ import { listCategory } from '@service/category';
 
 export default defineComponent({
   name: 'Category',
-  setup() {
+  emits: ['change'],
+  setup(_, { emit }) {
     const categoryAllList = ref([]); // 全部分类
     const categoryList = ref([]); // 分类
     const subCategoryList = ref([]); // 子分类
@@ -22,7 +23,7 @@ export default defineComponent({
         .map((item) => {
           return {
             ...item,
-            children: categoryAllList.value.filter(({ parent }) => parent === item.key),
+            children: [{ key: 'all', title: '全部', parent: item.key }].concat(...categoryAllList.value.filter(({ parent }) => parent === item.key)),
           };
         });
       activeKey.value = categoryList.value[0]?.key;
@@ -32,15 +33,25 @@ export default defineComponent({
      * 子分类随分类变化
      */
     const changSubCategoryList = (category) => {
-      showSubCategory();
-      if (hoverKey.value === category.key) return;
-      hoverKey.value = category.key;
-      if (category.key !== 'all') {
-        subCategoryList.value = [{ key: 'all', title: '全部', category: activeKey.value }].concat(...category.children);
-        subActiveKey.value = subCategoryList.value[0]?.key;
+      const subCategorys = category?.children;
+      if (category.key !== 'all' && subCategorys?.length) {
+        const activeSubCategory = subCategorys.find((c) => c.key === subActiveKey.value) ?? subCategorys[0];
+        activeSubCategory.active = true;
+        subCategorys.filter((c) => c.key !== activeSubCategory.key).forEach((c) => (c.active = false));
+        subCategoryList.value = subCategorys;
       } else {
         subCategoryList.value = null;
       }
+    };
+
+    /**
+     * 鼠标hover分类时显示子分类
+     */
+    const hoverCategory = (category) => {
+      showSubCategory();
+      if (hoverKey.value === category.key) return;
+      hoverKey.value = category.key;
+      changSubCategoryList(category);
     };
 
     /**
@@ -48,6 +59,10 @@ export default defineComponent({
      */
     const handleChangeCategory = ({ key }) => {
       activeKey.value = key;
+      const activeCategory = categoryList.value.find(c => c.key === key);
+      subActiveKey.value = activeCategory.children?.[0]?.key ?? '';
+      emit('change', activeKey.value, subActiveKey.value);
+      changSubCategoryList(activeCategory);
     };
 
     /**
@@ -56,6 +71,8 @@ export default defineComponent({
     const handleChangeSubCategory = ({ key, parent }) => {
       subActiveKey.value = key;
       activeKey.value = parent;
+      emit('change', activeKey.value, subActiveKey.value);
+      changSubCategoryList(categoryList.value.find(c => c.key === parent));
     };
 
     /**
@@ -97,6 +114,7 @@ export default defineComponent({
       cancleHideSubCategoryTimer,
       handleChangeCategory,
       handleChangeSubCategory,
+      hoverCategory,
     };
   },
 });
@@ -108,7 +126,7 @@ export default defineComponent({
       <template #default='{ item }'>
         <span
           @click='() => handleChangeCategory(item)'
-          @mouseenter='() => changSubCategoryList(item)'
+          @mouseenter='() => hoverCategory(item)'
           :class='[item.key === activeKey ? "text-indigo-500" : ""]'
           class='pr-6 cursor-pointer hover:text-indigo-500'
         >{{ item.title }}</span>
@@ -131,7 +149,7 @@ export default defineComponent({
       <template #default='{ item }'>
         <span
           @click='() => handleChangeSubCategory(item)'
-          :class='[item.key === subActiveKey ? "bg-indigo-500 text-white hover:text-white" : "bg-gray-100"]'
+          :class='[item.active ? "bg-indigo-500 text-white hover:text-white" : "bg-gray-100"]'
           class='cursor-pointer hover:text-indigo-500 px-2 py-1 rounded-full inline-block'
         >{{ item.title }}</span>
       </template>
