@@ -26,7 +26,7 @@ export default defineComponent({
           createTime: dayjs(result.createTime).format('YYYY年MM月DD日 HH:mm'),
           updateTime: dayjs(result.updateTime).format('YYYY年MM月DD日 HH:mm')
         };
-        setTimeout(() => (loading.value = false), 800);
+        setTimeout(() => (loading.value = false), 1000);
       }
     }
 

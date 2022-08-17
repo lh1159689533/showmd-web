@@ -1,6 +1,6 @@
 <script lang='ts'>
 import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { querySelectorAll, addClass, removeClass, getNodeByClassName, getNodeByAttribute, getElementById, getComputedStyleOf, getBoundingClientRect } from './vditorEditor';
+import { querySelectorAll, addClass, removeClass, getNodeByClassName, getNodeByAttribute, getElementById } from './vditorEditor';
 import Vditor from 'vditor/dist/method.min';
 import 'vditor/dist/index.css';
 
@@ -11,10 +11,11 @@ export default defineComponent({
     const { data } = toRefs(props);
     const isShowToTop = ref(false); // 是否显示回到顶部按钮
     let outlineNodeList = []; // 大纲节点列表
-    let targetList = []; // 大纲节点列表
-    let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
+    let targetIdList = []; // 大纲节点id列表
+    const isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
 
     watch(data, (newVal) => {
+      let count = 0;
       document.documentElement.scrollTop = 0;
       getElementById('myPreviewEditorOutlineList').scrollTop = 0;
       Vditor.preview(getElementById('myPreviewEditor'), newVal?.content, {
@@ -40,14 +41,28 @@ export default defineComponent({
             // eslint-disable-next-line
             return ['</blockquote>', Lute.WalkContinue];
           },
+          renderCodeBlock: (_, entering) => {
+            if (entering) {
+              return [
+                `<div class="code-block">
+                  <input type='checkbox' id='codeSuofang${count}' class='code-suofang-checkbox' style='display: none' />
+                  <div class='code-block-menus'>
+                    <label></label><label for='codeSuofang${count++}'></label><label></label>
+                  </div>
+                  <div class='code-content'>`,
+                // eslint-disable-next-line
+                Lute.WalkContinue,
+              ];
+            }
+            // eslint-disable-next-line
+            return ['</div></div>', Lute.WalkContinue];
+          },
         },
         after() {
           // 文档大纲渲染，并添加事件
           outlineRender();
           // 代码复制
           codeCopy();
-
-          // addTheme();
         },
       });
     });
@@ -56,7 +71,8 @@ export default defineComponent({
      * 代码片段复制按钮点击复制后显示 '已复制'
      */
     function codeCopy() {
-      const copyNodeList = querySelectorAll(document, '.vditor-copy>span[aria-label="复制"]');
+      const editor = getElementById('myPreviewEditor');
+      const copyNodeList = querySelectorAll(editor, '.vditor-copy>span[aria-label="复制"]');
       [].slice.call(copyNodeList).map((node) => {
         node?.addEventListener('click', function () {
           this.setAttribute('aria-label', '已复制');
@@ -75,35 +91,65 @@ export default defineComponent({
       addClass(outlineNodeList[0], 'active');
 
       // 遍历大纲节点，添加点击事件
-      outlineNodeList?.map((node) =>
+      outlineNodeList?.map((node) => {
         node.addEventListener('click', function () {
-          isOutlineClick = true;
+          // isOutlineClick = true;
           // 点击节点添加选中样式 active，其他节点去掉选中样式 active
           const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
           removeClass(currentActiveNode, 'active');
           addClass(this, 'active');
-        })
-      );
-
-      setTimeout(function () {
-        // 获取大纲节点的top值
-        const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
-
-        targetList = targetIdList?.map((id) => {
-          const node = getElementById(id);
-          const prevNode = node?.previousElementSibling;
-          let top = 0;
-          if (node && prevNode) {
-            const nodeMarginTop = getComputedStyleOf(node, 'marginTop');
-            const prevNodeMarginBottom = getComputedStyleOf(prevNode, 'marginBottom');
-            top = getBoundingClientRect(node)?.top - nodeMarginTop - prevNodeMarginBottom;
-          }
-          return {
-            id,
-            top,
-          };
         });
-      }, 1000);
+      });
+
+      setTimeout(outlineNodeTopChanged, 500);
+    }
+
+    function outlineNodeTopChanged() {
+      // 获取大纲节点的top值
+      targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
+
+      targetIdList?.map((id) => {
+        const node = getElementById(id);
+        const obeserver = new IntersectionObserver(
+          function (entries) {
+            const [entry] = entries;
+            const { isIntersecting, boundingClientRect, target } = entry ?? {};
+            // isOutlineClick=true说明是点击大纲节点触发的Vditor内部的滚动事件，不需要再执行以下自定义滚动事件
+            if (isOutlineClick) {
+              return;
+            }
+            let newActiveNodeId = null;
+            if (isIntersecting === false && boundingClientRect?.y < 60) {
+              newActiveNodeId = target?.id;
+            } else if (isIntersecting === true && boundingClientRect?.y < 60) {
+              const index = targetIdList.findIndex((id) => id === target.id);
+              newActiveNodeId = targetIdList[index === 0 ? 0 : index - 1];
+            }
+            outlineActiveChanged(newActiveNodeId);
+          },
+          {
+            rootMargin: '-60px 0px 0px 0px',
+          }
+        );
+        obeserver.observe(node);
+      });
+    }
+
+    /**
+     * 选中的大纲节点变化
+     * @param newActiveNodeId 新选中的节点id
+     */
+    function outlineActiveChanged(newActiveNodeId) {
+      const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+      // 根据当前最顶部的内容(h1-6)的id找到对应的大纲节点，即当前选中大纲节点
+      const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', newActiveNodeId);
+      if (newActiveNode && currentActiveNode) {
+        // 大纲节点显示到其滚动容器中心(有滚动条的时候)
+        newActiveNode.scrollIntoView({ block: 'center', behavior: 'auto' });
+        // 要选中的大纲节点添加选中样式，当前选中大纲节点去掉选中样式
+        removeClass(currentActiveNode, 'active');
+        addClass(newActiveNode, 'active');
+      }
     }
 
     /**
@@ -133,26 +179,8 @@ export default defineComponent({
       } else {
         isShowToTop.value = false;
       }
-      // isOutlineClick=true说明是点击大纲节点触发的Vditor内部的滚动事件，不需要再执行以下自定义滚动事件
-      if (isOutlineClick || !targetList?.length) return (isOutlineClick = false);
-      // 根据滚动条top值与大纲每个节点top值做对比，找到当前最顶部的内容(主要是h1-6，因为只有h1-6才会显示到大纲，内容区h1-6的id与大纲节点data-target-id有关联)
-      let target;
-      if (scrollTop <= targetList[0].top) {
-        target = targetList[0];
-      } else if (scrollTop >= targetList.at(-1).top) {
-        target = targetList.at(-1);
-      } else {
-        target = targetList.find((node, i) => node.top < scrollTop && targetList[i + 1]?.top > scrollTop);
-      }
-      const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-      // 根据当前最顶部的内容(h1-6)的id找到对应的大纲节点，即当前选中大纲节点
-      const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', target?.id);
-      if (newActiveNode && currentActiveNode) {
-        // 要选中的大纲节点添加选中样式，当前选中大纲节点去掉选中样式
-        removeClass(currentActiveNode, 'active');
-        addClass(newActiveNode, 'active');
-        // 大纲节点显示到其滚动容器中心(有滚动条的时候)
-        newActiveNode.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      if (scrollTop <= 0) {
+        outlineActiveChanged(targetIdList[0]);
       }
     }
 
@@ -164,7 +192,9 @@ export default defineComponent({
       document.removeEventListener('scroll', onScroll);
     });
 
+    // 置顶
     const toTop = () => {
+      outlineActiveChanged(targetIdList[0]);
       document.documentElement.scrollTop = 0;
     };
 
@@ -183,7 +213,7 @@ export default defineComponent({
 
 <template>
   <div v-bind='$attrs' class='w-full flex flex-row'>
-    <div class='content bg-white' style='width: calc(100% - 260px);'>
+    <div id='myPreviewEditorContainer' class='content bg-white' style='width: calc(100% - 260px);'>
       <div class='pl-10'>
         <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ data?.name }}</h1>
         <div class='flex mt-3 text-gray-400 items-center'>
@@ -219,9 +249,6 @@ export default defineComponent({
 </template>
 
 <style>
-/* @import url('./theme/awesome-green.css'); */
-/* @import url('./theme/Chinese-red.css'); */
-
 #toTop > i {
   background-size: 100%;
   background-repeat: no-repeat;
