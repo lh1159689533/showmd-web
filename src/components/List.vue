@@ -8,10 +8,8 @@ export default defineComponent({
       type: Array,
       default: () => [],
     },
-    onClick: {
-      type: Function,
-    },
   },
+  emits: ['click'],
   setup() {
     const hoverIndex = ref<number>(-1);
 
@@ -28,7 +26,7 @@ export default defineComponent({
       v-for='(item, index) in dataList'
       :key='item.id || item.key || index'
       :class='$attrs["item-class"]'
-      @click='() => onClick?.(item)'
+      @click='() => $emit("click", item)'
       @mouseenter='() => hoverIndex = index'
       @mouseleave='() => hoverIndex = -1'
     >

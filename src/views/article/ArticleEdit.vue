@@ -168,7 +168,7 @@ export default defineComponent({
         <PublishArticle v-show='isShowPublish' :init-value='initPublishForm' @publish='onPublish' @close='hidePublish' />
       </div>
     </div>
-    <Editor v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
+    <MDEditor v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
   </div>
 </template>
 

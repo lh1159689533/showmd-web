@@ -43,7 +43,7 @@ export default defineComponent({
         </g>
       </g>
     </svg>
-    <span class='text-gray-500 text-xs mt-4'>暂无数据</span>
+    <span class='text-gray-500 text-xs mt-4'>暂无文章</span>
   </div>
 </template>
 

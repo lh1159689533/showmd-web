@@ -10,9 +10,9 @@ export default defineComponent({
     const categoryAllList = ref([]); // 全部分类
     const categoryList = ref([]); // 分类
     const subCategoryList = ref([]); // 子分类
-    const activeKey = ref(''); // 当前选择分类
+    const activeCategory = ref(null); // 当前选择分类
     const hoverKey = ref(''); // 当前hover分类
-    const subActiveKey = ref(''); // 当前选择子分类
+    const activeSubCategory = ref(null); // 当前选择子分类
     const isShowSubCategory = ref(false); // 是否显示子分类
     const hideSubCategoryTimer = ref(null);
 
@@ -26,7 +26,7 @@ export default defineComponent({
             children: [{ key: 'all', title: '全部', parent: item.key }].concat(...categoryAllList.value.filter(({ parent }) => parent === item.key)),
           };
         });
-      activeKey.value = categoryList.value[0]?.key;
+      activeCategory.value = categoryList.value[0];
     }
 
     /**
@@ -35,7 +35,7 @@ export default defineComponent({
     const changSubCategoryList = (category) => {
       const subCategorys = category?.children;
       if (category.key !== 'all' && subCategorys?.length) {
-        const activeSubCategory = subCategorys.find((c) => c.key === subActiveKey.value) ?? subCategorys[0];
+        const activeSubCategory = subCategorys.find((c) => c.key === activeCategory.value?.key) ?? subCategorys[0];
         activeSubCategory.active = true;
         subCategorys.filter((c) => c.key !== activeSubCategory.key).forEach((c) => (c.active = false));
         subCategoryList.value = subCategorys;
@@ -57,22 +57,22 @@ export default defineComponent({
     /**
      * 分类改变
      */
-    const handleChangeCategory = ({ key }) => {
-      activeKey.value = key;
-      const activeCategory = categoryList.value.find(c => c.key === key);
-      subActiveKey.value = activeCategory.children?.[0]?.key ?? '';
-      emit('change', activeKey.value, subActiveKey.value);
+    const handleChangeCategory = (category) => {
+      activeCategory.value = category;
+      // const activeCategory = categoryList.value.find(c => c.key === category.key);
+      activeSubCategory.value = activeCategory.value.children?.[0] ?? null;
+      emit('change', activeCategory.value, activeSubCategory.value);
       changSubCategoryList(activeCategory);
     };
 
     /**
      * 子分类改变
      */
-    const handleChangeSubCategory = ({ key, parent }) => {
-      subActiveKey.value = key;
-      activeKey.value = parent;
-      emit('change', activeKey.value, subActiveKey.value);
-      changSubCategoryList(categoryList.value.find(c => c.key === parent));
+    const handleChangeSubCategory = (subCategory) => {
+      activeSubCategory.value = subCategory;
+      activeCategory.value = categoryList.value.find(c => c.key === subCategory.parent);
+      emit('change', activeCategory.value, activeSubCategory.value);
+      changSubCategoryList(activeCategory.value);
     };
 
     /**
@@ -103,8 +103,7 @@ export default defineComponent({
 
     return {
       categoryList,
-      activeKey,
-      subActiveKey,
+      activeCategory,
       subCategoryList,
       isShowSubCategory,
       hideSubCategoryTimer,
@@ -127,7 +126,7 @@ export default defineComponent({
         <span
           @click='() => handleChangeCategory(item)'
           @mouseenter='() => hoverCategory(item)'
-          :class='[item.key === activeKey ? "text-indigo-500" : ""]'
+          :class='[item.key === activeCategory.key ? "text-indigo-500" : ""]'
           class='pr-6 cursor-pointer hover:text-indigo-500'
         >{{ item.title }}</span>
       </template>

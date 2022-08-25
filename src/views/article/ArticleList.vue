@@ -1,11 +1,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import Empty from '@components/Empty.vue';
 
 export default defineComponent({
   name: 'ArticleList',
-  components: { Empty },
   props: {
     data: {
       type: Array,
@@ -15,7 +13,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
-    const toDetail = (id) => {
+    const toDetail = (id: number) => {
       const { href } = router.resolve(`/article/preview/${id}`);
       window.open(href, '_blank');
     };
@@ -35,9 +33,9 @@ export default defineComponent({
 <template>
   <div id='articleList' class='article-list'>
     <el-skeleton v-if='!data' :rows='3' animated class='p-6' />
-    <List v-else-if='data?.length' :data-list='data'>
+    <List v-else-if='data?.length' :data-list='data' @click='(item) => toDetail(item?.id)'>
       <template #default='{ item }'>
-        <div @click='() => toDetail(item.id)' class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-6 pb-4 cursor-pointer border-t hover:bg-gray-50'>
+        <div class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50'>
           <div class='flex flex-col'>
             <div class='article-list-item-header flex'>
               <a @click='toUserDetail' class='pr-3 cursor-pointer hover:text-indigo-500'>{{ item.user.name }}</a>
@@ -56,7 +54,7 @@ export default defineComponent({
               <div class='desc truncate'>{{ item.summary }}</div>
             </div>
           </div>
-          <img style='width: 140px; height: 120px;' :src='item.cover' />
+          <img :src='item.cover' @error='(e) => e?.target?.classList?.add?.("hidden")' style='width: 120px; height: 80px;' />
         </div>
       </template>
     </List>

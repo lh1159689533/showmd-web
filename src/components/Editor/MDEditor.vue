@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import {
   querySelector,
   getElementById,
@@ -166,6 +166,20 @@ export default defineComponent({
             style: props?.data?.codeTheme ?? 'github',
           },
           mode: 'both', // editor both
+          // transform(html) {
+          //   console.log(html);
+          //   if (html.includes('<pre>') && html.includes('</pre>')) {
+          //     count ++;
+          //     return html
+          //       .replaceAll(
+          //         '<pre>',
+          //         `<div class="code-block"><input type='checkbox' id='codeSuofang${count}' class='code-suofang-checkbox' style='display: none' />
+          //         <div class='code-block-menus'><label></label><label for='codeSuofang${count}'></label><label></label></div><div class='code-content'><pre>`
+          //       )
+          //       .replaceAll('</pre>', `</pre></div></div>`);
+          //   }
+          //   return html;
+          // },
         },
         mode: 'sv',
         cache: {
@@ -209,6 +223,11 @@ export default defineComponent({
           },
         },
       });
+    });
+
+    onBeforeUnmount(() => {
+      // 组件销毁时销毁编辑器
+      editor.value?.destroy();
     });
 
     function setContentTheme(contentTheme, contentThemePath) {

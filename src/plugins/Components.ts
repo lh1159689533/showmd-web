@@ -3,14 +3,18 @@
  */
 import List from '@components/List.vue';
 import Upload from '@components/Upload.vue';
-import Editor from '@src/components/Editor/Editor.vue';
-import PreviewEditor from '@src/components/Editor/PreviewEditor.vue';
+import MDEditor from '@src/components/Editor/MDEditor.vue';
+import MDPreview from '@src/components/Editor/MDPreview.vue';
+import Empty from '@src/components/Empty.vue';
+import CanvasBG from '@src/components/CanvasBG.vue';
 
 const Components = [
   List,
   Upload,
-  Editor,
-  PreviewEditor,
+  MDEditor,
+  MDPreview,
+  Empty,
+  CanvasBG,
 ];
 
 export default {

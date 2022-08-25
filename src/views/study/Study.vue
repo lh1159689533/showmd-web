@@ -1,33 +1,35 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue';
 import dayjs from 'dayjs';
+
 import ArticleList from '../article/ArticleList.vue';
 import Category from './Category.vue';
-import Sort from './Sort.vue';
+import Top from './Top.vue';
+
 import { findArticleList } from '../../service/article';
 
 export default defineComponent({
   name: 'Study',
-  components: { ArticleList, Category, Sort },
+  components: { ArticleList, Category, Top },
   setup() {
     const articleList = ref(null);
-    const filters = reactive({ category: '', subCategory: '' });
-    const currentSort = ref('tuijian'); // 默认推荐排序
+    const filters = reactive({ category: null, subCategory: null });
+    const currentSort = ref('latest'); // 默认时间排序
 
     async function getArticleList(category, subCategory, sort?) {
       let params = null;
-      if (category && category !== 'all') {
+      if (category && category.key !== 'all') {
         params = {
           filters: {
-            category,
+            category: category.key,
           },
         };
-        subCategory && subCategory !== 'all' && (params.filters.tags = subCategory);
+        subCategory && subCategory.key !== 'all' && (params.filters.tags = subCategory.key);
       }
       if (sort === 'latest') {
         params = {
           ...(params ?? {}),
-          order: 'desc'
+          order: 'desc',
         };
       }
       findArticleList(params).then((result) => {
@@ -45,18 +47,19 @@ export default defineComponent({
       getArticleList(category, subCategory, currentSort.value);
     };
 
-    const handleSortChange = (sort) => {
-      const { category, subCategory } = filters;
-      currentSort.value = sort;
-      getArticleList(category, subCategory, sort);
-    };
+    // const handleSortChange = (sort) => {
+    //   const { category, subCategory } = filters;
+    //   currentSort.value = sort;
+    //   getArticleList(category, subCategory, sort);
+    // };
 
     getArticleList(filters.category, filters.subCategory, currentSort.value);
 
     return {
+      filters,
       articleList,
       handleCategoryChange,
-      handleSortChange,
+      // handleSortChange,
     };
   },
 });
@@ -70,10 +73,17 @@ export default defineComponent({
     <section class='mt-16'>
       <div class='mt-4 relative'>
         <div class='content-list bg-white' style='width: 73%'>
-          <Sort @change='handleSortChange' />
+          <!-- <Sort @change='handleSortChange' /> -->
+          <div class='pl-6 py-3 text-sm text-indigo-500'>
+            <span>{{ filters.category?.title || '综合' }}</span>
+            <span class='separator px-2 text-gray-300'>/</span>
+            <span>{{ filters.subCategory?.title || '全部' }}</span>
+          </div>
           <ArticleList :data='articleList' />
         </div>
-        <aside class='content-aside right-0 top-0 absolute bg-white' style='width: 25%'>222</aside>
+        <aside class='content-aside right-8 top-0 absolute' style='width: 22%'>
+          <Top />
+        </aside>
       </div>
     </section>
   </div>

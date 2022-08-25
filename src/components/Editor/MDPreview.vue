@@ -1,18 +1,48 @@
 <script lang='ts'>
 import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { querySelectorAll, addClass, removeClass, getNodeByClassName, getNodeByAttribute, getElementById } from './vditorEditor';
+import { useRouter } from 'vue-router';
 import Vditor from 'vditor/dist/method.min';
+// import Vditor from 'vditor';
 import 'vditor/dist/index.css';
+import { querySelectorAll, getElementById } from './vditorEditor';
+
+interface User {
+  name: string;
+  avatar: string;
+}
+
+interface Data {
+  id: number;
+  content?: string;
+  codeTheme?: string;
+  contentTheme?: string;
+  updateTime?: string;
+  createTime?: string;
+  readCount?: number;
+  user?: User;
+}
+
+interface Props {
+  data: Data;
+}
+
+interface OutlineNode {
+  id: string;
+  title: string;
+  indent: string;
+}
 
 export default defineComponent({
   name: 'PreviewEditor',
   props: ['data'],
   setup(props) {
-    const { data } = toRefs(props);
+    const router = useRouter();
+
+    const { data } = toRefs<Props>(props);
     const isShowToTop = ref(false); // 是否显示回到顶部按钮
-    let outlineNodeList = []; // 大纲节点列表
-    let targetIdList = []; // 大纲节点id列表
-    const isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
+    const outlineNodeList = ref<OutlineNode[]>([]); // 目录对象
+    const outlineActiveNodeId = ref('');
+    let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
 
     watch(data, (newVal) => {
       let count = 0;
@@ -20,13 +50,13 @@ export default defineComponent({
       getElementById('myPreviewEditorOutlineList').scrollTop = 0;
       Vditor.preview(getElementById('myPreviewEditor'), newVal?.content, {
         hljs: {
-          style: props.data?.codeTheme ?? 'github',
+          style: newVal?.codeTheme ?? 'github',
         },
         theme: {
-          current: props.data?.contentTheme ?? 'Chinese-red',
+          current: newVal?.contentTheme ?? 'Chinese-red',
           path: 'http://localhost:1229/editor/theme',
         },
-        lazyLoadImage: 'https://cdn.jsdelivr.net/npm/vditor/dist/images/img-loading.svg',
+        lazyLoadImage: 'http://localhost:1229/loading.webp',
         renderers: {
           renderBlockquote: (node, entering) => {
             const text = node.Text();
@@ -59,10 +89,10 @@ export default defineComponent({
           },
         },
         after() {
-          // 文档大纲渲染，并添加事件
-          outlineRender();
           // 代码复制
           codeCopy();
+          // 文档大纲渲染，并添加事件
+          outlineRender();
         },
       });
     });
@@ -71,8 +101,8 @@ export default defineComponent({
      * 代码片段复制按钮点击复制后显示 '已复制'
      */
     function codeCopy() {
-      const editor = getElementById('myPreviewEditor');
-      const copyNodeList = querySelectorAll(editor, '.vditor-copy>span[aria-label="复制"]');
+      const editorNode = getElementById('myPreviewEditor');
+      const copyNodeList = querySelectorAll(editorNode, '.vditor-copy>span[aria-label="复制"]');
       [].slice.call(copyNodeList).map((node) => {
         node?.addEventListener('click', function () {
           this.setAttribute('aria-label', '已复制');
@@ -81,35 +111,27 @@ export default defineComponent({
     }
 
     /**
-     * 初始化大纲，并添加事件
+     * 文档目录渲染
      */
-    function initOutline(outline) {
-      // 获取大纲节点列表
-      outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
-
-      // 默认第一个选中
-      addClass(outlineNodeList[0], 'active');
-
-      // 遍历大纲节点，添加点击事件
-      outlineNodeList?.map((node) => {
-        node.addEventListener('click', function () {
-          // isOutlineClick = true;
-          // 点击节点添加选中样式 active，其他节点去掉选中样式 active
-          const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-          removeClass(currentActiveNode, 'active');
-          addClass(this, 'active');
-        });
-      });
-
-      setTimeout(outlineNodeTopChanged, 500);
+    function outlineRender() {
+      const editorNode = getElementById('myPreviewEditor');
+      const hList = querySelectorAll(editorNode, 'h1,h2,h3,h4,h5,h6');
+      if (hList?.length) {
+        outlineNodeList.value = hList.map((h) => ({
+          id: `outline-${h.id}`,
+          title: h.innerText,
+          indent: h.nodeName,
+        }));
+        setTimeout(() => contentLinkOutline(hList), 1000);
+        outlineActiveNodeId.value = outlineNodeList.value[0].id;
+      }
     }
 
-    function outlineNodeTopChanged() {
-      // 获取大纲节点的top值
-      targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
-
-      targetIdList?.map((id) => {
-        const node = getElementById(id);
+    /**
+     * 内容关联目录(内容区滚动时目录关联滚动)
+     */
+    function contentLinkOutline(hList) {
+      hList?.map((node) => {
         const obeserver = new IntersectionObserver(
           function (entries) {
             const [entry] = entries;
@@ -122,10 +144,10 @@ export default defineComponent({
             if (isIntersecting === false && boundingClientRect?.y < 60) {
               newActiveNodeId = target?.id;
             } else if (isIntersecting === true && boundingClientRect?.y < 60) {
-              const index = targetIdList.findIndex((id) => id === target.id);
-              newActiveNodeId = targetIdList[index === 0 ? 0 : index - 1];
+              const index = hList.findIndex((h) => h.id === target.id);
+              newActiveNodeId = hList[index === 0 ? 0 : index - 1].id;
             }
-            outlineActiveChanged(newActiveNodeId);
+            if (newActiveNodeId) outlineActiveChanged(`outline-${newActiveNodeId}`);
           },
           {
             rootMargin: '-60px 0px 0px 0px',
@@ -140,37 +162,25 @@ export default defineComponent({
      * @param newActiveNodeId 新选中的节点id
      */
     function outlineActiveChanged(newActiveNodeId) {
-      const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-      // 根据当前最顶部的内容(h1-6)的id找到对应的大纲节点，即当前选中大纲节点
-      const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', newActiveNodeId);
-      if (newActiveNode && currentActiveNode) {
-        // 大纲节点显示到其滚动容器中心(有滚动条的时候)
-        newActiveNode.scrollIntoView({ block: 'center', behavior: 'auto' });
-        // 要选中的大纲节点添加选中样式，当前选中大纲节点去掉选中样式
-        removeClass(currentActiveNode, 'active');
-        addClass(newActiveNode, 'active');
-      }
+      if (!newActiveNodeId) return;
+      outlineActiveNodeId.value = newActiveNodeId;
+      getElementById(outlineActiveNodeId.value)?.scrollIntoView({ block: 'center', behavior: 'auto' });
     }
 
     /**
-     * 文档大纲渲染
+     * 目录关联内容(目录滚动时内容区关联滚动)
      */
-    function outlineRender() {
-      const outline = getElementById('myPreviewEditorOutline');
-      // 渲染文档大纲
-      Vditor.outlineRender(getElementById('myPreviewEditor'), outline);
-
-      if (outline.innerText.trim() !== '') {
-        getElementById('myPreviewEditorSider').style.display = 'block';
-        outline.style.display = 'block';
-        initOutline(outline);
-      } else {
-        getElementById('myPreviewEditorSider').style.display = 'none';
-      }
+    function outlineLinkContent(outline) {
+      if (!outline) return;
+      isOutlineClick = true;
+      outlineActiveNodeId.value = outline.id;
+      const contentNodeId = outline.id.replace('outline-', '');
+      getElementById(contentNodeId)?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
+      setTimeout(() => (isOutlineClick = false), 800);
     }
 
     /**
-     * 文档内容区滚动事件，主要处理与大纲的联动效果
+     * 文档内容区滚动事件，主要处理header头的隐现与置顶按钮隐现
      */
     function onScroll() {
       const scrollTop = document.documentElement.scrollTop;
@@ -180,7 +190,7 @@ export default defineComponent({
         isShowToTop.value = false;
       }
       if (scrollTop <= 0) {
-        outlineActiveChanged(targetIdList[0]);
+        outlineActiveChanged(outlineNodeList.value?.[0]?.id);
       }
     }
 
@@ -194,19 +204,22 @@ export default defineComponent({
 
     // 置顶
     const toTop = () => {
-      outlineActiveChanged(targetIdList[0]);
+      outlineActiveChanged(outlineNodeList.value?.[0]?.id);
       document.documentElement.scrollTop = 0;
+    };
+
+    const edit = (id) => {
+      router.push(`/article/edit/${id}`);
     };
 
     return {
       isShowToTop,
       toTop,
+      edit,
+      outlineNodeList,
+      outlineActiveNodeId,
+      outlineLinkContent,
     };
-  },
-  methods: {
-    edit() {
-      this.$router.push(`/article/edit/${this.data?.id}`);
-    },
   },
 });
 </script>
@@ -223,7 +236,7 @@ export default defineComponent({
             <div>
               <span class='createTime'>{{ data?.updateTime ?? data?.createTime }}</span>
               <span class='ml-6'>阅读 {{ data?.readCount ?? 0 }}</span>
-              <a @click='edit' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
+              <a @click='() => edit(data?.id)' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
             </div>
           </div>
         </div>
@@ -231,11 +244,20 @@ export default defineComponent({
       <div id='myPreviewEditor' class='showmd px-12 mt-4' style='min-height: 1140px;' />
     </div>
     <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
-      <div id='myPreviewEditorSider' class='fixed border hidden bg-white'>
+      <div id='myPreviewEditorSider' class='fixed border bg-white'>
         <nav style='height: 580px' class='relative overflow-hidden'>
           <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
-          <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0' style='max-height: 530px;margin: 8px 4px 0 0;'>
-            <div id='myPreviewEditorOutline' style='padding-left: 2px' />
+          <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0 w-full' style='max-height: 530px;'>
+            <List :data-list='outlineNodeList' @click='outlineLinkContent' class='w-full' item-class='py-2 truncate cursor-pointer hover:bg-gray-100 relative text-sm'>
+              <template #default='{ item }'>
+                <el-tooltip effect='light' placement='left' :show-after='500'>
+                  <template #content>
+                    <span class='overflow-clip inline-block' style='max-width:350px'>{{ item.title }}</span>
+                  </template>
+                  <span :id='item.id' :class='[`indent-${item.indent}`, item.id === outlineActiveNodeId ? "active" : ""]'>{{ item.title }}</span>
+                </el-tooltip>
+              </template>
+            </List>
           </div>
         </nav>
       </div>
@@ -275,19 +297,7 @@ export default defineComponent({
   top: 4.5rem;
 }
 
-/* .vditor-outline {
-  display: block !important;
-} */
-
-.vditor-outline ul {
-  padding-left: 0 !important;
-}
-
-.vditor-outline li > span {
-  @apply relative;
-}
-
-.vditor-outline li > span.active::before {
+#myPreviewEditorOutlineList ul > li > span.active::before {
   content: '';
   position: absolute;
   width: 4px;
@@ -295,16 +305,35 @@ export default defineComponent({
   @apply bg-indigo-600 left-0 rounded-tr-lg rounded-br-lg;
 }
 
-.vditor-outline li > span:hover {
-  @apply bg-gray-50;
-}
-
-.vditor-outline li > span > span {
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.vditor-outline li > span.active > span {
+#myPreviewEditorOutlineList ul > li > span.active {
   @apply text-indigo-600;
+}
+
+#myPreviewEditorOutlineList ul > li > span {
+  @apply text-gray-600;
+}
+
+.indent-H1 {
+  padding-left: 10px;
+}
+
+.indent-H2 {
+  padding-left: 26px;
+}
+
+.indent-H3 {
+  padding-left: 42px;
+}
+
+.indent-H4 {
+  padding-left: 58px;
+}
+
+.indent-H5 {
+  padding-left: 74px;
+}
+
+.indent-H6 {
+  padding-left: 90px;
 }
 </style>

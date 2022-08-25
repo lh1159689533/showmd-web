@@ -54,9 +54,17 @@ async function uploadImg(formData) {
   return res.data;
 }
 
+// 查询热门文章列表
+async function findTopArticleList(data?) {
+  const [err, res] = await http.request({ apiurl: 'article/findTopList', data });
+  if (err && res.code !== 0) return 0;
+  return res.data;
+}
+
 export {
   findById,
   saveArticle,
   findArticleList,
+  findTopArticleList,
   uploadImg
 }
