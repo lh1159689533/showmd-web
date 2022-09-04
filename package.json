@@ -19,7 +19,7 @@
   "dependencies": {
     "animate.css": "^4.1.1",
     "dayjs": "^1.11.4",
-    "element-plus": "^2.2.2",
+    "element-plus": "^2.2.15",
     "unplugin-icons": "^0.14.6",
     "vditor": "^3.8.13",
     "vue": "^3.2.25",

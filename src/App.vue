@@ -18,6 +18,21 @@ body {
   position: relative;
 }
 
+.el-message {
+  min-width: fit-content !important;
+  padding: 15px 19px !important;
+}
+
+.el-notification {
+  width: fit-content !important;
+}
+
+.el-button:not(.is-text, .is-link, .el-button--text):focus-visible {
+  border-color: transparent !important;
+  outline: none !important;
+  outline-offset: 0px !important;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -6,7 +6,8 @@ import Upload from '@components/Upload.vue';
 import MDEditor from '@src/components/Editor/MDEditor.vue';
 import MDPreview from '@src/components/Editor/MDPreview.vue';
 import Empty from '@src/components/Empty.vue';
-import CanvasBG from '@src/components/CanvasBG.vue';
+import CanvasBG from '@src/components/CanvasBG/Index.vue';
+import Comment from '@src/components/Comment/Comment.vue';
 
 const Components = [
   List,
@@ -15,6 +16,7 @@ const Components = [
   MDPreview,
   Empty,
   CanvasBG,
+  Comment,
 ];
 
 export default {

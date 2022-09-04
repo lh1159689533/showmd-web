@@ -3,7 +3,7 @@ import router from './router';
 import App from './App.vue';
 import { store } from './store'
 import Components from '@plugins/Components';
-import 'element-plus/theme-chalk/el-message.css';
+import 'element-plus/theme-chalk/index.css';
 import 'animate.css';
 import './index.css';
 
