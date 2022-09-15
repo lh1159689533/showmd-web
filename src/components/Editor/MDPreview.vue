@@ -34,7 +34,7 @@ interface OutlineNode {
 }
 
 export default defineComponent({
-  name: 'PreviewEditor',
+  name: 'MDPreview',
   props: ['data', 'isEdit'],
   setup(props) {
     const router = useRouter();
@@ -227,7 +227,7 @@ export default defineComponent({
 
 <template>
   <div v-bind='$attrs' class='w-full flex flex-row'>
-    <div id='myPreviewEditorContainer' class='content bg-white pb-10' style='width: calc(100% - 260px);'>
+    <div id='myPreviewEditorContainer' class='content bg-white mb-4 rounded-md' style='width: calc(100% - 260px);'>
       <div class='pl-10'>
         <h1 class='title font-bold pt-4 text-3xl text-gray-600'>{{ data?.name }}</h1>
         <div class='flex mt-3 text-gray-400 items-center'>

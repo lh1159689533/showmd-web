@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='home' class='container mx-auto'>
+  <div id='home' class='container'>
     11111222
   </div>
 </template>

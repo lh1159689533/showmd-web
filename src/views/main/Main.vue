@@ -9,7 +9,7 @@ export default defineComponent({
 
 <template>
   <Header />
-  <div id='main' class='container mx-auto'>
+  <div id='main' class='container'>
     <router-view />
   </div>
 </template>

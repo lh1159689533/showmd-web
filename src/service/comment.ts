@@ -8,25 +8,28 @@ interface User {
 
 interface Reply {
   id: number;
+  parentId: number;
   content: string;
   user: User;
+  userId?: number;
   replyToUser?: User;
+  replyToUserId?: number;
   createTime: string;
   digg: number;
-  isAuthor: boolean;
-  isMyself: boolean;
+  diggUsers: string;
 }
 
 export interface Comment extends ResponseData {
   id?: number;
   content?: string;
   user: User;
+  userId: number;
   createTime: string;
   digg: number;
-  replys: Reply[];
-  isAuthor: boolean;
-  isMyself: boolean;
+  diggUsers: string;
+  replies: Reply[];
   articleId: number;
+  replyCount: number;
 }
 
 interface CommentData {
@@ -44,8 +47,8 @@ interface ReplyData {
 }
 
 interface CommentResponseData {
-  list: Comment[];
-  articleId: number;
+  id: number;
+  list: Comment[] | Reply[];
   count: number;
 }
 
@@ -56,8 +59,8 @@ interface DiggData {
   replyId?: number;
 }
 
-async function findCommentList(articleId) {
-  const [err, res] = await http.request({ apiurl: 'comment/findList', params: { articleId } });
+async function findList(id: number, type: 'comment' | 'reply') {
+  const [err, res] = await http.request({ apiurl: 'comment/findList', segment: { id, type } });
   if (err && res.code !== 0) return null;
   const data: CommentResponseData = res.data;
   return data;
@@ -105,7 +108,7 @@ function isAuthorOrMyself(list, currentUser, articleAuthor) {
 }
 
 export {
-  findCommentList,
+  findList,
   saveComment,
   deleteById,
   isAuthorOrMyself,

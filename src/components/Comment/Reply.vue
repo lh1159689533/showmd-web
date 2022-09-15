@@ -15,7 +15,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <List :class='$attrs["class"]' class='reply-list' :data-list='replies' item-class='mb-8'>
+  <List :class='$attrs["class"]' class='reply-list' :data-list='replies' item-class='mt-8'>
     <template #default='{ item }'>
       <Item :data='item' type='reply' />
     </template>

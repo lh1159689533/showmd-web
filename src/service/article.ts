@@ -47,13 +47,6 @@ async function findArticleList(data?) {
   return res.data;
 }
 
-// 查询文章列表
-async function uploadImg(formData) {
-  const [err, res] = await http.request({ apiurl: 'article/uploadImg', data: formData });
-  if (err && res.code !== 0) return 0;
-  return res.data;
-}
-
 // 查询热门文章列表
 async function findTopArticleList(data?) {
   const [err, res] = await http.request({ apiurl: 'article/findTopList', data });
@@ -66,5 +59,4 @@ export {
   saveArticle,
   findArticleList,
   findTopArticleList,
-  uploadImg
 }

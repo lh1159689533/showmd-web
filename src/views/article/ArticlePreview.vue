@@ -15,6 +15,8 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
 
+    const commentDom = ref(null);
+
     const article = ref(null);
     const loading = ref(true);
 
@@ -50,6 +52,11 @@ export default defineComponent({
       }
     }
 
+    // 跳转到评论
+    const gotoComment = () => {
+      commentDom.value?.scrollIntoView({ block: 'start' });
+    };
+
     init();
 
     return {
@@ -57,6 +64,8 @@ export default defineComponent({
       loading,
       commentData,
       currentUser,
+      commentDom,
+      gotoComment,
     };
   },
 });
@@ -64,7 +73,7 @@ export default defineComponent({
 
 <template>
   <Header />
-  <div class='container m-auto mt-4 relative z-100'>
+  <div class='container mt-4 relative z-100'>
     <div v-if='loading' style='width: calc(100% - 260px);height:100vh;' class='bg-white p-6'>
       <el-skeleton animated>
         <template #template>
@@ -80,13 +89,25 @@ export default defineComponent({
         </template>
       </el-skeleton>
     </div>
+    <ul class='action-box fixed -ml-24 top-40'>
+      <li @click='gotoComment'>
+        <el-badge :value='commentData?.count || ""' type='info' :max='999'>
+          <div class='w-10 h-10 flex justify-center items-center bg-white rounded-full cursor-pointer'>
+            <i class='iconfont icon-reply text-gray-600'></i>
+          </div>
+        </el-badge>
+      </li>
+    </ul>
     <MDPreview v-show='!loading' :data='article' :is-edit='currentUser?.id === article?.user?.id' />
-    <div class='comment px-10 py-2 bg-white border-t pb-16' style='width: calc(100% - 260px);'>
+    <div ref='commentDom' class='comment px-10 py-2 bg-white border-t pb-16 rounded-md mb-12' style='width: calc(100% - 260px);'>
       <Comment :data='commentData' />
     </div>
   </div>
   <CanvasBG v-show='!loading' class='fixed w-screen h-screen top-0 left-0' />
 </template>
 
-<style scope>
+<style>
+.action-box .el-badge__content--info {
+  background-color: #9ca3af !important;
+}
 </style>

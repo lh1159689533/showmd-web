@@ -26,7 +26,7 @@ export default defineComponent({
       v-for='(item, index) in dataList'
       :key='item.id || item.key || index'
       :class='$attrs["item-class"]'
-      @click='() => $emit("click", item)'
+      @click='(e) => $emit("click", item, e)'
       @mouseenter='() => hoverIndex = index'
       @mouseleave='() => hoverIndex = -1'
     >

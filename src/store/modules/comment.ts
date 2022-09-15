@@ -1,4 +1,4 @@
-import { saveComment, deleteById, findCommentList, isAuthorOrMyself, digg, undigg } from '@service/comment';
+import { saveComment, deleteById, findList, isAuthorOrMyself, digg, undigg } from '@service/comment';
 
 interface DiggData {
   commentId: number;
@@ -35,38 +35,56 @@ const mutations = {
     const comment = list.find(c => c.id === commentId);
     if (comment) {
       comment.replies.push(reply);
+      comment.replyCount = comment.replies.length;
     }
     state.commentData = {
       ...state.commentData,
       list,
       count: count + 1,
+    };
+  },
+
+  setReply(state, { replyData, commentId }) {
+    const { list } = state.commentData;
+    const index = list.findIndex(c => c.id === commentId);
+    if (index !== -1) {
+      list.splice(index, 1, { ...list[index], replies: replyData.list })
+    }
+    state.commentData = {
+      ...state.commentData,
+      list,
     };
   },
 
   delComment(state, id) {
     const { list, count } = state.commentData;
     const index = list.findIndex(item => item.id === id);
+    let delCount = 1;
     if (index !== -1) {
-      list.splice(index, 1);
+      const [del] = list.splice(index, 1);
+      delCount += del?.replyCount;
     }
     state.commentData = {
       ...state.commentData,
       list,
-      count: count - 1,
+      count: count - delCount,
     };
   },
 
   delReply(state, { id, commentId }) {
     const { list, count } = state.commentData;
     const comment = list.find(c => c.id === commentId);
+    let delCount = 1;
     if (comment?.replies?.length) {
       const replies = comment.replies.filter(item => item.id !== id && item.parentId !== id);
+      delCount = comment?.replies?.length - replies.length;
       comment.replies = replies;
+      comment.replyCount = comment.replies.length;
     }
     state.commentData = {
       ...state.commentData,
       list,
-      count: count + 1,
+      count: count - delCount,
     };
   },
 
@@ -150,7 +168,7 @@ const actions = {
   },
 
   async listComment({ commit, state, rootState }, articleId) {
-    const commentData = await findCommentList(articleId);
+    const commentData = await findList(articleId, 'comment');
     const currentUser = rootState.user.user;
     if (commentData) {
       isAuthorOrMyself(commentData.list, currentUser, state.articleAuthor);
@@ -188,6 +206,15 @@ const actions = {
     commit('undigg', { commentId, userId, articleId, replyId, type });
 
     return true;
+  },
+
+  async loadMoreReply({ commit, rootState, state }, commentId: number) {
+    const replyData = await findList(commentId, 'reply');
+    if (replyData) {
+      const currentUser = rootState.user.user;
+      isAuthorOrMyself(replyData.list, currentUser, state.articleAuthor);
+      commit('setReply', { commentId, replyData })
+    }
   }
 };
 

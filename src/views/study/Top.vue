@@ -32,7 +32,7 @@ export default defineComponent({
       <template #default='{ item, index }'>
         <el-tooltip effect='light' placement='left' :show-after='500'>
           <template #content>
-            <span class='overflow-clip inline-block' style='max-width:350px'>{{ item.summary }}</span>
+            <span class='overflow-clip inline-block' style='max-width:350px'>{{ item.summary ?? item.name }}</span>
           </template>
           <div>
             <div class='title flex items-center'>

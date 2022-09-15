@@ -75,7 +75,7 @@ export default defineComponent({
 
 <template>
   <div class='h-14 bg-white border-b sticky top-0 z-2000' :class='headerCls'>
-    <header class='container mx-auto h-full flex items-center'>
+    <header class='container h-full flex items-center'>
       <div class='logo mr-8 text-2xl font-bold text-indigo-500 cursor-pointer'>Lanis</div>
       <List :data-list='menuList' @click='changeNav' class='flex text-black mr-16 h-full flex-1' item-class='nav-list text-gray-800 min-w-max hover:text-black'>
         <template #default='{ item }'>

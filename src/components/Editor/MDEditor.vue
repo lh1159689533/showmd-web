@@ -26,7 +26,7 @@ interface ICodeTheme {
 }
 
 export default defineComponent({
-  name: 'Editor',
+  name: 'MDEditor',
   props: {
     // 内容
     data: Object,
