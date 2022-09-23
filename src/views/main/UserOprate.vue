@@ -47,7 +47,8 @@ export default defineComponent({
     // 操作
     const handleOprate = (key) => {
       if (key === 'newArticle') {
-        router.push('/article/new');
+        const { href } = router.resolve('/article/new');
+        window.open(href, '_blank');
       }
     };
 

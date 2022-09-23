@@ -54,7 +54,7 @@ export default defineComponent({
               <div class='desc truncate'>{{ item.summary }}</div>
             </div>
           </div>
-          <img :src='item.cover' @error='(e) => e?.target?.classList?.add?.("hidden")' style='width: 120px; height: 80px;' />
+          <img :src='item.cover' @error='(e) => (e?.target as HTMLElement)?.classList?.add?.("hidden")' style='width: 120px; height: 80px;' />
         </div>
       </template>
     </List>

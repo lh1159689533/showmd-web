@@ -22,8 +22,8 @@ function getNodeByAttribute(nodeList: Element[], attributeName: string, attribut
  * @param node 目标节点
  * @param className className
  */
-function addClass(node: Element, className: string): void {
-  node?.classList?.add?.(className);
+function addClass(node: Element, ...className: string[]): void {
+  node?.classList?.add?.(...className);
 }
 
 /**
@@ -49,7 +49,7 @@ function getElementById(id: string): HTMLElement {
  * @param selector css选择器
  */
 function querySelector(node: Element | Document = document, selector: string): HTMLElement {
-  return node.querySelector(selector);
+  return node?.querySelector(selector);
 }
 
 /**
@@ -58,7 +58,7 @@ function querySelector(node: Element | Document = document, selector: string): H
  * @param selector css选择器
  */
 function querySelectorAll(node: Element | Document = document, selector: string): HTMLElement[] {
-  return toArray<HTMLElement>(node.querySelectorAll(selector));
+  return toArray<HTMLElement>(node?.querySelectorAll(selector));
 }
 
 /**

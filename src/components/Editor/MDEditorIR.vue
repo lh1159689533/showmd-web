@@ -1,5 +1,6 @@
 <script lang='ts'>
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
+import Vditor from 'vditor';
 import {
   querySelector,
   getElementById,
@@ -11,7 +12,9 @@ import {
   getBoundingClientRect,
   getComputedStyleOf,
 } from './vditorEditor';
-import Vditor from 'vditor';
+import { sliceUpload } from '@utils/sliceUpload';
+import message from '@utils/message';
+
 import 'vditor/dist/index.css';
 
 interface IContentTheme {
@@ -26,7 +29,7 @@ interface ICodeTheme {
 }
 
 export default defineComponent({
-  name: 'MDEditor',
+  name: 'MDEditorIR',
   props: {
     // 内容
     data: Object,
@@ -44,7 +47,7 @@ export default defineComponent({
   emits: ['change'],
   setup(props, { emit }) {
     const editor = ref<Vditor | null>(null);
-    let editorMode = 'both';
+    const editorMode = 'both';
     let isEditorInited = false; // 编辑器是否初始化
     let isOutlineInited = false; // 目录是否初始化
     let isShowOutline = false; // 是否显示目录
@@ -92,7 +95,7 @@ export default defineComponent({
               className: `${currentCodeTheme.value}`,
               click: () => setCodeTheme(t.value),
             })),
-            click: () => {},
+            click: () => { },
           },
           {
             name: 'contentTheme',
@@ -105,7 +108,7 @@ export default defineComponent({
               name: t.value,
               click: () => setContentTheme(t.value, t.path),
             })),
-            click: () => {},
+            click: () => { },
           },
           '|',
           {
@@ -125,34 +128,11 @@ export default defineComponent({
             className: 'right',
             icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M24 28.625v-4a6 6 0 1 0-6-6" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M24 37.625a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor"></path></svg>',
           },
-          {
-            name: 'Edit',
-            tip: '仅编辑区',
-            tipPosition: 'n',
-            className: 'right',
-            icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="28" height="36" rx="2" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M42 6v36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-            click() {
-              toggleMode('edit');
-            },
-          },
-          {
-            name: 'Preview',
-            tip: '仅预览区',
-            tipPosition: 'n',
-            className: 'right',
-            icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><rect x="14" y="6" width="28" height="36" rx="2" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></rect><path d="M6 6v36" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-            click() {
-              toggleMode('preview');
-            },
-          },
           'fullscreen',
         ],
         outline: {
           enable: false,
           position: 'right',
-        },
-        classes: {
-          preview: 'showmd',
         },
         preview: {
           delay: 500,
@@ -167,21 +147,28 @@ export default defineComponent({
           },
           mode: 'both', // editor both
         },
-        mode: 'sv',
+        mode: 'ir',
         cache: {
           enable: false,
         },
-        value: props?.data?.content ?? '',
+        tab: '\t',
+        value: (props?.data?.content ?? '').concat('\n\n'),
         after() {
+          (window as any).editor = editor.value;
           if (isEditorInited) return;
           isEditorInited = true;
           onScroll();
           !isOutlineInited && setTimeout(initOutline, 1000);
           onPreviewScroll();
+          const editorContent = querySelector(getElementById('myEditorContent'), '.vditor-ir');
+          addClass(editorContent, 'showmd');
           const outlineTitle = querySelector(getElementById('myEditorContent'), '.vditor-content .vditor-outline .vditor-outline__title');
           if (outlineTitle) {
             outlineTitle.innerText = '目录';
           }
+          querySelector(getElementById('myEditorContent'), '.vditor-wysiwyg')?.remove();
+          querySelector(getElementById('myEditorContent'), '.vditor-sv')?.remove();
+          querySelector(getElementById('myEditorContent'), '.vditor-preview')?.remove();
         },
         input(value) {
           const data = {
@@ -192,20 +179,21 @@ export default defineComponent({
         // 上传图片
         upload: {
           accept: 'image/*',
-          url: '/api/showmd/file/upload',
-          format(_, res) {
-            // 对服务端返回的数据进行转换，以满足内置的数据结构
-            const { data } = JSON.parse(res);
-            const { name, path } = data;
-            return JSON.stringify({
-              code: 0,
-              data: {
-                errFiles: [],
-                succMap: {
-                  [`${name}`]: `/api/${path}`,
-                },
-              },
-            });
+          multiple: false, // 不支持多个文件同时上传
+          filename(name) {
+            return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').replace('/\\s/g', '');
+          },
+          // 自定义上传
+          async handler(files: File[]) {
+            const file = files[0];
+            const res: any = await sliceUpload(file);
+            if (res.data?.data) {
+              editor.value.insertValue(`![${this.filename(file?.name)}](/api/${res?.data?.data?.path})\n`);
+              message.success('图片上传成功');
+            } else {
+              message.error('图片上传失败');
+            }
+            return null;
           },
         },
       });
@@ -282,32 +270,6 @@ export default defineComponent({
         target = nodeTopList.find((node, i) => node.top < scrollTop && nodeTopList[i + 1]?.top > scrollTop);
       }
       return target?.id;
-    }
-
-    /**
-     * 编辑模式切换
-     */
-    function toggleMode(mode) {
-      const editorContent = getElementById('myEditorContent');
-      const content = querySelector(editorContent, '.vditor-content');
-      const previewNode = querySelector(content, '.vditor-preview');
-      const editorNode = querySelector(content, '.vditor-sv');
-      if (editorMode === mode) {
-        content.style.gridTemplateColumns = isShowOutline ? '1fr 1fr 250px' : '1fr 1fr';
-        previewNode.style.display = 'block';
-        editorNode.style.display = 'block';
-        editorMode = 'both';
-      } else if (mode === 'edit') {
-        content.style.gridTemplateColumns = isShowOutline ? '1fr 250px' : '1fr';
-        previewNode.style.display = 'none';
-        editorNode.style.display = 'block';
-        editorMode = mode;
-      } else if (mode === 'preview') {
-        content.style.gridTemplateColumns = isShowOutline ? '1fr 250px' : '1fr';
-        editorNode.style.display = 'none';
-        previewNode.style.display = 'block';
-        editorMode = mode;
-      }
     }
 
     /**
@@ -402,78 +364,92 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='myEditor'>
+  <div id='myEditorIR'>
     <div id='myEditorContent' v-bind='$attrs' />
   </div>
 </template>
 
 <style>
-#myEditor .vditor-toolbar__item {
+#myEditorIR .vditor-toolbar__item {
   padding-right: 10px;
 }
 
-#myEditor .vditor-toolbar__item > button[data-type='record'],
-#myEditor .vditor-toolbar__item > button[data-type='undo'],
-#myEditor .vditor-toolbar__item > button[data-type='edit-mode'],
-#myEditor .vditor-toolbar__item > button[data-type='redo'] {
+#myEditorIR .vditor-toolbar__item>button[data-type='record'],
+#myEditorIR .vditor-toolbar__item>button[data-type='undo'],
+#myEditorIR .vditor-toolbar__item>button[data-type='edit-mode'],
+#myEditorIR .vditor-toolbar__item>button[data-type='redo'] {
   display: none;
 }
 
-#myEditor #myEditorContent {
+#myEditorIR #myEditorContent {
   height: calc(100vh - 74px);
+  position: relative;
 }
 
-#myEditor #myEditorContent .vditor-content .vditor-preview .vditor-reset {
-  padding-top: 0;
-  /* height: 100%; */
+#myEditorIR #myEditorContent .vditor-content .vditor-ir .vditor-reset {
+  background-color: transparent;
+  position: relative;
+  padding: 10px 50px !important;
 }
 
-#myEditor #myEditorContent .vditor-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+#myEditorIR #myEditorContent .vditor-content {
+  display: flex;
+  overflow: auto;
 }
 
-#myEditor #myEditorContent .vditor-content .vditor-sv {
-  padding: 10px 60px;
+/* #myEditorIR #myEditorContent .vditor-content .vditor-preview {
   display: inline-block;
-  /* width: 50%; */
   vertical-align: top;
   flex: none;
 }
 
-#myEditor #myEditorContent .vditor-content .vditor-preview {
-  display: inline-block;
-  /* width: 50%; */
-  vertical-align: top;
-  flex: none;
-}
-
-#myEditor #myEditorContent .vditor-content .vditor-preview .showmd {
+#myEditorIR #myEditorContent .vditor-content .vditor-preview .showmd {
   min-height: 100%;
-}
+} */
 
-#myEditor #myEditorContent .vditor-toolbar--pin {
+#myEditorIR #myEditorContent .vditor-toolbar--pin {
   display: flex;
   @apply px-8 !important;
 }
 
-#myEditor #myEditorContent .vditor-toolbar__item {
+#myEditorIR #myEditorContent .vditor-toolbar__item {
   float: none;
   display: block !important;
 }
 
-#myEditor .vditor-toolbar__divider {
+#myEditorIR .vditor-toolbar__divider {
   float: none;
   flex: 1;
   border-left: none;
 }
-#myEditor .vditor-messageElementtip,
-#myEditor .vditor-tip {
+
+#myEditorIR .vditor-messageElementtip,
+#myEditorIR .vditor-tip {
   display: none;
 }
 
-#myEditor .toolbar__item > div {
+#myEditorIR .toolbar__item>div {
   max-height: 600px;
   overflow-y: auto;
+}
+
+.showmd .vditor-reset {
+  width: 1380px !important;
+  margin: 0 auto !important;
+  flex: 1;
+  height: auto !important;
+  overflow-x: hidden;
+}
+
+@media screen and (max-width: 1439px) {
+  .showmd .vditor-reset {
+    max-width: 1190px;
+  }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1535px) {
+  .showmd .vditor-reset {
+    max-width: 1280px;
+  }
 }
 </style>

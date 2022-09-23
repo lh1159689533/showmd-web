@@ -4,6 +4,7 @@
 import List from '@components/List.vue';
 import Upload from '@components/Upload.vue';
 import MDEditor from '@src/components/Editor/MDEditor.vue';
+import MDEditorIR from '@src/components/Editor/MDEditorIR.vue';
 import MDPreview from '@src/components/Editor/MDPreview.vue';
 import Empty from '@src/components/Empty.vue';
 import CanvasBG from '@src/components/CanvasBG/Index.vue';
@@ -13,6 +14,7 @@ const Components = [
   List,
   Upload,
   MDEditor,
+  MDEditorIR,
   MDPreview,
   Empty,
   CanvasBG,

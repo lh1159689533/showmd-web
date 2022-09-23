@@ -40,7 +40,7 @@ body {
 /** element-ui样式重写 end */
 
 .container {
-  width: 1380px;
+  width: 1380px !important;
   margin: 0 auto;
 }
 

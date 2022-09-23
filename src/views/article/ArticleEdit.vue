@@ -26,11 +26,14 @@ export default defineComponent({
     id: String,
   },
   setup(props) {
+    const router = useRouter();
+
     const isShowEditor = ref(false);
     const isShowPublish = ref(false);
     const contentThemeList = ref([]);
     const codeThemeList = ref([]);
-    const router = useRouter();
+
+    const storageKey = props.id ? `update-article-${props.id}` : 'create-article';
 
     const article = ref<IArticle>({
       name: '',
@@ -72,6 +75,12 @@ export default defineComponent({
       } else {
         isShowEditor.value = true;
       }
+      if (storage.getJson(storageKey)) {
+        article.value = {
+          ...article.value,
+          ...storage.getJson(storageKey)
+        };
+      }
     }
 
     // 隐藏发布窗
@@ -107,6 +116,7 @@ export default defineComponent({
       } else if (value.codeTheme) {
         article.value.codeTheme = value.codeTheme;
       }
+      storage.setJson(storageKey, article.value);
     };
 
     // 发布
@@ -137,6 +147,7 @@ export default defineComponent({
         storage.setJson('publishedArticle', { ...art, id: result });
         message.success('文章发布成功');
         router.push('/published');
+        storage.remove(storageKey);
       }
     };
 
@@ -159,7 +170,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='myEditor' class='flex flex-col'>
+  <div class='flex flex-col'>
     <div class='tool flex items-center p-3 px-8 bg-white'>
       <input v-model='article.name' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none' />
       <div class='rightGroups flex py-1 relative'>
@@ -168,7 +179,7 @@ export default defineComponent({
         <PublishArticle v-show='isShowPublish' :init-value='initPublishForm' @publish='onPublish' @close='hidePublish' />
       </div>
     </div>
-    <MDEditor v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
+    <MDEditorIR v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
   </div>
 </template>
 

@@ -177,7 +177,6 @@ export default defineComponent({
       class='textarea w-full p-2 text-sm rounded border-gray-300 border focus:border-indigo-500'
     ></div>
     <div v-show='isShowAction' class='action-box text-sm text-gray-500 mt-2 flex items-center'>
-      <!-- <div @mousedown='(e) => e.preventDefault()'></div> -->
       <el-dropdown @visible-change='handleIsShowEmoji' trigger='click' class='flex-1' placement='bottom-start' popper-class='emoji-dropdown'>
         <div class='flex items-center'>
           <i class='iconfont icon-emoji text-xl mr-1'></i>

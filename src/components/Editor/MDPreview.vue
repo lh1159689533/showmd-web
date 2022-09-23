@@ -242,7 +242,7 @@ export default defineComponent({
           </div>
         </div>
       </div>
-      <div id='myPreviewEditor' class='showmd px-12 mt-4' style='min-height: 1140px;' />
+      <div id='myPreviewEditor' class='showmd px-12 pb-10 mt-4' style='min-height: 1140px;' />
     </div>
     <div class='rightSider relative w-1/4' style='width: 260px; padding-left: 20px;'>
       <div id='myPreviewEditorSider' class='fixed bg-white'>
