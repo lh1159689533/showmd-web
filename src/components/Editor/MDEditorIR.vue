@@ -12,7 +12,7 @@ import {
   getBoundingClientRect,
   getComputedStyleOf,
 } from './vditorEditor';
-import { sliceUpload } from '@utils/sliceUpload';
+import { upload } from '@src/components/Editor/upload';
 import message from '@utils/message';
 
 import 'vditor/dist/index.css';
@@ -47,7 +47,7 @@ export default defineComponent({
   emits: ['change'],
   setup(props, { emit }) {
     const editor = ref<Vditor | null>(null);
-    const editorMode = 'both';
+    // const editorMode = 'both';
     let isEditorInited = false; // 编辑器是否初始化
     let isOutlineInited = false; // 目录是否初始化
     let isShowOutline = false; // 是否显示目录
@@ -186,9 +186,9 @@ export default defineComponent({
           // 自定义上传
           async handler(files: File[]) {
             const file = files[0];
-            const res: any = await sliceUpload(file);
-            if (res.data?.data) {
-              editor.value.insertValue(`![${this.filename(file?.name)}](/api/${res?.data?.data?.path})\n`);
+            const [err, res] = await upload(file);
+            if (!err) {
+              editor.value.insertValue(`![${this.filename(file?.name)}](/api/${res?.data?.path})\n`);
               message.success('图片上传成功');
             } else {
               message.error('图片上传失败');
@@ -334,13 +334,13 @@ export default defineComponent({
       const content = querySelector(editorContent, '.vditor-content');
       const outline = querySelector(content, '.vditor-outline');
       if (isShowOutline) {
-        if (editorMode === 'preview') {
-          content.style.gridTemplateColumns = '1fr 250px';
-        } else if (editorMode === 'edit') {
-          content.style.gridTemplateColumns = '1fr 250px';
-        } else {
-          content.style.gridTemplateColumns = '1fr 1fr 250px';
-        }
+        // if (editorMode === 'preview') {
+        //   content.style.gridTemplateColumns = '1fr 250px';
+        // } else if (editorMode === 'edit') {
+        //   content.style.gridTemplateColumns = '1fr 250px';
+        // } else {
+        //   content.style.gridTemplateColumns = '1fr 1fr 250px';
+        // }
         outline.style.display = 'block';
         const contentNode = querySelector(content, '.vditor-sv.vditor-reset');
         const targetId = findTargetIdNode(contentNode.scrollTop, contentNodeTopList);
@@ -350,13 +350,13 @@ export default defineComponent({
         addClass(newActiveNode, 'active');
       } else {
         outline.style.display = 'none';
-        if (editorMode === 'preview') {
-          content.style.gridTemplateColumns = '1fr';
-        } else if (editorMode === 'edit') {
-          content.style.gridTemplateColumns = '1fr';
-        } else {
-          content.style.gridTemplateColumns = '1fr 1fr';
-        }
+        // if (editorMode === 'preview') {
+        //   content.style.gridTemplateColumns = '1fr';
+        // } else if (editorMode === 'edit') {
+        //   content.style.gridTemplateColumns = '1fr';
+        // } else {
+        //   content.style.gridTemplateColumns = '1fr 1fr';
+        // }
       }
     }
   },
