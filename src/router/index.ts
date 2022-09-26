@@ -11,17 +11,27 @@ const routes: RouteRecordRaw[] = [
         alias: '/home'
       },
       {
-        path: '/study',
+        path: '/blog',
         component: () => import('@views/study/Study.vue'),
       },
       {
         path: '/published',
         component: () => import('@views/article/Published.vue')
-      }
+      },
     ]
   },
   { path: '/article/new', component: () => import('@views/article/ArticleEdit.vue') },
   { path: '/article/edit/:id', component: () => import('@views/article/ArticleEdit.vue'), props: true },
+  {
+    path: '/article/preview/:id',
+    component: () => import('@views/article/ArticlePreview.vue'),
+    props: true
+  },
+  {
+    path: '/comment',
+    component: () => import('@components/Comment/Comment.vue'),
+    props: true
+  }
 ]
 
 const router = createRouter({

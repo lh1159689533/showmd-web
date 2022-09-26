@@ -1,12 +1,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 export default defineComponent({
-  name: 'home',
+  name: 'Home',
 });
 </script>
 
 <template>
-  <div id='home' class='container mx-auto'>
+  <div id='home' class='container'>
     11111222
   </div>
 </template>

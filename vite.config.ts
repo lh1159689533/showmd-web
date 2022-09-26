@@ -38,6 +38,7 @@ export default defineConfig({
       '@components': resolve('src/components'),
       '@plugins': resolve('src/plugins'),
       '@utils': resolve('src/utils'),
+      '@service': resolve('src/service'),
     }
   },
   server: {

@@ -13,7 +13,7 @@ export default defineComponent({
       const { id, name } = storage.getJson('publishedArticle');
       article.id = id;
       article.name = name;
-      console.log(article);
+      storage.remove('publishedArticle');
     });
 
     const to = () => {

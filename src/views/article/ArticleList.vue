@@ -1,21 +1,30 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { findArticleList } from './article';
+import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ArticleList',
+  props: {
+    data: {
+      type: Array,
+      default: () => [],
+    },
+  },
   setup() {
-    const articleList = ref();
+    const router = useRouter();
 
-    findArticleList().then((result) => {
-      articleList.value = result?.map((item) => ({
-        ...item,
-        tags: [{ 'front-dev': '前端', 'backend-dev': '后端' }[item.category], ...item.tags.split(',')],
-      }));
-    });
+    const toDetail = (id: number) => {
+      const { href } = router.resolve(`/article/preview/${id}`);
+      window.open(href, '_blank');
+    };
+
+    const toUserDetail = (id) => {
+      console.log(id);
+    };
 
     return {
-      articleList,
+      toDetail,
+      toUserDetail,
     };
   },
 });
@@ -23,32 +32,33 @@ export default defineComponent({
 
 <template>
   <div id='articleList' class='article-list'>
-    <List :dataList='articleList'>
+    <el-skeleton v-if='!data' :rows='3' animated class='p-6' />
+    <List v-else-if='data?.length' :data-list='data' @click='(item) => toDetail(item?.id)'>
       <template #default='{ item }'>
-        <div class='article-list-item flex flex-col text-sm text-gray-800 px-6 py-4 cursor-pointer border-t hover:bg-gray-50'>
-          <div class='article-list-item-header flex'>
-            <a class='pr-3 cursor-pointer hover:text-indigo-500'>{{item.creator}}</a>
-            <span class='modify-time relative px-3 flex items-center'>{{item.modifyTime}}</span>
-            <span class='tag-list pl-3 flex items-center'>
-              <a
-                v-for='(tag, index) in item.tags'
-                :key='`${tag}-${index}`'
-                class='cursor-pointer hover:text-indigo-500 px-2 flex items-center'
-                :class='[index !== item.tags.length - 1 ? "delimiter relative" : ""]'
-              >{{tag}}</a>
-            </span>
+        <div class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50'>
+          <div class='flex flex-col'>
+            <div class='article-list-item-header flex'>
+              <a @click='toUserDetail' class='pr-3 cursor-pointer hover:text-indigo-500'>{{ item.user.name }}</a>
+              <span class='modify-time relative px-3 flex items-center'>{{ item.updateTime }}</span>
+              <span class='tag-list pl-3 flex items-center'>
+                <a
+                  v-for='(tag, index) in item.tags'
+                  :key='`${tag}-${index}`'
+                  class='cursor-pointer hover:text-indigo-500 px-2 flex items-center'
+                  :class='[index !== item.tags.length - 1 ? "delimiter relative" : ""]'
+                >{{ tag }}</a>
+              </span>
+            </div>
+            <div class='article-list-item-content flex flex-col mt-3'>
+              <div class='title text-lg mb-3 text-gray-900'>{{ item.name }}</div>
+              <div class='desc truncate'>{{ item.summary }}</div>
+            </div>
           </div>
-          <div class='article-list-item-content flex flex-col my-2'>
-            <div class='title text-lg mb-2 text-gray-900'>{{item.name}}</div>
-            <div class='desc truncate'>{{item.summary}}</div>
-          </div>
-          <div class='article-list-item-footer flex items-center'>
-            <i class='iconfont icon-eye text-gray-500 text-2xl' />
-            <span class='read-count ml-1'>{{item.readCount}}</span>
-          </div>
+          <img :src='item.cover' @error='(e) => (e?.target as HTMLElement)?.classList?.add?.("hidden")' style='width: 120px; height: 80px;' />
         </div>
       </template>
     </List>
+    <Empty v-else class='border-t' />
   </div>
 </template>
 

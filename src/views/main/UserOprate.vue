@@ -1,11 +1,13 @@
 <script lang='ts'>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   name: 'UserOprate',
   setup() {
     const router = useRouter();
+    const store = useStore();
 
     // 用户操作选项
     const userOprateList = [
@@ -28,6 +30,7 @@ export default defineComponent({
 
     // 是否展示用户操作
     const isShowUserOprate = ref(false);
+    const user = computed(() => store.getters.getUser);
 
     // 显示用户操作栏
     const showUserOprate = () => {
@@ -42,36 +45,38 @@ export default defineComponent({
     };
 
     // 操作
-    const oprate = ({ key }) => {
+    const handleOprate = (key) => {
       if (key === 'newArticle') {
-        router.push('/article/new');
+        const { href } = router.resolve('/article/new');
+        window.open(href, '_blank');
       }
     };
 
     return {
+      user,
       userOprateList,
       isShowUserOprate,
       showUserOprate,
-      oprate,
+      handleOprate,
     };
   },
 });
 </script>
 
 <template>
-  <img class='rounded-full w-8 h-8 ml-5 cursor-pointer' @click.stop='showUserOprate' />
-  <List
-    :dataList='userOprateList'
-    v-show='isShowUserOprate'
-    :onClick='oprate'
-    class='user-oprate-list py-2 grid grid-rows-3 justify-items-center text-gray-600 text-sm absolute top-14 right-0 border rounded-sm bg-white'
-    itemClass='py-1 grid grid-cols-2 w-full items-center cursor-pointer hover:bg-gray-50'
-  >
-    <template #default='{ item }'>
-      <i class='iconfont justify-self-center text-2xl' :class='`icon-${item.icon}`' />
-      <a class='py-1 min-w-max'>{{item.title}}</a>
+  <el-dropdown @command='handleOprate' trigger='hover'>
+    <el-avatar :size='30' class='ml-5 -mt-1 cursor-pointer' :src='user.avatar'>
+      <img src='https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png' />
+    </el-avatar>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item v-for='item in userOprateList' :key='item.key' :command='item.key'>
+          <i class='iconfont justify-self-center text-2xl' :class='`icon-${item.icon}`' />
+          {{ item.title }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
     </template>
-  </List>
+  </el-dropdown>
 </template>
 
 <style scoped>

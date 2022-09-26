@@ -2,22 +2,11 @@ import axios from 'axios';
 
 import { AxiosResponse, AxiosInstance, AxiosRequestConfig, Response } from './types';
 
-// export type RequestConfig = AxiosRequestConfig;
-// export type RequestMethod = Method;
-// export type JsonData = Record<string, string | number | boolean>;
-// export type RequestData = JsonData | FormData;
-// export type ResponseData = JsonData | string | number | boolean;
-// export interface Response extends AxiosResponse {
-//   code: number;
-//   message?: string;
-//   data: ResponseData;
-// }
-
 let PREFIX = "/api",
   IP = "";
 if (process.env.NODE_ENV === "development") {
   PREFIX = "/api";
-  IP = "http://localhost:1229";
+  IP = "http://localhost:3000";
 }
 
 // 创建axios实例

@@ -18,6 +18,44 @@ body {
   position: relative;
 }
 
+/** element-ui样式重写 start */
+.el-message {
+  min-width: fit-content !important;
+  padding: 15px 19px !important;
+}
+
+.el-notification {
+  width: fit-content !important;
+}
+
+.el-button:not(.is-text, .is-link, .el-button--text):focus-visible {
+  border-color: transparent !important;
+  outline: none !important;
+  outline-offset: 0px !important;
+}
+
+.el-badge__content.is-fixed {
+  border: none !important;
+}
+/** element-ui样式重写 end */
+
+.container {
+  width: 1380px !important;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1439px) {
+  .container {
+    max-width: 1190px;
+  }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1535px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

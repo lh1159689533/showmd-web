@@ -16,7 +16,7 @@ Object.values(apis).map(api => {
 interface RequestProps {
   apiurl: string;
   prefix?: string;
-  headers?: JsonData;
+  headers?: any;
   data?: RequestData;
   segment?: JsonData;
   params?: JsonData;

@@ -1,147 +1,98 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
+import dayjs from 'dayjs';
+
 import ArticleList from '../article/ArticleList.vue';
+import Category from './Category.vue';
+import Top from './Top.vue';
+
+import { findArticleList } from '../../service/article';
 
 export default defineComponent({
   name: 'Study',
-  components: { ArticleList },
+  components: { ArticleList, Category, Top },
   setup() {
-    const categoryList = [
-      {
-        key: 'all',
-        title: '综合',
-      },
-      {
-        key: 'front-dev',
-        title: '前端',
-      },
-      {
-        key: 'backend-dev',
-        title: '后端',
-      },
-    ];
-    const tagList = [
-      {
-        key: 'all',
-        title: '全部',
-      },
-      {
-        key: 'js',
-        title: 'JavaScript',
-      },
-      {
-        key: 'vue',
-        title: 'Vue.js',
-      },
-      {
-        key: 'react',
-        title: 'React.js',
-      },
-      {
-        key: 'css',
-        title: 'CSS',
-      },
-      {
-        key: 'node',
-        title: 'Node.js',
-      },
-      {
-        key: 'ts',
-        title: 'TypeScript',
-      },
-    ];
-    const sortList = [
-      { title: '推荐', key: 'recommend' },
-      { title: '最新', key: 'latest' },
-    ];
-    const activeKey = ref(categoryList[0].key);
-    const tagActiveKey = ref(tagList[0].key);
-    const sort = ref(sortList[0].key);
+    const articleList = ref(null);
+    const filters = reactive({ category: null, subCategory: null });
+    const currentSort = ref('latest'); // 默认时间排序
+
+    async function getArticleList(category, subCategory, sort?) {
+      let params = null;
+      if (category && category.key !== 'all') {
+        params = {
+          filters: {
+            category: category.key,
+          },
+        };
+        subCategory && subCategory.key !== 'all' && (params.filters.tags = subCategory.key);
+      }
+      if (sort === 'latest') {
+        params = {
+          ...(params ?? {}),
+          order: 'desc',
+        };
+      }
+      findArticleList(params).then((result) => {
+        articleList.value = result?.map((item) => ({
+          ...item,
+          tags: [{ 'front-dev': '前端', 'backend-dev': '后端' }[item.category], ...item.tags.split(',')],
+          updateTime: dayjs(item.updateTime).fromNow(),
+        }));
+      });
+    }
+
+    const handleCategoryChange = (category, subCategory) => {
+      filters.category = category;
+      filters.subCategory = subCategory;
+      getArticleList(category, subCategory, currentSort.value);
+    };
+
+    // const handleSortChange = (sort) => {
+    //   const { category, subCategory } = filters;
+    //   currentSort.value = sort;
+    //   getArticleList(category, subCategory, sort);
+    // };
+
+    getArticleList(filters.category, filters.subCategory, currentSort.value);
 
     return {
-      categoryList,
-      tagList,
-      activeKey,
-      tagActiveKey,
-      sortList,
-      sort,
+      filters,
+      articleList,
+      handleCategoryChange,
+      // handleSortChange,
     };
   },
 });
 </script>
 
 <template>
-  <div
-    id='study'
-    class
-  >
-    <nav class='fixed w-full h-12 left-0 top-14 z-10 shadow bg-white'>
-      <List
-        :dataList='categoryList'
-        class='category-list h-full flex items-center text-sm text-gray-800'
-      >
-        <template #default='{ item }'>
-          <span
-            @click='() => activeKey = item.key'
-            :class='[item.key === activeKey ? "text-indigo-500" : ""]'
-            class='pr-6 cursor-pointer hover:text-indigo-500'
-          >{{item.title}}</span>
-        </template>
-      </List>
+  <div id='study' class>
+    <nav class='fixed w-full h-12 left-0 top-14 z-1000 shadow bg-white'>
+      <Category @change='handleCategoryChange' />
     </nav>
     <section class='mt-16'>
-      <List
-        :dataList='tagList'
-        style='font-size: 0.85rem'
-        class='sub-category-list flex items-center text-gray-800'
-        itemClass='mr-4'
-      >
-        <template #default='{ item }'>
-          <span
-            @click='() => tagActiveKey = item.key'
-            :class='[item.key === tagActiveKey ? "bg-indigo-500 text-white hover:text-white" : ""]'
-            class='cursor-pointer hover:text-indigo-500 bg-white rounded-full px-2 py-1 inline-block'
-          >{{item.title}}</span>
-        </template>
-      </List>
       <div class='mt-4 relative'>
-        <div
-          class='content-list bg-white'
-          style='width: 73%'
-        >
-          <List
-            :dataList='sortList'
-            class='sort-list flex text-gray-800 p-3'
-            style='font-size: 0.85rem'
-          >
-            <template #default='{ item }'>
-              <span
-                @click='() => sort = item.key'
-                :class='[item.key === sort ? "text-indigo-500" : ""]'
-                class='cursor-pointer hover:text-indigo-500 px-4'
-              >{{item.title}}</span>
-            </template>
-          </List>
-          <ArticleList />
+        <div class='content-list bg-white' style='width: 73%'>
+          <!-- <Sort @change='handleSortChange' /> -->
+          <div class='pl-6 py-3 text-sm text-indigo-500'>
+            <span>{{ filters.category?.title || '综合' }}</span>
+            <span class='separator px-2 text-gray-300'>/</span>
+            <span>{{ filters.subCategory?.title || '全部' }}</span>
+          </div>
+          <ArticleList :data='articleList' />
         </div>
-        <aside
-          class='content-aside right-0 top-0 absolute bg-white'
-          style='width: 25%'
-        >222</aside>
+        <aside class='content-aside right-8 top-0 absolute' style='width: 22%'>
+          <Top />
+        </aside>
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
-#study,
-#study .category-list {
-  max-width: 1120px;
+#study {
+  max-width: 1380px;
   margin: 0 auto;
-}
-
-#study .content-list .sort-list > li:nth-child(odd) > span {
-  border-right: 1px solid #bbb;
 }
 
 #study .content-list {

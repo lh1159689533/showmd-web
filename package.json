@@ -11,17 +11,21 @@
     "tsc": "vue-tsc --noEmit"
   },
   "lint-staged": {
-    "src/*": "eslint --ext .js,.ts,.vue"
+    "./src/**/*.{js,ts,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
-    "@headlessui/vue": "^1.5.0",
     "animate.css": "^4.1.1",
-    "editor.md": "^1.5.0",
-    "element-plus": "^2.2.2",
+    "dayjs": "^1.11.4",
+    "element-plus": "^2.2.15",
+    "js-base64": "^3.7.2",
     "unplugin-icons": "^0.14.6",
     "vditor": "^3.8.13",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
