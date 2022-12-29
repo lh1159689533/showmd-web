@@ -12,7 +12,7 @@ import {
   getBoundingClientRect,
   getComputedStyleOf,
 } from './vditorEditor';
-import { upload } from '@src/components/Editor/upload';
+import { upload } from '@src/utils/upload';
 import message from '@utils/message';
 
 import 'vditor/dist/index.css';
@@ -187,7 +187,7 @@ export default defineComponent({
           async handler(files: File[]) {
             const file = files[0];
             const [err, res] = await upload(file);
-            if (!err) {
+            if (!err && res.code === 0) {
               editor.value.insertValue(`![${this.filename(file?.name)}](/api/${res?.data?.path})\n`);
               message.success('图片上传成功');
             } else {
@@ -365,7 +365,7 @@ export default defineComponent({
 
 <template>
   <div id='myEditorIR'>
-    <div id='myEditorContent' v-bind='$attrs' />
+    <div id='myEditorContent' v-bind='$attrs'></div>
   </div>
 </template>
 
@@ -389,7 +389,8 @@ export default defineComponent({
 #myEditorIR #myEditorContent .vditor-content .vditor-ir .vditor-reset {
   background-color: transparent;
   position: relative;
-  padding: 10px 50px !important;
+  padding: 10px 50px 50px 50px !important;
+  min-height: 50px;
 }
 
 #myEditorIR #myEditorContent .vditor-content {

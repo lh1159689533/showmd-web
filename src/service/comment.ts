@@ -60,7 +60,7 @@ interface DiggData {
 }
 
 async function findList(id: number, type: 'comment' | 'reply') {
-  const [err, res] = await http.request({ apiurl: 'comment/findList', segment: { id, type } });
+  const [err, res] = await http.request({ apiurl: 'comment/findList', params: { id, type } });
   if (err && res.code !== 0) return null;
   const data: CommentResponseData = res.data;
   return data;
@@ -73,7 +73,7 @@ async function saveComment(comment: CommentData | ReplyData, type: 'comment' | '
 }
 
 async function deleteById(id: number, type: 'comment' | 'reply') {
-  const [err, res] = await http.request({ apiurl: 'comment/delete', segment: { id, type } });
+  const [err, res] = await http.request({ apiurl: 'comment/delete', params: { id, type } });
   if (err && res.code !== 0) return false;
   return res.data;
 }

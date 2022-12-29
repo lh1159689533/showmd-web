@@ -24,7 +24,7 @@ export default defineComponent({
   <ul class='overflow-y-auto overflow-x-hidden'>
     <li
       v-for='(item, index) in dataList'
-      :key='item.id || item.key || index'
+      :key='(item as any).id || (item as any).key || index'
       :class='$attrs["item-class"]'
       @click='(e) => $emit("click", item, e)'
       @mouseenter='() => hoverIndex = index'

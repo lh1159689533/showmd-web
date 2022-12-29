@@ -54,9 +54,17 @@ async function findTopArticleList(data?) {
   return res.data;
 }
 
+// 查询用户的文章
+async function findListByUserId(userId: number, searchKey?: string) {
+  const [err, res] = await http.request({ apiurl: 'article/findListByUserId', params: { userId, searchKey } });
+  if (err && res.code !== 0) return 0;
+  return res.data;
+}
+
 export {
   findById,
   saveArticle,
   findArticleList,
   findTopArticleList,
+  findListByUserId,
 }

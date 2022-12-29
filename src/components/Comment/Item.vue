@@ -7,7 +7,8 @@ import AddItem from './AddItem.vue';
 import { useStore } from 'vuex';
 
 import { addClass, removeClass } from '@src/components/Editor/vditorEditor';
-import { parseEmoji } from './Emoji/emoji.config';
+// import { parseEmoji } from './Emoji/emoji.config';
+import { parse } from './utils';
 
 export default defineComponent({
   name: 'Item',
@@ -175,7 +176,7 @@ export default defineComponent({
       handleAddItem,
       handleDigg,
       formatDate,
-      parseEmoji,
+      parse,
     };
   },
 });
@@ -202,7 +203,7 @@ export default defineComponent({
         <div class='content-box'>
           <div ref='contentDom' class='content pr-4 text-gray-700'>
             <span v-if='type === "reply" && data.replyToUserId' class='reply-to-user text-indigo-500 mr-1'>@{{ data.replyToUser.name }}</span>
-            <span v-html='parseEmoji(data.content)'></span>
+            <span v-html='parse(data.content)'></span>
           </div>
           <div v-if='isShowLimit' @click='handleExpand' class='limit text-indigo-500 cursor-pointer mt-2'>{{ isExpand ? '收起' : '展开' }}</div>
         </div>

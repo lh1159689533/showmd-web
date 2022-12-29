@@ -3,12 +3,12 @@ import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@src/views/main/Main.vue'),
+    component: () => import('@views/main/Main.vue'),
     children: [
       {
         path: '',
+        alias: '/home',
         component: () => import('@views/Home.vue'),
-        alias: '/home'
       },
       {
         path: '/blog',
@@ -20,17 +20,37 @@ const routes: RouteRecordRaw[] = [
       },
     ]
   },
-  { path: '/article/new', component: () => import('@views/article/ArticleEdit.vue') },
-  { path: '/article/edit/:id', component: () => import('@views/article/ArticleEdit.vue'), props: true },
+  {
+    path: '/article/new',
+    component: () => import('@views/article/ArticleEdit.vue')
+  },
+  {
+    path: '/article/edit/:id',
+    component: () => import('@views/article/ArticleEdit.vue'), props: true
+  },
   {
     path: '/article/preview/:id',
     component: () => import('@views/article/ArticlePreview.vue'),
     props: true
   },
   {
-    path: '/comment',
-    component: () => import('@components/Comment/Comment.vue'),
-    props: true
+    path: '/creator',
+    component: () => import('@views/creator/Creator.vue'),
+    children: [
+      {
+        path: '',
+        alias: '/creator/home',
+        component: () => import('@views/creator/Home.vue'),
+      },
+      {
+        path: '/creator/manage/article',
+        component: () => import('@views/creator/manage/Article.vue'),
+      },
+      {
+        path: '/creator/manage/column',
+        component: () => import('@views/creator/manage/column/Column.vue'),
+      }
+    ]
   }
 ]
 

@@ -1,10 +1,11 @@
 export default {
   namespace: 'article',
 
-  findList: 'post showmd/list/article',
-  findTopList: 'post showmd/toplist/article',
+  findList: 'post showmd/article/list',
+  findTopList: 'post showmd/article/toplist',
   findById: 'get showmd/article/findById',
-  save: 'post showmd/article/create',
+  save: 'post showmd/article/update',
   upload: 'post showmd/file/upload',
-  sliceUpload: 'post showmd/file/sliceUpload'
+  sliceUpload: 'post showmd/file/sliceUpload',
+  findListByUserId: 'get showmd/article/findListByUserId',
 };

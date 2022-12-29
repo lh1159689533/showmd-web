@@ -2,7 +2,8 @@
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import Emoji from './Emoji/Emoji.vue';
 
-import { formatEmoji } from './Emoji/emoji.config';
+// import { formatEmoji } from './Emoji/emoji.config';
+import { formatEmoji } from './utils';
 
 export default defineComponent({
   name: 'AddItem',
@@ -42,7 +43,7 @@ export default defineComponent({
      */
     const handleValueChange = (ele) => {
       if (ele.target) {
-        value.value = ele.target.innerHTML;
+        value.value = ele.target.innerText;
       }
     };
 

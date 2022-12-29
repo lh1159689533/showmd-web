@@ -29,34 +29,33 @@ export default defineComponent({
     ];
 
     // 是否展示用户操作
-    const isShowUserOprate = ref(false);
+    const isShow = ref(false);
     const user = computed(() => store.getters.getUser);
 
     // 显示用户操作栏
-    const showUserOprate = () => {
-      function hide() {
-        isShowUserOprate.value = false;
-        document.removeEventListener('click', hide);
-      }
-      isShowUserOprate.value = !isShowUserOprate.value;
-      if (isShowUserOprate.value) {
-        document.addEventListener('click', hide);
-      }
+    const show = () => {
+      isShow.value = true;
+    };
+
+    const hide = () => {
+      isShow.value = false;
     };
 
     // 操作
-    const handleOprate = (key) => {
+    const handleOprate = ({ key }) => {
       if (key === 'newArticle') {
         const { href } = router.resolve('/article/new');
         window.open(href, '_blank');
       }
+      hide();
     };
 
     return {
       user,
       userOprateList,
-      isShowUserOprate,
-      showUserOprate,
+      isShow,
+      show,
+      hide,
       handleOprate,
     };
   },
@@ -64,24 +63,62 @@ export default defineComponent({
 </script>
 
 <template>
-  <el-dropdown @command='handleOprate' trigger='hover'>
-    <el-avatar :size='30' class='ml-5 -mt-1 cursor-pointer' :src='user.avatar'>
-      <img src='https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png' />
-    </el-avatar>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item v-for='item in userOprateList' :key='item.key' :command='item.key'>
-          <i class='iconfont justify-self-center text-2xl' :class='`icon-${item.icon}`' />
-          {{ item.title }}
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  <div class='user' @mouseenter='show' @mouseleave='hide'>
+    <img
+      :src='user.avatar' :style='[isShow ? &apos;transform:scale(1.5) translate(0,8px)&apos; : &apos;&apos;]'
+      @error='(e) => (e.target as HTMLImageElement).src=&apos;https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png&apos;'
+    >
+    <div class='oprate-box show-ani absolute bg-white' :style='[isShow ? &apos;display:block&apos; : &apos;display:none&apos;]'>
+      <div class='pt-3 pb-2 flex justify-center items-center border-b'>
+        <span>{{ user.name }}</span>
+      </div>
+      <List
+        :data-list='userOprateList' @click='handleOprate' class='oprate-list text-sm text-gray-600 my-3'
+        item-class='cursor-pointer hover:bg-gray-200'
+      >
+        <template #default='{ item }'>
+          <div class='px-4 flex items-center' style='padding-top: 6px;padding-bottom: 6px;'>
+            <i class='iconfont justify-self-center text-xl mr-2' :class='`icon-${item.icon}`' />
+            <span>{{ item.title }}</span>
+          </div>
+        </template>
+      </List>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.user-oprate-list {
-  min-width: 8.15rem;
-  box-shadow: 0px 0px 6px -3px #666;
+.user {
+  @apply mr-8 relative h-full flex items-center justify-center;
+}
+
+.user img {
+  @apply w-7 h-7 rounded-full cursor-pointer;
+  transition: all 300ms;
+}
+
+.user .oprate-box {
+  top: 100%;
+  z-index: -1;
+  box-shadow: 0px 0px 10px -6px #666;
+  border-radius: 3px;
+  width: 160px;
+}
+
+.user .oprate-box .oprate-list {
+  width: 100%;
+}
+
+.show-ani {
+  animation: show 300ms forwards;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>

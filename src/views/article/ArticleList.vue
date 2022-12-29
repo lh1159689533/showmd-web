@@ -35,15 +35,16 @@ export default defineComponent({
     <el-skeleton v-if='!data' :rows='3' animated class='p-6' />
     <List v-else-if='data?.length' :data-list='data' @click='(item) => toDetail(item?.id)'>
       <template #default='{ item }'>
-        <div class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50'>
+        <div
+          class='article-list-item flex justify-between text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50'
+        >
           <div class='flex flex-col'>
             <div class='article-list-item-header flex'>
               <a @click='toUserDetail' class='pr-3 cursor-pointer hover:text-indigo-500'>{{ item.user.name }}</a>
               <span class='modify-time relative px-3 flex items-center'>{{ item.updateTime }}</span>
               <span class='tag-list pl-3 flex items-center'>
                 <a
-                  v-for='(tag, index) in item.tags'
-                  :key='`${tag}-${index}`'
+                  v-for='(tag, index) in item.tags' :key='`${tag}-${index}`'
                   class='cursor-pointer hover:text-indigo-500 px-2 flex items-center'
                   :class='[index !== item.tags.length - 1 ? "delimiter relative" : ""]'
                 >{{ tag }}</a>
@@ -54,11 +55,17 @@ export default defineComponent({
               <div class='desc truncate'>{{ item.summary }}</div>
             </div>
           </div>
-          <img :src='item.cover' @error='(e) => (e?.target as HTMLElement)?.classList?.add?.("hidden")' style='width: 120px; height: 80px;' />
+          <img
+            :src='item.cover' @error='(e) => (e?.target as HTMLElement)?.classList?.add?.("hidden")'
+            style='width: 120px; height: 80px;'
+          />
         </div>
       </template>
     </List>
-    <Empty v-else class='border-t' />
+    <Empty v-else class='border-t'>
+      还没有文章，快来发表第一篇文章吧
+      <router-link to='/article/new' target='_blank' class='ml-2 text-indigo-500 hover:underline'>写文章</router-link>
+    </Empty>
   </div>
 </template>
 
@@ -80,7 +87,7 @@ export default defineComponent({
   right: 0;
 }
 
-.article-list .article-list-item .article-list-item-header .tag-list > a.delimiter::after {
+.article-list .article-list-item .article-list-item-header .tag-list>a.delimiter::after {
   content: ' ';
   position: absolute;
   display: block;

@@ -2,8 +2,8 @@
 </script>
 
 <template>
-  <div id='home' class='container'>
-    11111222
+  <div>
+    home
   </div>
 </template>
 

@@ -37,12 +37,53 @@ body {
 .el-badge__content.is-fixed {
   border: none !important;
 }
+
+.el-button--primary {
+  --el-button-disabled-bg-color: rgba(79, 70, 229, 0.5) !important;
+  --el-button-disabled-border-color: transparent !important;
+}
 /** element-ui样式重写 end */
 
+/* 公共css start */
 .container {
   width: 1380px !important;
   margin: 0 auto;
 }
+
+.delimiter {
+  gap: 16px;
+}
+
+.delimiter>span {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.delimiter>span:last-child::before, .delimiter>span:not(:first-child):not(:last-child)::before {
+  content: ' ';
+  position: absolute;
+  display: block;
+  width: 3px;
+  height: 3px;
+  background-color: #666;
+  border-radius: 50%;
+  left: -9px;
+  color: #000;
+}
+
+.delimiter>span:first-child::after, .delimiter>span:not(:first-child):not(:last-child)::after {
+  content: ' ';
+  position: absolute;
+  display: block;
+  width: 3px;
+  height: 3px;
+  background-color: #666;
+  border-radius: 50%;
+  right: -10px;
+  color: #000;
+}
+/* 公共css end */
 
 @media screen and (max-width: 1439px) {
   .container {
@@ -54,6 +95,11 @@ body {
   .container {
     max-width: 1280px;
   }
+}
+
+@font-face {
+  font-family: OleoScriptSwashCaps;
+  src: url('/fonts/OleoScriptSwashCaps-Bold.ttf');
 }
 
 ::-webkit-scrollbar {

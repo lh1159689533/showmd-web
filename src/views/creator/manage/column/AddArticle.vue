@@ -1,0 +1,73 @@
+<!-- 专栏添加文章 -->
+<script lang="ts" setup>
+import { ref, defineProps, defineEmits, watchEffect } from 'vue';
+import message from '@utils/message';
+import { addArticle, findArticleListNotInColumn } from '@service/column';
+
+const props = defineProps<{
+  id?: number | null
+}>();
+const emit = defineEmits<{ (e: 'close'): void, (e: 'callback'): void }>();
+
+const searchKey = ref('');
+const searchTimer = ref();
+const selectionArticle = ref([]);
+const articleList = ref([]);
+
+watchEffect(async () => {
+  if (props.id) {
+    articleList.value = await findArticleListNotInColumn();
+  }
+});
+
+const selectionChange = (selection) => {
+  selectionArticle.value = selection;
+};
+
+const add = async () => {
+  const isSucc = await addArticle(props.id, selectionArticle.value.map(c => c.id));
+  if (isSucc) {
+    message.success('添加文章成功');
+    emit('callback');
+  } else {
+    message.error('添加文章失败');
+  }
+};
+
+const searchArtile = () => {
+  if (searchTimer.value) {
+    clearTimeout(searchTimer.value);
+  }
+  searchTimer.value = setTimeout(async () => {
+    articleList.value = await findArticleListNotInColumn(searchKey.value);
+  }, 500);
+};
+</script>
+
+<template>
+  <el-dialog :model-value='true' :close-on-click-modal='false' :show-close='false' :width='800'>
+    <template #header>
+      <div style='display: flex; padding: 0 10px;'>
+        <span style='flex: 1'>将文章添加至此专栏</span>
+        <div class='w-80'><el-input v-model='searchKey' @input='searchArtile' placeholder='请输入关键字搜索' clearable /></div>
+      </div>
+    </template>
+    <el-table :data='articleList' style='width: 100%' @selection-change='selectionChange' :height='350' empty-text='暂无可收录文章'>
+      <el-table-column type='selection' width='55' />
+      <el-table-column property='name'>
+        <template #header>
+          <el-tag>已选择 {{ selectionArticle?.length }} 项</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column property='updateTime' align='right' />
+    </el-table>
+    <template #footer>
+      <el-button type='primary' @click='add' :disabled='selectionArticle?.length === 0'>添加</el-button>
+      <el-button @click='() => $emit("close")'>取消</el-button>
+    </template>
+  </el-dialog>
+</template>
+
+<style>
+
+</style>

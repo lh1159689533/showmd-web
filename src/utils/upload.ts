@@ -1,5 +1,5 @@
 import http from '@src/http';
-import { Base64 } from 'js-base64';
+import SparkMD5 from 'spark-md5';
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 切片大小
 const MAX_CONCURRENCY = 5; // 最大并发
@@ -38,7 +38,7 @@ async function sliceUploadFile(fileChunkList: FileChunk[], uploadId: string, onP
       pool.splice(index);
       doneNum++;
       onProgress?.(doneNum / fileChunkList.length * 100);
-    }).catch(() => {});
+    }).catch(() => { });
 
     pool.push(task);
 
@@ -100,12 +100,41 @@ function getFileChunkList(file: File): FileChunk[] {
   return fileChunkList;
 }
 
+/**
+ * 获取文件md5
+ * @param chunks 文件切片
+ */
+function getMd5(chunks: File[]): Promise<string> {
+  return new Promise(resolve => {
+    const spark = new SparkMD5.ArrayBuffer();
+    const fileReader = new FileReader();
+    let currentChunk = 0;
+    const chunkCount = chunks.length;
+    fileReader.onload = function (e) {
+      spark.append(e.target.result);
+      currentChunk++;
+      if (currentChunk < chunkCount) {
+        loadNext();
+      } else {
+        resolve(spark.end());
+      }
+    };
+
+    function loadNext() {
+      fileReader.readAsArrayBuffer(chunks[currentChunk]);
+    }
+
+    loadNext();
+  });
+}
+
 async function upload(file: File, onProgress?) {
   if (file?.size <= CHUNK_SIZE) {
     return await uploadFile(file);
   }
   const fileChunkList: FileChunk[] = getFileChunkList(file);
-  const uploadId = Base64.encode(file.name).replace(/[\/\\]/g, '');
+  // const uploadId = Base64.encode(file.name).replace(/[\/\\]/g, '');
+  const uploadId = await getMd5(fileChunkList.map(item => item.chunk));
   await sliceUploadFile(fileChunkList, uploadId, onProgress);
   return await mergeFile(fileChunkList, uploadId, file.type, file.name);
 }

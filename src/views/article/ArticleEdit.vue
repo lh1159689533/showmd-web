@@ -121,7 +121,6 @@ export default defineComponent({
 
     // 发布
     const onPublish = async (art) => {
-      console.log('art:', art);
       art = {
         ...article.value,
         ...art,

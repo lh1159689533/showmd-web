@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import { emojiConf } from './emoji.config';
+import emojiConf from './emoji.config';
 
 const emit = defineEmits(['change']);
 const handleEmojiClick = (emoji) => {

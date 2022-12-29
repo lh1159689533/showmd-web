@@ -2,9 +2,8 @@
 import { defineComponent, toRefs, ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import Vditor from 'vditor/dist/method.min';
-// import Vditor from 'vditor';
 import 'vditor/dist/index.css';
-import { querySelectorAll, getElementById } from './vditorEditor';
+import { querySelectorAll, getElementById, getBoundingClientRect } from './vditorEditor';
 
 interface User {
   name: string;
@@ -36,11 +35,11 @@ interface OutlineNode {
 export default defineComponent({
   name: 'MDPreview',
   props: ['data', 'isEdit'],
-  setup(props) {
+  emits: ['onToTop'],
+  setup(props, { emit }) {
     const router = useRouter();
 
     const { data } = toRefs<Props>(props);
-    const isShowToTop = ref(false); // 是否显示回到顶部按钮
     const outlineNodeList = ref<OutlineNode[]>([]); // 目录对象
     const outlineActiveNodeId = ref('');
     let isOutlineClick = false; // 是否是点击大纲，如果是则不触发onScroll
@@ -57,7 +56,7 @@ export default defineComponent({
           current: newVal?.contentTheme ?? 'Chinese-red',
           path: 'http://localhost:1229/editor/theme',
         },
-        lazyLoadImage: 'http://localhost:1229/loading.webp',
+        lazyLoadImage: 'http://localhost:1229/editor/loading.webp',
         renderers: {
           renderBlockquote: (node, entering) => {
             const text = node.Text();
@@ -94,9 +93,66 @@ export default defineComponent({
           codeCopy();
           // 文档大纲渲染，并添加事件
           outlineRender();
+          // 预览图片的处理
+          previewImg();
         },
       });
     });
+
+    /**
+     * 预览图片(图片点击放大)
+     */
+    function previewImg() {
+      const editorNode = getElementById('myPreviewEditor');
+      const imgList = querySelectorAll(editorNode, 'img');
+      imgList.map(img => {
+        // 遍历img添加click事件
+        img.addEventListener('click', function () {
+          const { width, height, top, left } = getBoundingClientRect(img) ?? {};
+          const scrollTop = document.documentElement.scrollTop;
+          const { innerWidth, innerHeight } = window;
+          const duration = 300;
+          // const scale = Math.min(innerWidth / width, innerHeight / height) - 0.5;
+          const scale = Math.min(innerWidth / width, innerHeight / height, 2) - 0.5;
+          // 添加遮罩层
+          const imgWrapper = document.createElement('div');
+          imgWrapper.setAttribute('style', `position:fixed;left:0;top:0;bottom:0;right:0;background-color:rgba(0,0,0,.8);z-index:2001;
+            cursor:zoom-out;opacity:0;transition:opacity ${duration}ms cubic-bezier(.2,0,.2,1);`);
+
+          // 新建一个img元素
+          const imgPreview = document.createElement('img');
+          imgPreview.setAttribute('src', (img as HTMLImageElement).currentSrc);
+          imgPreview.setAttribute('style', `position:absolute;left:${left}px;top:${top + scrollTop}px;width:${width}px;
+            height:${height}px;z-index:2001;cursor:zoom-out;transform:scale(1) translate(0,0);transition:transform ${duration}ms cubic-bezier(.2,0,.2,1);`);
+
+          document.body.appendChild(imgWrapper);
+          document.body.appendChild(imgPreview);
+
+          setTimeout(() => {
+            img.style.visibility = 'hidden';
+            imgWrapper.style.opacity = '1';
+            imgPreview.style.transform = `scale(${scale}) translate(${((innerWidth - width) / 2 - left) / scale}px, ${((innerHeight - height) / 2 - top) / scale}px)`;
+          }, 0);
+
+          // 关闭
+          function close() {
+            imgWrapper.style.opacity = '0';
+            imgPreview.style.transform = `scale(1) translate(0,0)`;
+            imgWrapper.removeEventListener('click', close);
+            imgPreview.removeEventListener('click', close);
+            document.removeEventListener('scroll', close);
+            setTimeout(() => {
+              img.style.visibility = 'visible';
+              document.body.removeChild(imgWrapper);
+              document.body.removeChild(imgPreview);
+            }, duration);
+          }
+          imgWrapper.addEventListener('click', close);
+          imgPreview.addEventListener('click', close);
+          document.addEventListener('scroll', close);
+        });
+      });
+    }
 
     /**
      * 代码片段复制按钮点击复制后显示 '已复制'
@@ -185,11 +241,7 @@ export default defineComponent({
      */
     function onScroll() {
       const scrollTop = document.documentElement.scrollTop;
-      if (scrollTop >= 500) {
-        isShowToTop.value = true;
-      } else {
-        isShowToTop.value = false;
-      }
+      emit('onToTop', scrollTop >= 500);
       if (scrollTop <= 0) {
         outlineActiveChanged(outlineNodeList.value?.[0]?.id);
       }
@@ -203,19 +255,11 @@ export default defineComponent({
       document.removeEventListener('scroll', onScroll);
     });
 
-    // 置顶
-    const toTop = () => {
-      outlineActiveChanged(outlineNodeList.value?.[0]?.id);
-      document.documentElement.scrollTop = 0;
-    };
-
     const edit = (id) => {
       router.push(`/article/edit/${id}`);
     };
 
     return {
-      isShowToTop,
-      toTop,
       edit,
       outlineNodeList,
       outlineActiveNodeId,
@@ -237,7 +281,10 @@ export default defineComponent({
             <div>
               <span class='createTime'>{{ data?.updateTime ?? data?.createTime }}</span>
               <span class='ml-6'>阅读 {{ data?.readCount ?? 0 }}</span>
-              <a v-if='isEdit' @click='() => edit(data?.id)' class='ml-6 cursor-pointer text-indigo-500 hover:underline'>编辑</a>
+              <a
+                v-if='isEdit' @click='() => edit(data?.id)'
+                class='ml-6 cursor-pointer text-indigo-500 hover:underline'
+              >编辑</a>
             </div>
           </div>
         </div>
@@ -248,14 +295,24 @@ export default defineComponent({
       <div id='myPreviewEditorSider' class='fixed bg-white'>
         <nav style='height: 580px' class='relative overflow-hidden'>
           <h1 class='title font-bold pl-4 py-2 border-b' style='height: 50px'>目录</h1>
-          <div id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0 w-full' style='max-height: 530px;'>
-            <List :data-list='outlineNodeList' @click='outlineLinkContent' class='w-full' item-class='py-2 truncate cursor-pointer hover:bg-gray-100 relative text-sm'>
+          <div
+            id='myPreviewEditorOutlineList' class='overflow-y-auto overflow-x-hidden absolute right-0 w-full'
+            style='max-height: 530px;'
+          >
+            <List
+              :data-list='outlineNodeList' @click='outlineLinkContent' class='w-full'
+              item-class='py-2 truncate cursor-pointer hover:bg-gray-100 relative text-sm'
+            >
               <template #default='{ item }'>
                 <el-tooltip effect='light' placement='left' :show-after='500'>
                   <template #content>
                     <span class='overflow-clip inline-block' style='max-width:350px'>{{ item.title }}</span>
                   </template>
-                  <span :id='item.id' :class='[`indent-${item.indent}`, item.id === outlineActiveNodeId ? "active" : ""]'>{{ item.title }}</span>
+                  <span
+                    :id='item.id'
+                    :class='[`indent-${item.indent}`, item.id === outlineActiveNodeId ? "active" : ""]'
+                  >{{ item.title
+                  }}</span>
                 </el-tooltip>
               </template>
             </List>
@@ -263,42 +320,26 @@ export default defineComponent({
         </nav>
       </div>
     </div>
-    <div class='oprate flex flex-col fixed right-16 bottom-20'>
-      <div id='toTop' v-show='isShowToTop' @click='toTop' class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'>
-        <i title='回到顶部' class='absolute w-4 h-4' />
-      </div>
-    </div>
   </div>
 </template>
 
 <style>
-#toTop > i {
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjUyMjcxMDM2MjcwIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjU0ODciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+QGZvbnQtZmFjZSB7IGZvbnQtZmFtaWx5OiBmZWVkYmFjay1pY29uZm9udDsgc3JjOiB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LndvZmYyP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZjIiKSwgdXJsKCIvL2F0LmFsaWNkbi5jb20vdC9mb250XzEwMzExNThfdTY5dzh5aHhkdS53b2ZmP3Q9MTYzMDAzMzc1OTk0NCIpIGZvcm1hdCgid29mZiIpLCB1cmwoIi8vYXQuYWxpY2RuLmNvbS90L2ZvbnRfMTAzMTE1OF91Njl3OHloeGR1LnR0Zj90PTE2MzAwMzM3NTk5NDQiKSBmb3JtYXQoInRydWV0eXBlIik7IH0KPC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTgzMiA2NEgxOTJjLTE3LjYgMC0zMiAxNC40LTMyIDMyczE0LjQgMzIgMzIgMzJoNjQwYzE3LjYgMCAzMi0xNC40IDMyLTMycy0xNC40LTMyLTMyLTMyek04NTIuNDg0IDUxOS40NjlMNTM4LjU5MiAyMDUuNTc3YTMwLjc5IDMwLjc5IDAgMCAwLTMuNjkzLTQuNDc2Yy02LjI0MS02LjI0MS0xNC41NTYtOS4yNTgtMjIuODk5LTkuMDktOC4zNDMtMC4xNjgtMTYuNjU4IDIuODQ5LTIyLjg5OSA5LjA5YTMwLjc3OCAzMC43NzggMCAwIDAtMy42OTMgNC40NzZMMTcxLjQxOSA1MTkuNTY2QzE2NC40NDkgNTI1LjQ0OCAxNjAgNTM0LjIyOCAxNjAgNTQ0YzAgMC4wNTggMC4wMDQgMC4xMTUgMC4wMDQgMC4xNzItMC4xMjQgOC4yODUgMi44OTkgMTYuNTI5IDkuMDk2IDIyLjcyNyA2LjIwMiA2LjIwMiAxNC40NTMgOS4yMjQgMjIuNzQzIDkuMDk2IDAuMDY2IDAgMC4xMzEgMC4wMDUgMC4xOTcgMC4wMDVIMzUydjMyMGMwIDM1LjIgMjguOCA2NCA2NCA2NGgxOTJjMzUuMiAwIDY0LTI4LjggNjQtNjRWNTc2aDE2MGMwLjA1OCAwIDAuMTE1LTAuMDA0IDAuMTcyLTAuMDA0IDguMjg1IDAuMTI0IDE2LjUyOS0yLjg5OSAyMi43MjctOS4wOTYgNi4xOTgtNi4xOTggOS4yMi0xNC40NDIgOS4wOTYtMjIuNzI3IDAtMC4wNTggMC4wMDQtMC4xMTUgMC4wMDQtMC4xNzIgMC4wMDEtOS44MjYtNC40ODktMTguNjUtMTEuNTE1LTI0LjUzMnoiIHAtaWQ9IjU0ODgiPjwvcGF0aD48L3N2Zz4=);
-}
-
-#toTop {
-  box-shadow: 0px 1px 8px -5px #555;
-  animation: bounceInUp 600ms;
-}
-
-#toTop:hover {
-  box-shadow: 0px 1px 8px -2px #555;
-}
-
 #myPreviewEditor .vditor-toolbar--hide {
   display: none !important;
+}
+
+#myPreviewEditor img {
+  cursor: zoom-in;
 }
 
 #myPreviewEditorSider {
   box-shadow: 0px 0px 8px -6px #000;
   border-radius: 3px;
   width: 260px;
-  top: 4.5rem;
+  /* top: 4.5rem; */
 }
 
-#myPreviewEditorOutlineList ul > li > span.active::before {
+#myPreviewEditorOutlineList ul>li>span.active::before {
   content: '';
   position: absolute;
   width: 4px;
@@ -306,11 +347,11 @@ export default defineComponent({
   @apply bg-indigo-600 left-0 rounded-tr-lg rounded-br-lg;
 }
 
-#myPreviewEditorOutlineList ul > li > span.active {
+#myPreviewEditorOutlineList ul>li>span.active {
   @apply text-indigo-600;
 }
 
-#myPreviewEditorOutlineList ul > li > span {
+#myPreviewEditorOutlineList ul>li>span {
   @apply text-gray-600;
 }
 

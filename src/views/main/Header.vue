@@ -1,5 +1,5 @@
 <script lang='ts'>
-import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
+import { defineComponent, ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Search } from '@element-plus/icons-vue';
@@ -9,6 +9,7 @@ import { listMenuByRoleId } from '@service/user';
 export default defineComponent({
   name: 'Header',
   components: { UserOprate },
+  emits: ['onShow'],
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -20,6 +21,8 @@ export default defineComponent({
     const activeKey = ref('');
     const headerCls = ref('');
     const currentScrollTop = ref(0);
+
+    const isShowHeader = computed(() => store.getters.isShowHeader);
 
     async function init() {
       const user = await store.dispatch('getUserById', 1);
@@ -40,14 +43,22 @@ export default defineComponent({
       router.push(nav.path);
     };
 
+    const handleNoticeClick = (e) => {
+      if (e.target.dataset?.link) {
+        router.push(e.target.dataset?.link);
+      }
+    };
+
     // 滚动事件，滚动高度大于500时隐藏header头
     function onScroll() {
       const { scrollTop } = document.documentElement;
-      if (scrollTop > 500) {
-        headerCls.value = 'animate__animated animate__fadeOutUp animate__faster';
+      if (scrollTop > 500 && isShowHeader.value) {
+        store.commit('hide')
+        headerCls.value = 'animate__animated animate__slideOutUp animate__faster';
       }
-      if (scrollTop < currentScrollTop.value) {
-        headerCls.value = 'animate__animated animate__fadeInDown animate__faster';
+      if (scrollTop < currentScrollTop.value && !isShowHeader.value) {
+        store.commit('show')
+        headerCls.value = 'animate__animated animate__slideInDown animate__faster';
       }
       currentScrollTop.value = scrollTop;
     }
@@ -68,30 +79,36 @@ export default defineComponent({
       changeNav,
       Search,
       headerCls,
+      handleNoticeClick
     };
   },
 });
 </script>
 
 <template>
-  <div class='h-14 bg-white border-b sticky top-0 z-2000' :class='headerCls'>
+  <div class='h-12 w-full bg-white border-b fixed top-0 z-2000' :class='headerCls'>
     <header class='container h-full flex items-center'>
-      <div class='logo mr-8 text-2xl font-bold text-indigo-500 cursor-pointer'>Lanis</div>
-      <List :data-list='menuList' @click='changeNav' class='flex text-black mr-16 h-full flex-1' item-class='nav-list text-gray-800 min-w-max hover:text-black'>
+      <div class='logo mr-8 text-2xl font-bold text-indigo-500 cursor-pointer' style='font-family: OleoScriptSwashCaps'>Lanis</div>
+      <List
+        :data-list='menuList' @click='changeNav' class='flex text-black mr-16 h-full flex-1'
+        item-class='nav-list text-gray-800 min-w-max hover:text-black'
+      >
         <template #default='{ item }'>
           <span :class='[item.key === activeKey ? "text-indigo-500 font-bold" : ""]'>{{ item.title }}</span>
         </template>
       </List>
       <div class='flex items-center h-10 relative w-80'>
-        <el-input :prefix-icon='Search' placeholder='Search projects' class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400' />
+        <el-input
+          :prefix-icon='Search' placeholder='Search projects'
+          class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400'
+        />
       </div>
-      <div class='notice flex ml-16 items-center h-full'>
-        <span class='message relative cursor-pointer'>
-          <i class='iconfont icon-notice text-gray-400 w-6 h-6 text-4xl hover:text-gray-500' />
-          <span class='num rounded-full bg-red-500 text-white px-1 text-xs inline-block text-center absolute right-0 top-0'>8</span>
-        </span>
-        <div class='user h-full flex items-center relative'>
-          <UserOprate />
+      <div class='flex ml-16 items-center h-full'>
+        <UserOprate />
+        <div @click='handleNoticeClick' class='notice-list flex gap-4 text-sm text-gray-600'>
+          <el-badge is-dot class='cursor-pointer hover:text-indigo-500'>消息</el-badge>
+          <span class='cursor-pointer hover:text-indigo-500'>足迹</span>
+          <span data-link='/creator' class='cursor-pointer hover:text-indigo-500'>创作中心</span>
         </div>
       </div>
     </header>

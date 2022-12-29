@@ -35,9 +35,6 @@ export default defineComponent({
     const changSubCategoryList = (category) => {
       const subCategorys = category?.children;
       if (category.key !== 'all' && subCategorys?.length) {
-        const activeSubCategory = subCategorys.find((c) => c.key === activeCategory.value?.key) ?? subCategorys[0];
-        activeSubCategory.active = true;
-        subCategorys.filter((c) => c.key !== activeSubCategory.key).forEach((c) => (c.active = false));
         subCategoryList.value = subCategorys;
       } else {
         subCategoryList.value = null;
@@ -59,10 +56,9 @@ export default defineComponent({
      */
     const handleChangeCategory = (category) => {
       activeCategory.value = category;
-      // const activeCategory = categoryList.value.find(c => c.key === category.key);
       activeSubCategory.value = activeCategory.value.children?.[0] ?? null;
       emit('change', activeCategory.value, activeSubCategory.value);
-      changSubCategoryList(activeCategory);
+      changSubCategoryList(activeCategory.value);
     };
 
     /**
@@ -105,6 +101,7 @@ export default defineComponent({
       categoryList,
       activeCategory,
       subCategoryList,
+      activeSubCategory,
       isShowSubCategory,
       hideSubCategoryTimer,
       changSubCategoryList,
@@ -148,7 +145,7 @@ export default defineComponent({
       <template #default='{ item }'>
         <span
           @click='() => handleChangeSubCategory(item)'
-          :class='[item.active ? "bg-indigo-500 text-white hover:text-white" : "bg-gray-100"]'
+          :class='[item.key === activeSubCategory?.key && item.parent === activeSubCategory?.parent ? "bg-indigo-500 text-white hover:text-white" : "bg-gray-100"]'
           class='cursor-pointer hover:text-indigo-500 px-2 py-1 rounded-full inline-block'
         >{{ item.title }}</span>
       </template>

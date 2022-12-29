@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent, ref, reactive, computed } from 'vue';
 import dayjs from 'dayjs';
+import { useStore } from 'vuex';
 
 import ArticleList from '../article/ArticleList.vue';
 import Category from './Category.vue';
@@ -12,9 +13,13 @@ export default defineComponent({
   name: 'Study',
   components: { ArticleList, Category, Top },
   setup() {
+    const store = useStore();
+
     const articleList = ref(null);
     const filters = reactive({ category: null, subCategory: null });
     const currentSort = ref('latest'); // 默认时间排序
+
+    const isShowHeader = computed(() => store.getters.isShowHeader);
 
     async function getArticleList(category, subCategory, sort?) {
       let params = null;
@@ -45,35 +50,32 @@ export default defineComponent({
       filters.category = category;
       filters.subCategory = subCategory;
       getArticleList(category, subCategory, currentSort.value);
+      document.documentElement.scrollTop = 0;
     };
-
-    // const handleSortChange = (sort) => {
-    //   const { category, subCategory } = filters;
-    //   currentSort.value = sort;
-    //   getArticleList(category, subCategory, sort);
-    // };
 
     getArticleList(filters.category, filters.subCategory, currentSort.value);
 
     return {
       filters,
       articleList,
+      isShowHeader,
       handleCategoryChange,
-      // handleSortChange,
     };
   },
 });
 </script>
 
 <template>
-  <div id='study' class>
-    <nav class='fixed w-full h-12 left-0 top-14 z-1000 shadow bg-white'>
+  <div id='study'>
+    <nav
+      class='fixed w-full h-12 left-0 z-1000 shadow bg-white' :class='[isShowHeader ? &apos;top-12&apos; : &apos;top-0&apos;]'
+      style='transition:top 500ms;'
+    >
       <Category @change='handleCategoryChange' />
     </nav>
-    <section class='mt-16'>
-      <div class='mt-4 relative'>
-        <div class='content-list bg-white' style='width: 73%'>
-          <!-- <Sort @change='handleSortChange' /> -->
+    <section class='pt-20 relative'>
+      <div class='relative pr-8' style='width: 78%'>
+        <div class='content-list bg-white'>
           <div class='pl-6 py-3 text-sm text-indigo-500'>
             <span>{{ filters.category?.title || '综合' }}</span>
             <span class='separator px-2 text-gray-300'>/</span>
@@ -81,10 +83,12 @@ export default defineComponent({
           </div>
           <ArticleList :data='articleList' />
         </div>
-        <aside class='content-aside right-8 top-0 absolute' style='width: 22%'>
-          <Top />
-        </aside>
       </div>
+      <aside class='content-aside right-0 top-0 absolute' style='width: 22%'>
+        <div class='fixed w-80' :class='[isShowHeader ? &apos;top-32&apos; : &apos;top-16&apos;]' style='transition: 500ms;'>
+          <Top />
+        </div>
+      </aside>
     </section>
   </div>
 </template>
@@ -103,6 +107,7 @@ export default defineComponent({
   #study .content-list {
     width: 100% !important;
   }
+
   #study .content-aside {
     display: none;
   }
