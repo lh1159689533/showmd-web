@@ -150,7 +150,7 @@ findColumnList();
         <div class='flex gap-8 border-t px-6 py-4 hover:bg-gray-50'>
           <img
             :src='`${column.cover}?t=${new Date(column.updateTime).getTime()}`' class='w-36 h-24 cursor-pointer'
-            @error='(e) => (e.target as HTMLImageElement).src = &apos;/img/column-default-cover.webp&apos;'
+            @error='(e) => (e.target as HTMLImageElement).src = "/img/column-default-cover.webp"'
           >
           <div class='detail flex-1 flex flex-col gap-2'>
             <div class='title flex items-center gap-2'>
@@ -173,7 +173,7 @@ findColumnList();
                 item-class='hover:text-indigo-500 cursor-pointer' @click='(oprate) => oprate.handle?.(column)'
               >
                 <template #default='{ item }'>
-                  <span :class='[item.key === &apos;del&apos; ? &apos;hover:text-red-500&apos; : &apos;hover:text-indigo-500&apos;]'>
+                  <span :class='[item.key === "del" ? "hover:text-red-500" : "hover:text-indigo-500"]'>
                     {{ typeof item.title === 'function' ? item.title(column) : item.title }}</span>
                 </template>
               </List>

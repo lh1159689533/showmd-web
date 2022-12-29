@@ -99,8 +99,8 @@ const submitForm = async (formEl) => {
 
 <template>
   <el-drawer
-    :model-value='visible' :title='columnForm?.id ? &apos;修改专栏&apos; : &apos;新建专栏&apos;' direction='rtl' :close-on-click-modal='false'
-    :before-close='() => $emit(&apos;close&apos;)' destroy-on-close :size='600'
+    :model-value='visible' :title='columnForm?.id ? "修改专栏" : "新建专栏"' direction='rtl' :close-on-click-modal='false'
+    :before-close='() => $emit("close")' destroy-on-close :size='600'
   >
     <el-form ref='ruleFormRef' :model='columnForm' :rules='publishRules' label-width='120px'>
       <el-form-item label='专栏名称' prop='name'>
