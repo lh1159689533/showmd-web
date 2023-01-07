@@ -26,8 +26,6 @@ emojiConf
     emojiKeys.push(em.key ?? em.title);
   });
 
-// const languages = ['javascript', 'html', 'css'];
-
 const regExpEmoji = new RegExp(`(\\[(${emojiKeys.join('|')})\\])`, 'g');
 const regExpCode = new RegExp(`\\[code=([^\\[\\]]*?)\\]([^\\[\\]]*?)\\[\\/code\\]`, 'g'); // /\[code=[^\[\]]*?\][^\[\]]*?\[\/code\]/g
 
@@ -43,23 +41,23 @@ const formatEmoji = (emoji: IEmoji): string => {
 };
 
 const parseCode = (text: string): string => {
-  return text?.replace(regExpCode, (item, language, code) => {
-    console.log('code:', code);
-    console.log('lang:', language);
+  return text?.replace(regExpCode, (_, language, code) => {
     if (!code) return '';
     return `<pre style='overflow-x:auto;padding:0.5em;color:#383a42;background:#fafafa;'><code class='${language}'>${hljs.highlight(code.trim(), { language }).value}</code></pre>`;
   });
-}
+};
+
+const formatCode = (language = 'javascript'): string => {
+  return `[code=${language}]<br><br>[/code]`;
+};
 
 const parse = (text: string,): string => {
-  console.log('text:', text);
   let value = text;
   if (regExpEmoji.test(text)) {
     value = parseEmoji(text);
   }
   if (regExpCode.test(text)) {
     value = parseCode(value);
-    console.log('value:', value);
   }
   return value;
 };
@@ -67,4 +65,5 @@ const parse = (text: string,): string => {
 export {
   parse,
   formatEmoji,
+  formatCode,
 };

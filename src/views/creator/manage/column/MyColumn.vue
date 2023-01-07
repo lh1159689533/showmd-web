@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, watchEffect } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router';
 import Edit from './Edit.vue';
 import EditArticle from './EditArticle.vue';
 import { findListByUserId, topColumn, deleteById } from '@service/column';
@@ -9,6 +10,9 @@ import { confirm } from '@utils/messageBox';
 
 const store = useStore();
 const user = computed(() => store.getters.getUser);
+
+const router = useRouter();
+const route = useRoute();
 
 const oprateList = [
   {
@@ -107,6 +111,11 @@ const handleClose = () => {
   showEditArticleDrawer.value = false;
 };
 
+/**
+ * 置顶专栏
+ * @param id 专栏id
+ * @param action 1 置顶, 0 取消置顶
+ */
 const top = async (id: number, action: 0 | 1) => {
   const actionDesc = action === 1 ? '置顶' : '取消置顶'
   if (await topColumn(id, action)) {
@@ -117,6 +126,7 @@ const top = async (id: number, action: 0 | 1) => {
   }
 };
 
+// 删除专栏
 const del = async (id: number) => {
   if (await deleteById(id)) {
     message.success('删除成功');
@@ -126,8 +136,23 @@ const del = async (id: number) => {
   }
 };
 
+// 专栏详情
+const toDetail = (id) => {
+  const { href } = router.resolve(`/column/${id}`);
+  window.open(href, '_blank');
+};
+
 watch(user, () => {
   findColumnList();
+});
+
+watchEffect(() => {
+  // 其他地方跳转且需要打开操作抽屉
+  if (route.query?.columnId) {
+    const { columnId, action } = route.query;
+    const oprate = oprateList.find(item => item.key === action);
+    oprate?.handle?.({ id: columnId });
+  }
 });
 
 findColumnList();
@@ -151,15 +176,16 @@ findColumnList();
           <img
             :src='`${column.cover}?t=${new Date(column.updateTime).getTime()}`' class='w-36 h-24 cursor-pointer'
             @error='(e) => (e.target as HTMLImageElement).src = "/img/column-default-cover.webp"'
+            @click='() => toDetail(column?.id)'
           >
           <div class='detail flex-1 flex flex-col gap-2'>
             <div class='title flex items-center gap-2'>
-              <span class='attrs text-indigo-500 text-sm bg-indigo-100'>{{ column.isPrivate ? '私有' : '公开'
+              <span class='attrs text-indigo-500 text-sm bg-indigo-100 px-1' style='border-radius: 1px'>{{ column.isPrivate ? '私有' : '公开'
               }}</span>
-              <span v-if='column.isTop === 1' class='text-indigo-500 text-sm bg-indigo-100 flex items-center'>
+              <span v-if='column.isTop === 1' class='text-indigo-500 text-sm bg-indigo-100 flex items-center px-1' style='border-radius: 1px'>
                 <i class='iconfont icon-top'></i>置顶
               </span>
-              <span class='text-xl cursor-pointer hover:text-indigo-600 flex-1'>{{ column.name }}</span>
+              <span @click='() => toDetail(column?.id)' class='text-xl cursor-pointer hover:text-indigo-600 flex-1'>{{ column.name }}</span>
             </div>
             <span class='desc text-gray-600 text-sm'>{{ column.desc }}</span>
             <div class='footer flex text-sm'>

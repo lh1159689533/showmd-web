@@ -4,8 +4,14 @@
 <style>
 :root {
   --el-color-primary: rgb(79 70 229) !important;
+  --el-color-primary-light-1: rgba(79, 70, 229, 0.9) !important;
+  --el-color-primary-light-2: rgba(79, 70, 229, 0.8) !important;
   --el-color-primary-light-3: rgba(79, 70, 229, 0.7) !important;
+  --el-color-primary-light-4: rgba(79, 70, 229, 0.6) !important;
+  --el-color-primary-light-5: rgba(79, 70, 229, 0.5) !important;
+  --el-color-primary-light-6: rgba(79, 70, 229, 0.4) !important;
   --el-color-primary-light-7: rgba(79, 70, 229, 0.3) !important;
+  --el-color-primary-light-8: rgba(79, 70, 229, 0.2) !important;
   --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
 }
 

@@ -99,7 +99,7 @@ const handleSearch = async () => {
                 item-class='hover:text-indigo-500 cursor-pointer' @click='(item) => item.handle?.(article?.id)'
               >
                 <template #default='{ item }'>
-                  <span :class='[item.key === &apos;del&apos; ? &apos;hover:text-red-500&apos; : &apos;hover:text-indigo-500&apos;]'>{{ item.title
+                  <span :class='[item.key === "del" ? "hover:text-red-500" : "hover:text-indigo-500"]'>{{ item.title
                   }}</span>
                 </template>
               </List>
