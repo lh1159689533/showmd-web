@@ -6,11 +6,16 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import WindiCSS from 'vite-plugin-windicss'
+// import { visualizer } from "rollup-plugin-visualizer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    // visualizer({
+    //   open: true,
+    // }),
     AutoImport({
       resolvers: [
         ElementPlusResolver(),
@@ -30,6 +35,7 @@ export default defineConfig({
     Icons({
       autoInstall: true,
     }),
+    WindiCSS(),
   ],
   resolve: {
     alias: {

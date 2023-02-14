@@ -3,10 +3,10 @@
 import { ref, defineProps, defineEmits, watchEffect, computed } from 'vue';
 import { useStore } from 'vuex';
 import message from '@utils/message';
-import { findListByUserId, addArticle } from '@service/column';
+import { findListByUserId, moveArticle } from '@service/column';
 
 const props = defineProps<{
-  id: number | null
+  columnId: number | null
   articleIds?: number[]
 }>();
 const emit = defineEmits<{ (e: 'close'): void, (e: 'callback'): void }>();
@@ -21,7 +21,7 @@ const columnList = ref([]);
 
 const findColumnList = async (searchKey = '') => {
   columnList.value = await findListByUserId(user.value?.id, searchKey);
-  columnList.value = columnList.value.filter(item => item.id !== props.id);
+  columnList.value = columnList.value.filter(item => item.id !== props.columnId);
 };
 
 const onSelect = (_, row) => {
@@ -34,7 +34,7 @@ const move = async () => {
   const currentColumn = tableRef.value.getSelectionRows()?.[0];
 
   if (currentColumn?.id) {
-    const isSucc = await addArticle(currentColumn.id, props.articleIds);
+    const isSucc = await moveArticle(currentColumn.id, props.columnId, props.articleIds);
     if (isSucc) {
       message.success('移动文章成功');
       emit('callback');

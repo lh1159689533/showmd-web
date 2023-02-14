@@ -3,7 +3,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import Edit from './Edit.vue';
-import EditArticle from './EditArticle.vue';
+import ManageArticle from './ManageArticle.vue';
 import { findListByUserId, topColumn, deleteById } from '@service/column';
 import message from '@src/utils/message';
 import { confirm } from '@utils/messageBox';
@@ -217,7 +217,7 @@ findColumnList();
       </div>
     </Empty>
     <Edit :visible='showEditDrawer' :id='currentColumn' @close='handleClose' @confirm='handleSuccess' />
-    <EditArticle :visible='showEditArticleDrawer' :id='currentColumn' @close='handleClose' @callback='findColumnList' />
+    <ManageArticle :visible='showEditArticleDrawer' :id='currentColumn' @close='handleClose' @callback='findColumnList' />
   </div>
 </template>
 

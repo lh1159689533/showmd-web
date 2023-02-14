@@ -103,11 +103,6 @@ body {
   }
 }
 
-@font-face {
-  font-family: OleoScriptSwashCaps;
-  src: url('/fonts/OleoScriptSwashCaps-Bold.ttf');
-}
-
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

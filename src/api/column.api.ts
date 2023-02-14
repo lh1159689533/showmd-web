@@ -2,6 +2,7 @@ export default {
   namespace: 'column',
 
   findById: 'get showmd/column/findById',
+  findByArticleId: 'get showmd/column/findByArticleId',
   save: 'post showmd/column/update',
   findListByUserId: 'get showmd/column/findListByUserId',
   topColumn: 'post showmd/column/topColumn',

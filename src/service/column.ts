@@ -16,8 +16,31 @@ export interface Column extends ResponseData {
   subscribeCnt?: number;
 }
 
+// 0 移除文章, 1 添加文章, 2 移动文章, 3 排序文章
+const COLUMN_OPERATE = {
+  REMOVE: 0,
+  ADD: 1,
+  MOVE: 2,
+  SORT: 3,
+};
+
+/**
+ * 根据id查询专栏
+ * @param id 专栏id
+ */
 async function findById(id: number) {
   const [err, res] = await http.request({ apiurl: 'column/findById', params: { id } });
+  if (err && res.code !== 0) return null;
+  const data: Column = res.data;
+  return data;
+}
+
+/**
+ * 根据文章id查询专栏
+ * @param articleId 文章id
+ */
+async function findByArticleId(articleId: number) {
+  const [err, res] = await http.request({ apiurl: 'column/findByArticleId', params: { articleId } });
   if (err && res.code !== 0) return null;
   const data: Column = res.data;
   return data;
@@ -70,8 +93,30 @@ async function findArticleListNotInColumn(searchKey = '') {
  * @param articles 文章id集合
  */
 async function addArticle(id: number, articleIds: number[]) {
-  // action 0 移除文章, 1 添加文章
-  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, articleIds, action: 1 } });
+  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, articleIds, action: COLUMN_OPERATE.ADD } });
+  if (err && res.code !== 0) return false;
+  return true;
+}
+
+/**
+ * 专栏移动文章
+ * @param id 专栏id
+ * @param oid 原专栏id
+ * @param articles 文章id集合
+ */
+async function moveArticle(id: number, oid: number, articleIds: number[]) {
+  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, oid, articleIds, action: COLUMN_OPERATE.MOVE } });
+  if (err && res.code !== 0) return false;
+  return true;
+}
+
+/**
+ * 专栏下文章排序
+ * @param id 专栏id
+ * @param articles 文章id集合(有序)
+ */
+async function sortArticle(id: number, articleIds: number[]) {
+  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, articleIds, action: COLUMN_OPERATE.SORT } });
   if (err && res.code !== 0) return false;
   return true;
 }
@@ -82,20 +127,22 @@ async function addArticle(id: number, articleIds: number[]) {
  * @param articles 文章id集合
  */
 async function removeArticle(id: number, articleIds: string[]) {
-  // action 0 移除文章, 1 添加文章
-  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, articleIds, action: 0 } });
+  const [err, res] = await http.request({ apiurl: 'column/articleOperate', data: { id, articleIds, action: COLUMN_OPERATE.REMOVE } });
   if (err && res.code !== 0) return false;
   return true;
 }
 
 export {
   findById,
+  findByArticleId,
   saveColumn,
   findListByUserId,
   topColumn,
   deleteById,
   findArticleList,
   addArticle,
+  moveArticle,
+  sortArticle,
   removeArticle,
   findArticleListNotInColumn,
 }

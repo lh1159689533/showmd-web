@@ -1,9 +1,4 @@
-<script lang='ts'>
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: 'Empty',
-});
+<script lang='ts' setup>
 </script>
 
 <template>
@@ -85,7 +80,3 @@ export default defineComponent({
     <span class='text-gray-500 text-sm'><slot></slot></span>
   </div>
 </template>
-
-<style scoped>
-
-</style>

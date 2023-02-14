@@ -65,10 +65,10 @@ export default defineComponent({
 <template>
   <div class='user' @mouseenter='show' @mouseleave='hide'>
     <img
-      :src='user.avatar' :style='[isShow ? &apos;transform:scale(1.5) translate(0,8px)&apos; : &apos;&apos;]'
-      @error='(e) => (e.target as HTMLImageElement).src=&apos;https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png&apos;'
+      :src='user.avatar' :style='[isShow ? "transform:scale(1.5) translate(0,8px)" : ""]'
+      @error='(e) => (e.target as HTMLImageElement).src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"'
     >
-    <div class='oprate-box show-ani absolute bg-white' :style='[isShow ? &apos;display:block&apos; : &apos;display:none&apos;]'>
+    <div class='oprate-box show-ani absolute bg-white' :style='[isShow ? "display:block" : "display:none"]'>
       <div class='pt-3 pb-2 flex justify-center items-center border-b'>
         <span>{{ user.name }}</span>
       </div>

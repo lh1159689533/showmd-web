@@ -8,4 +8,6 @@ export default {
   upload: 'post showmd/file/upload',
   sliceUpload: 'post showmd/file/sliceUpload',
   findListByUserId: 'get showmd/article/findListByUserId',
+  nextColumnArticle: 'post showmd/article/next',
+  prevColumnArticle: 'post showmd/article/prev',
 };

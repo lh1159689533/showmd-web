@@ -13,6 +13,7 @@ const searchKey = ref('');
 const searchTimer = ref();
 const selectionArticle = ref([]);
 const articleList = ref([]);
+const articleTableRef = ref();
 
 watchEffect(async () => {
   if (props.id) {
@@ -47,16 +48,18 @@ const searchArtile = () => {
 <template>
   <el-dialog :model-value='true' :close-on-click-modal='false' :show-close='false' :width='800'>
     <template #header>
-      <div style='display: flex; padding: 0 10px;'>
-        <span style='flex: 1'>将文章添加至此专栏</span>
+      <div class='flex px-2'>
+        <span class='flex-1'>将文章添加至此专栏</span>
         <div class='w-80'><el-input v-model='searchKey' @input='searchArtile' placeholder='请输入关键字搜索' clearable /></div>
       </div>
     </template>
-    <el-table :data='articleList' style='width: 100%' @selection-change='selectionChange' :height='350' empty-text='暂无可收录文章'>
+    <el-table ref='articleTableRef' :data='articleList' style='width: 100%' @selection-change='selectionChange'
+      :height='350' empty-text='暂无可收录文章' @row-click='(row) => articleTableRef.toggleRowSelection(row)'>
       <el-table-column type='selection' width='55' />
       <el-table-column property='name'>
         <template #header>
-          <el-tag>已选择 {{ selectionArticle?.length }} 项</el-tag>
+          <span class='tag text-xs text-indigo-600 border inline-flex justify-center items-center h-6'>已选择
+            {{ selectionArticle?.length }} 项</span>
         </template>
       </el-table-column>
       <el-table-column property='updateTime' align='right' />
@@ -68,6 +71,11 @@ const searchArtile = () => {
   </el-dialog>
 </template>
 
-<style>
-
+<style scoped>
+.tag {
+  padding: 0 9px;
+  border-radius: 4px;
+  background-color: rgba(79, 70, 229, 0.1);
+  border-color: rgba(79, 70, 229, 0.2);
+}
 </style>

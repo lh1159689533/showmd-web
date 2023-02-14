@@ -41,13 +41,12 @@ watchEffect(() => {
   <div class='my-column-list my-8 bg-white'>
     <div class='header flex flex-col justify-between px-6 py-4'>
       <div class='flex gap-8 mb-4'>
-        <img
-          :src='`${column?.cover?.url}?t=${new Date(column?.updateTime).getTime()}`' class='w-36 h-24'
-          @error='(e) => (e.target as HTMLImageElement).src = "/img/column-default-cover.webp"'
-        >
+        <img :src='`${column?.cover?.url}?t=${new Date(column?.updateTime).getTime()}`' class='w-36 h-24'
+          @error='(e) => (e.target as HTMLImageElement).src = "/img/column-default-cover.webp"'>
         <div class='detail flex-1 flex flex-col gap-2'>
           <div class='title flex items-center gap-2'>
-            <span class='attrs text-indigo-500 text-sm bg-indigo-100 px-1' style='border-radius: 1px'>{{ column?.isPrivate ? '私有' : '公开'
+            <span class='attrs text-indigo-500 text-sm bg-indigo-100 px-1' :style='{ borderRadius: "1px" }'>{{
+              column?.isPrivate? '私有': '公开'
             }}</span>
             <span class='text-xl flex-1'>{{ column?.name }}</span>
           </div>
@@ -58,7 +57,8 @@ watchEffect(() => {
             <span class='create-time'>创建于 {{ column?.createTime }}</span>
           </div>
         </div>
-        <div><el-button @click='toManageColumn' v-if='user?.id === column?.userId' type='primary' plain>管理文章</el-button></div>
+        <div><el-button @click='toManageColumn' v-if='user?.id === column?.userId' type='primary' plain>管理文章</el-button>
+        </div>
       </div>
       <div class='user p-3 bg-gray-50 rounded'>
         <span class='text-gray-500 text-base font-bold'>作者: <span class='pl-4'>{{ user?.name }}</span></span>
@@ -101,5 +101,4 @@ watchEffect(() => {
 </template>
 
 <style scoped>
-
 </style>

@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@views/creator/manage/column/ColumnDetail.vue'),
         props: true
       },
+      {
+        path: '/article/preview/:id',
+        component: () => import('@views/article/ArticlePreview.vue'),
+        props: true
+      },
     ]
   },
   {
@@ -32,11 +37,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/article/edit/:id',
     component: () => import('@views/article/ArticleEdit.vue'),
-    props: true
-  },
-  {
-    path: '/article/preview/:id',
-    component: () => import('@views/article/ArticlePreview.vue'),
     props: true
   },
   {

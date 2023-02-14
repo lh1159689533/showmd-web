@@ -26,7 +26,7 @@ export interface IArticle extends ResponseData {
   updateTime?: Date;
 }
 
-async function findById(id: string) {
+async function findById(id: number) {
   const [err, res] = await http.request({ apiurl: 'article/findById', params: { id } });
   if (err && res.code !== 0) return null;
   const data: IArticle = res.data;
@@ -61,10 +61,26 @@ async function findListByUserId(userId: number, searchKey?: string) {
   return res.data;
 }
 
+// 获取专栏上一篇文章
+async function findPrevColumnArticle(articleId: number) {
+  const [err, res] = await http.request({ apiurl: 'article/prevColumnArticle', data: { articleId } });
+  if (err && res.code !== 0) return 0;
+  return res.data;
+}
+
+// 获取专栏下一篇文章
+async function findNextColumnArticle(articleId: number) {
+  const [err, res] = await http.request({ apiurl: 'article/nextColumnArticle', data: { articleId } });
+  if (err && res.code !== 0) return 0;
+  return res.data;
+}
+
 export {
   findById,
   saveArticle,
   findArticleList,
   findTopArticleList,
   findListByUserId,
+  findPrevColumnArticle,
+  findNextColumnArticle
 }

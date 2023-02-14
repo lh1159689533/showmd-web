@@ -1,7 +1,15 @@
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import html from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+
 import 'highlight.js/styles/github.css';
 
 import emojiConf from './Emoji/emoji.config';
+
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('html', html);
+hljs.registerLanguage('css', css);
 
 interface IEmoji {
   title: string;
@@ -13,6 +21,8 @@ interface IEmojiExpand extends IEmoji {
   width: string;
   height: string;
 }
+
+type CodeLanguage = 'javascript' | 'html' | 'css';
 
 const emojiMap = new Map<string, IEmojiExpand>();
 const emojiKeys: string[] = [];
@@ -47,7 +57,7 @@ const parseCode = (text: string): string => {
   });
 };
 
-const formatCode = (language = 'javascript'): string => {
+const formatCode = (language: CodeLanguage = 'javascript'): string => {
   return `[code=${language}]<br><br>[/code]`;
 };
 

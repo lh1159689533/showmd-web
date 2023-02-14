@@ -1,4 +1,5 @@
 import { ElMessageBox as messageBox } from 'element-plus';
+import 'element-plus/theme-chalk/el-message-box.css';
 
 const CONFIRM_DEFAULT_OPTIONS = {
   cancelButtonText: '取消',

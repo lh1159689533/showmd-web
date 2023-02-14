@@ -68,7 +68,7 @@ export default defineComponent({
 <template>
   <div id='study'>
     <nav
-      class='fixed w-full h-12 left-0 z-1000 shadow bg-white' :class='[isShowHeader ? &apos;top-12&apos; : &apos;top-0&apos;]'
+      class='fixed w-full h-12 left-0 z-1000 shadow bg-white' :class='[isShowHeader ? "top-12" : "top-0"]'
       style='transition:top 500ms;'
     >
       <Category @change='handleCategoryChange' />
@@ -85,7 +85,7 @@ export default defineComponent({
         </div>
       </div>
       <aside class='content-aside right-0 top-0 absolute' style='width: 22%'>
-        <div class='fixed w-80' :class='[isShowHeader ? &apos;top-32&apos; : &apos;top-16&apos;]' style='transition: 500ms;'>
+        <div class='fixed w-80' :class='[isShowHeader ? "top-32" : "top-16"]' style='transition: 500ms;'>
           <Top />
         </div>
       </aside>

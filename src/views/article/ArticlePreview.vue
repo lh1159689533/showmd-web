@@ -1,94 +1,99 @@
-<script lang='ts'>
-import { computed, defineComponent, ref } from 'vue';
+<script lang='ts' setup>
+import { computed, defineProps, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 import { useStore } from 'vuex';
-import { ElMessage as message } from 'element-plus';
-import Header from '@src/views/main/Header.vue';
-import { findById } from '@service/article';
+import CanvasBG from '@components/CanvasBG/Index.vue';
+import message from '@utils/message';
+import { findById, findPrevColumnArticle, findNextColumnArticle } from '@service/article';
+import { findByArticleId } from '@service/column';
 
-export default defineComponent({
-  name: 'ArticlePreview',
-  components: { Header },
-  props: {
-    id: String,
-  },
-  setup(props) {
-    const store = useStore();
-    const router = useRouter();
+const props = defineProps<{
+  id: number
+}>();
 
-    const commentDom = ref(null);
+const router = useRouter();
+const store = useStore();
 
-    const article = ref(null);
-    const loading = ref(true);
-    const isShowToTop = ref(false); // 是否显示回到顶部按钮
+const isShowHeader = computed(() => store.getters.isShowHeader);
 
-    const commentData = computed(() => store.state.comment.commentData);
-    const currentUser = computed(() => store.getters.getUser);
+const commentDom = ref();
 
-    async function getArticle() {
-      if (props.id) {
-        // 编辑文章,获取文章内容
-        const result = await findById(props.id);
-        if (!result) {
-          return message.error('文章不存在');
-        }
-        article.value = {
-          ...result,
-          content: decodeURIComponent(result.content),
-          createTime: dayjs(result.createTime).format('YYYY年MM月DD日 HH:mm'),
-          updateTime: dayjs(result.updateTime).format('YYYY年MM月DD日 HH:mm'),
-        };
+const article = ref();
+const prevColumnArticle = ref(); // 专栏上一篇文章
+const nextColumnArticle = ref(); // 专栏下一篇文章
+const loading = ref(true);
+const isShowToTop = ref(false); // 是否显示回到顶部按钮
 
-        if (result.user) {
-          store.commit('setArticleAuthor', result.user);
-        }
+const commentData = computed(() => store.state.comment.commentData);
+const currentUser = computed(() => store.getters.getUser);
 
-        setTimeout(() => (loading.value = false), 1000);
-      }
-    }
+async function getArticle() {
+  // 编辑文章,获取文章内容
+  const result = await findById(props.id);
+  if (!result) {
+    return message.error('文章不存在');
+  }
+  const column = await findByArticleId(props.id);
+  article.value = {
+    ...result,
+    content: decodeURIComponent(result.content),
+    createTime: dayjs(result.createTime).format('YYYY年MM月DD日 HH:mm'),
+    updateTime: dayjs(result.updateTime).format('YYYY年MM月DD日 HH:mm'),
+    column
+  };
 
-    async function init() {
-      if (props.id) {
-        await getArticle();
-        store.dispatch('listComment', props.id);
-      }
-    }
+  if (result.user) {
+    store.commit('setArticleAuthor', result.user);
+  }
 
-    // 跳转到评论
-    const toComment = () => {
-      commentDom.value?.scrollIntoView({ block: 'start' });
-    };
+  setTimeout(() => (loading.value = false), 1000);
+}
 
-    // 编辑
-    const toEdit = () => {
-      router.push(`/article/edit/${props.id}`);
-    };
+async function prev() {
+  const result = await findPrevColumnArticle(props.id);
+  prevColumnArticle.value = result;
+}
 
-    // 置顶
-    const toTop = () => {
-      document.documentElement.scrollTop = 0;
-    };
+async function next() {
+  const result = await findNextColumnArticle(props.id);
+  nextColumnArticle.value = result;
+}
 
-    init();
+async function init() {
+  if (props.id) {
+    await getArticle();
+    store.dispatch('listComment', props.id);
+    next();
+    prev();
+  }
+}
 
-    return {
-      article,
-      loading,
-      commentData,
-      currentUser,
-      commentDom,
-      isShowToTop,
-      toComment,
-      toEdit,
-      toTop
-    };
-  },
-});
+// 跳转到评论
+const toComment = () => {
+  commentDom.value?.scrollIntoView({ block: 'start' });
+};
+
+// 编辑
+const toEdit = () => {
+  router.push(`/article/edit/${props.id}`);
+};
+
+// 预览
+const toPreview = (articleId) => {
+  const { href } = router.resolve(`/article/preview/${articleId}`);
+  window.open(href, '_blank');
+};
+
+// 置顶
+const toTop = () => {
+  document.documentElement.scrollTop = 0;
+};
+
+init();
 </script>
 
 <template>
-  <Header />
   <div class='container mt-16 relative z-100'>
     <div v-if='loading' style='width: calc(100% - 260px);height:100vh;' class='bg-white p-6'>
       <el-skeleton animated>
@@ -105,6 +110,7 @@ export default defineComponent({
         </template>
       </el-skeleton>
     </div>
+    <!-- 左侧操作栏 -->
     <ul class='action-box fixed -ml-24 top-40'>
       <li @click='toComment'>
         <el-badge :value='commentData?.count || ""' type='info' :max='999'>
@@ -119,18 +125,44 @@ export default defineComponent({
         </div>
       </li>
     </ul>
-    <MDPreview v-show='!loading' :data='article' :is-edit='currentUser?.id === article?.user?.id' @onToTop='(isShow: boolean) => isShowToTop = isShow' />
-    <div
-      ref='commentDom' class='comment px-10 py-2 bg-white border-t pb-16 rounded-md mb-12'
-      style='width: calc(100% - 260px);'
-    >
+    <MDPreview v-show='!loading' :data='article' :is-edit='currentUser?.id === article?.user?.id'
+      @onToTop='(isShow: boolean) => isShowToTop = isShow' />
+    <!-- 收录于同一专栏的上/下一篇文章 -->
+    <div v-show='!loading' class='absolute right-0' style='width: 240px;transition: 300ms;' :style='[isShowHeader ? "top: 560px" : "top: 472px"]'>
+      <div class='flex-col fixed'>
+        <div v-if='prevColumnArticle' class='w-full h-24 px-4 py-2 bg-white mb-3 rounded'
+          style='box-shadow: 0px 0px 8px -6px #000; width: 260px;'>
+          <h1 class='font-bold py-2 border-b'>上一篇</h1>
+          <el-tooltip effect='light' placement='left' :show-after='500'>
+            <template #content>
+              <span class='overflow-clip inline-block' style='max-width:350px'>{{ prevColumnArticle?.name }}</span>
+            </template>
+            <p @click='() => toPreview(prevColumnArticle?.id)'
+              class='text-sm text-gray-600 pt-2 cursor-pointer truncate hover:text-indigo-500'>
+              {{ prevColumnArticle?.name }}</p>
+          </el-tooltip>
+        </div>
+        <div v-if='nextColumnArticle' class='w-full h-24 px-4 py-2 bg-white rounded'
+          style='box-shadow: 0px 0px 8px -6px #000; width: 260px;'>
+          <h1 class='font-bold py-2 border-b'>下一篇</h1>
+          <el-tooltip effect='light' placement='left' :show-after='500'>
+            <template #content>
+              <span class='overflow-clip inline-block' style='max-width:350px'>{{ nextColumnArticle?.name }}</span>
+            </template>
+            <p @click='() => toPreview(nextColumnArticle?.id)'
+              class='text-sm text-gray-600 pt-2 cursor-pointer truncate hover:text-indigo-500'>
+              {{ nextColumnArticle?.name }}</p>
+          </el-tooltip>
+        </div>
+      </div>
+    </div>
+    <div ref='commentDom' class='comment px-10 py-2 bg-white border-t pb-16 rounded-md mb-12'
+      style='width: calc(100% - 260px);'>
       <Comment :data='commentData' />
     </div>
     <div class='oprate flex flex-col fixed right-36 bottom-20'>
-      <div
-        id='toTop' v-show='isShowToTop' @click='toTop'
-        class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'
-      >
+      <div id='toTop' v-show='isShowToTop' @click='toTop'
+        class='w-8 h-8 bg-white flex justify-center items-center rounded-full cursor-pointer'>
         <i title='回到顶部' class='absolute w-4 h-4' />
       </div>
     </div>

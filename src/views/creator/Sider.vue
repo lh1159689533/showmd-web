@@ -17,7 +17,7 @@ const handleSelect = (path) => {
 </script>
   
 <template>
-  <el-menu @select='handleSelect' class='sider h-full' :default-openeds='[&apos;manage&apos;]' :default-active='active'>
+  <el-menu @select='handleSelect' class='sider h-full' :default-openeds='["manage"]' :default-active='active'>
     <el-menu-item index='/creator'>
       <i class='iconfont icon-home text-lg' style='padding: 1px 10px 0 0;'></i>
       <template #title>首页</template>

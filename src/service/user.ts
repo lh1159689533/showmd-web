@@ -12,7 +12,14 @@ async function listMenuByRoleId(roleId: number) {
   return res.data;
 }
 
+async function holiday() {
+  const [err, res] = await http.request({ apiurl: 'user/holiday' });
+  if (err && !res.data) return null;
+  return res.data;
+}
+
 export {
   findUserById,
-  listMenuByRoleId
+  listMenuByRoleId,
+  holiday
 };
