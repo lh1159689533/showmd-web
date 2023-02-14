@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: "16.x"
           cache: "npm"
+      - name: cache
+        run: npm cache clean --force
       - name: Installing Dependencies
         run: npm install
       - name: Running Lint
