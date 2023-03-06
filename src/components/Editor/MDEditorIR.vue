@@ -139,7 +139,7 @@ export default defineComponent({
           actions: [],
           theme: {
             current: props?.data?.contentTheme ?? 'Chinese-red',
-            path: 'http://localhost:1229/editor/theme',
+            path: '/api/editor/theme',
             list: previewThemeList,
           },
           hljs: {

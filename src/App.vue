@@ -90,14 +90,31 @@ body {
   color: #000;
 }
 /* 公共css end */
-
-@media screen and (max-width: 1439px) {
+@media screen and (max-width: 1065px) {
   .container {
-    max-width: 1190px;
+    max-width: 660px;
   }
 }
 
-@media screen and (min-width: 1440px) and (max-width: 1535px) {
+@media screen and (min-width: 1066px) and (max-width: 1179px) {
+  .container {
+    max-width: 760px;
+  }
+}
+
+@media screen and (min-width: 1180px) and (max-width: 1284px) {
+  .container {
+    max-width: 880px;
+  }
+}
+
+@media screen and (min-width: 1285px) and (max-width: 1614px) {
+  .container {
+    max-width: 990px;
+  }
+}
+
+@media screen and (min-width: 1615px) and (max-width: 1700px) {
   .container {
     max-width: 1280px;
   }

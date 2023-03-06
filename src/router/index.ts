@@ -57,12 +57,25 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@views/creator/manage/column/Column.vue'),
       }
     ]
-  }
+  },
+  {
+    path: '/404',
+    component: () => import('@components/404.vue'),
+    props: true
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.length === 0) {  //如果未匹配到路由
+    next('/404');
+  } else {
+    next();
+  }
+});
 
 export default router

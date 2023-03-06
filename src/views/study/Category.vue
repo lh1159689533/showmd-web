@@ -118,7 +118,7 @@ export default defineComponent({
 
 <template>
   <div class='h-full z-1000 bg-white relative' @mouseleave='hideSubCategory' @mouseenter='cancleHideSubCategoryTimer'>
-    <List :data-list='categoryList' class='category-list h-full flex items-center text-sm text-gray-800'>
+    <List :data-list='categoryList' class='category-list container h-full flex items-center text-sm text-gray-800'>
       <template #default='{ item }'>
         <span
           @click='() => handleChangeCategory(item)'
@@ -139,7 +139,7 @@ export default defineComponent({
       :data-list='subCategoryList'
       :class='$attrs["item-class"]'
       style='font-size: 0.85rem'
-      class='sub-category-list flex flex-wrap bg-white items-center text-gray-800 py-2'
+      class='sub-category-list container flex flex-wrap bg-white items-center text-gray-800 py-2'
       item-class='mr-4'
     >
       <template #default='{ item }'>
@@ -154,11 +154,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.category-list,
-.sub-category-list {
-  max-width: 1380px;
-  margin: 0 auto;
-}
 .sub-category {
   box-shadow: #666 0px 8px 8px -12px;
   background-color: white;

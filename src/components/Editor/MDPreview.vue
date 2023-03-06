@@ -62,9 +62,9 @@ watch(data, (newVal) => {
     },
     theme: {
       current: newVal?.contentTheme ?? 'Chinese-red',
-      path: 'http://localhost:1229/editor/theme',
+      path: '/api/editor/theme',
     },
-    lazyLoadImage: 'http://localhost:1229/editor/loading.webp',
+    lazyLoadImage: '/api/editor/loading.webp',
     renderers: {
       renderBlockquote: (node, entering) => {
         const text = node.Text();
