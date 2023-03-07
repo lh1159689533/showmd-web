@@ -28,6 +28,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@views/article/ArticlePreview.vue'),
         props: true
       },
+      {
+        path: '/404',
+        component: () => import('@components/404.vue'),
+        props: true
+      },
     ]
   },
   {
@@ -57,11 +62,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@views/creator/manage/column/Column.vue'),
       }
     ]
-  },
-  {
-    path: '/404',
-    component: () => import('@components/404.vue'),
-    props: true
   },
 ]
 
