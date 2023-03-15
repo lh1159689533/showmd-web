@@ -1,4 +1,4 @@
-import { getElementById } from '@src/components/MDEditor/vditorEditor';
+import { getElementById } from '@src/components/Editor/domUtil';
 
 let canvas = null;
 let ctx = null;

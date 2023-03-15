@@ -12,10 +12,10 @@ interface IColumnForm {
 }
 
 const props = defineProps<{
-  visible: boolean
-  id?: number
+  visible: boolean;
+  id?: number;
 }>();
-const emit = defineEmits<{ (e: 'close'): void, (e: 'confirm'): void }>();
+const emit = defineEmits<{ (e: 'close'): void; (e: 'confirm'): void }>();
 
 const columnForm = reactive<IColumnForm>({});
 // form规则
@@ -99,44 +99,52 @@ const submitForm = async (formEl) => {
 
 <template>
   <el-drawer
-    :model-value='visible' :title='columnForm?.id ? "修改专栏" : "新建专栏"' direction='rtl' :close-on-click-modal='false'
-    :before-close='() => $emit("close")' destroy-on-close :size='600'
+    :model-value="visible"
+    :title="columnForm?.id ? '修改专栏' : '新建专栏'"
+    direction="rtl"
+    :close-on-click-modal="false"
+    :before-close="() => $emit('close')"
+    destroy-on-close
+    :size="600"
   >
-    <el-form ref='ruleFormRef' :model='columnForm' :rules='publishRules' label-width='120px'>
-      <el-form-item label='专栏名称' prop='name'>
-        <el-input v-model='columnForm.name' placeholder='请输入专栏名称' />
+    <el-form ref="ruleFormRef" :model="columnForm" :rules="publishRules" label-width="120px">
+      <el-form-item label="专栏名称" prop="name">
+        <el-input v-model="columnForm.name" placeholder="请输入专栏名称" />
       </el-form-item>
-      <el-form-item label='专栏简介' prop='desc'>
-        <el-input
-          v-model='columnForm.desc' :rows='5' resize='none' maxlength='100' show-word-limit type='textarea'
-          placeholder='请输入专栏简介...'
-        />
+      <el-form-item label="专栏简介" prop="desc">
+        <el-input v-model="columnForm.desc" :rows="5" resize="none" maxlength="100" show-word-limit type="textarea" placeholder="请输入专栏简介..." />
       </el-form-item>
-      <el-form-item label='专栏封面'>
+      <el-form-item label="专栏封面">
         <el-upload
-          :class='{ isUpload: columnForm.cover?.length }' list-type='picture-card' :on-change='handleChange'
-          :on-preview='handlePreview' :on-remove='handleRemove' :limit='1' action='#'
-          :auto-upload='false' :file-list='columnForm.cover'
+          :class="{ isUpload: columnForm.cover?.length }"
+          list-type="picture-card"
+          :on-change="handleChange"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :limit="1"
+          action="#"
+          :auto-upload="false"
+          :file-list="columnForm.cover"
         >
-          <div class='flex flex-col'>
-            <i class='iconfont icon-plus text-center'></i>
-            <span class='text-sm text-gray-400'>上传封面</span>
+          <div class="flex flex-col">
+            <i class="iconfont icon-plus text-center"></i>
+            <span class="text-sm text-gray-400">上传封面</span>
           </div>
         </el-upload>
-        <el-dialog v-model='isPreview'>
-          <img w-full :src='previewUrl' alt='Preview Image' />
+        <el-dialog v-model="isPreview">
+          <img w-full :src="previewUrl" alt="Preview Image" />
         </el-dialog>
       </el-form-item>
-      <el-form-item label='是否公开' prop='type'>
-        <el-radio-group v-model='columnForm.type' @change='(val) => columnForm.type = val' size='small'>
-          <el-radio-button label='公开' />
-          <el-radio-button label='私有' />
+      <el-form-item label="是否公开" prop="type">
+        <el-radio-group v-model="columnForm.type" @change="(val) => (columnForm.type = val)" size="small">
+          <el-radio-button label="公开" />
+          <el-radio-button label="私有" />
         </el-radio-group>
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type='primary' @click='submitForm(ruleFormRef)'>确认</el-button>
-      <el-button @click='() => $emit("close")'>取消</el-button>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">确认</el-button>
+      <el-button @click="() => $emit('close')">取消</el-button>
     </template>
   </el-drawer>
 </template>

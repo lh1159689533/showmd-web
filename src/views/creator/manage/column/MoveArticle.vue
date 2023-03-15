@@ -6,10 +6,10 @@ import message from '@utils/message';
 import { findListByUserId, moveArticle } from '@service/column';
 
 const props = defineProps<{
-  columnId: number | null
-  articleIds?: number[]
+  columnId: number | null;
+  articleIds?: number[];
 }>();
-const emit = defineEmits<{ (e: 'close'): void, (e: 'callback'): void }>();
+const emit = defineEmits<{ (e: 'close'): void; (e: 'callback'): void }>();
 
 const store = useStore();
 const user = computed(() => store.getters.getUser);
@@ -21,7 +21,7 @@ const columnList = ref([]);
 
 const findColumnList = async (searchKey = '') => {
   columnList.value = await findListByUserId(user.value?.id, searchKey);
-  columnList.value = columnList.value.filter(item => item.id !== props.columnId);
+  columnList.value = columnList.value.filter((item) => item.id !== props.columnId);
 };
 
 const onSelect = (_, row) => {
@@ -61,26 +61,24 @@ watchEffect(() => {
 </script>
 
 <template>
-  <el-dialog :model-value='true' :close-on-click-modal='false' :show-close='false' :width='800'>
+  <el-dialog :model-value="true" :close-on-click-modal="false" :show-close="false" :width="800">
     <template #header>
-      <div class='flex px-3 items-center'>
+      <div class="flex px-3 items-center">
         <span>将文章移动至其他专栏</span>
-        <span class='px-2 text-gray-400'>|</span>
-        <span class='flex-1 text-gray-500 text-sm'>每次只能选择一个专栏</span>
-        <div class='w-80'><el-input v-model='searchKey' @input='searchColumn' placeholder='请输入关键字搜索' clearable /></div>
+        <span class="px-2 text-gray-400">|</span>
+        <span class="flex-1 text-gray-500 text-sm">每次只能选择一个专栏</span>
+        <div class="w-80"><el-input v-model="searchKey" @input="searchColumn" placeholder="请输入关键字搜索" clearable /></div>
       </div>
     </template>
-    <el-table ref='tableRef' :data='columnList' style='width: 100%' :show-header='false' @select='onSelect' :height='350' empty-text='暂无其他专栏'>
-      <el-table-column type='selection' width='55' />
-      <el-table-column property='name' />
+    <el-table ref="tableRef" :data="columnList" style="width: 100%" :show-header="false" @select="onSelect" :height="350" empty-text="暂无其他专栏">
+      <el-table-column type="selection" width="55" />
+      <el-table-column property="name" />
     </el-table>
     <template #footer>
-      <el-button type='primary' @click='move' :disabled='tableRef?.getSelectionRows()?.length === 0'>移动</el-button>
-      <el-button @click='() => $emit("close")'>取消</el-button>
+      <el-button type="primary" @click="move" :disabled="tableRef?.getSelectionRows()?.length === 0">移动</el-button>
+      <el-button @click="() => $emit('close')">取消</el-button>
     </template>
   </el-dialog>
 </template>
 
-<style>
-
-</style>
+<style></style>

@@ -24,6 +24,7 @@ export interface IArticle extends ResponseData {
   user?: IUser;
   createTime?: Date;
   updateTime?: Date;
+  editorType?: number;
 }
 
 async function findById(id: number) {

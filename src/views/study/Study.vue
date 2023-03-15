@@ -66,26 +66,23 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='study'>
-    <nav
-      class='fixed w-full h-12 left-0 z-1000 shadow bg-white' :class='[isShowHeader ? "top-12" : "top-0"]'
-      style='transition:top 500ms;'
-    >
-      <Category @change='handleCategoryChange' />
+  <div id="study">
+    <nav class="fixed w-full h-12 left-0 z-1000 shadow bg-white" :class="[isShowHeader ? 'top-12' : 'top-0']" style="transition: top 500ms">
+      <Category @change="handleCategoryChange" />
     </nav>
-    <section class='pt-20 relative'>
-      <div class='relative pr-8' style='width: 78%'>
-        <div class='content-list bg-white'>
-          <div class='pl-6 py-3 text-sm text-indigo-500'>
+    <section class="pt-20 relative">
+      <div class="relative pr-8" style="width: 78%">
+        <div class="content-list bg-white">
+          <div class="pl-6 py-3 text-sm text-indigo-500">
             <span>{{ filters.category?.title || '综合' }}</span>
-            <span class='separator px-2 text-gray-300'>/</span>
+            <span class="separator px-2 text-gray-300">/</span>
             <span>{{ filters.subCategory?.title || '全部' }}</span>
           </div>
-          <ArticleList :data='articleList' />
+          <ArticleList :data="articleList" />
         </div>
       </div>
-      <aside class='content-aside right-0 top-0 absolute' style='width: 22%'>
-        <div class='fixed w-80' :class='[isShowHeader ? "top-32" : "top-16"]' style='transition: 500ms;'>
+      <aside class="content-aside right-0 top-0 absolute" style="width: 22%">
+        <div class="fixed w-80" :class="[isShowHeader ? 'top-32' : 'top-16']" style="transition: 500ms">
           <Top />
         </div>
       </aside>

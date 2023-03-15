@@ -1,13 +1,13 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from 'vue';
-import { getElementById } from '@src/components/Editor/vditorEditor';
+import { getElementById } from '@src/components/Editor/domUtil';
 
 // canvas背景
 export default defineComponent({
   name: 'CanvasBG',
   setup() {
     onMounted(() => {
-      import('./lib/hexagon').then(mod => mod?.default());
+      import('./lib/hexagon').then((mod) => mod?.default());
     });
 
     onUnmounted(() => {
@@ -21,9 +21,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <canvas id='CanvasBG'></canvas>
+  <canvas id="CanvasBG"></canvas>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

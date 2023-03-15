@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import Emoji from './Emoji/Emoji.vue';
 import MyCode from './Code/Code.vue';
@@ -173,44 +173,39 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='add-item' :class='$attrs.class'>
+  <div class="add-item" :class="$attrs.class">
     <div
-      ref='dom' id='textareaBox' contenteditable='true' :placeholder='placeholder' @input='handleValueChange'
-      @focus='handleFoucs' @blur='handleBlur'
-      class='textarea w-full p-2 text-sm rounded border-gray-300 border focus:border-indigo-500'
+      ref="dom"
+      id="textareaBox"
+      contenteditable="true"
+      :placeholder="placeholder"
+      @input="handleValueChange"
+      @focus="handleFoucs"
+      @blur="handleBlur"
+      class="textarea w-full p-2 text-sm rounded border-gray-300 border focus:border-indigo-500"
     ></div>
-    <div v-show='isShowAction' class='action-box text-sm text-gray-500 mt-2 flex items-center gap-4'>
-      <el-dropdown
-        @visible-change='handleIsShowEmoji' trigger='click' placement='bottom-start'
-        popper-class='emoji-dropdown'
-      >
-        <div class='flex items-center'>
-          <i class='iconfont icon-emoji text-xl mr-1'></i>
+    <div v-show="isShowAction" class="action-box text-sm text-gray-500 mt-2 flex items-center gap-4">
+      <el-dropdown @visible-change="handleIsShowEmoji" trigger="click" placement="bottom-start" popper-class="emoji-dropdown">
+        <div class="flex items-center">
+          <i class="iconfont icon-emoji text-xl mr-1"></i>
           <span>表情</span>
         </div>
         <template #dropdown>
-          <Emoji @change='handleEmojiChange' />
+          <Emoji @change="handleEmojiChange" />
         </template>
       </el-dropdown>
-      <el-dropdown
-        @visible-change='handleIsShowEmoji' trigger='click' class='flex-1' placement='bottom-start'
-        popper-class='emoji-dropdown'
-      >
-        <div class='flex items-center'>
-          <i class='iconfont icon-code text-xl mr-1'></i>
+      <el-dropdown @visible-change="handleIsShowEmoji" trigger="click" class="flex-1" placement="bottom-start" popper-class="emoji-dropdown">
+        <div class="flex items-center">
+          <i class="iconfont icon-code text-xl mr-1"></i>
           <span>代码</span>
         </div>
         <template #dropdown>
-          <MyCode @change='handleCodeChange' />
+          <MyCode @change="handleCodeChange" />
         </template>
       </el-dropdown>
       <span>⌘ + Enter</span>
-      <button
-        @click='addItem' :disabled='!value || isPublish'
-        class='ml-2 bg-indigo-500 py-2 px-5 text-white rounded disabled:bg-indigo-300'
-      >
-        {{ isPublish ? '发布中' : '发布'
-        }}
+      <button @click="addItem" :disabled="!value || isPublish" class="ml-2 bg-indigo-500 py-2 px-5 text-white rounded disabled:bg-indigo-300">
+        {{ isPublish ? '发布中' : '发布' }}
       </button>
     </div>
   </div>

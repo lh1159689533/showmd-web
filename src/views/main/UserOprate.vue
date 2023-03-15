@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -63,22 +63,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='user' @mouseenter='show' @mouseleave='hide'>
+  <div class="user" @mouseenter="show" @mouseleave="hide">
     <img
-      :src='user.avatar' :style='[isShow ? "transform:scale(1.5) translate(0,8px)" : ""]'
-      @error='(e) => (e.target as HTMLImageElement).src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"'
-    >
-    <div class='oprate-box show-ani absolute bg-white' :style='[isShow ? "display:block" : "display:none"]'>
-      <div class='pt-3 pb-2 flex justify-center items-center border-b'>
+      :src="user.avatar"
+      :style="[isShow ? 'transform:scale(1.5) translate(0,8px)' : '']"
+      @error="(e) => (e.target as HTMLImageElement).src = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+    />
+    <div class="oprate-box show-ani absolute bg-white" :style="[isShow ? 'display:block' : 'display:none']">
+      <div class="pt-3 pb-2 flex justify-center items-center border-b">
         <span>{{ user.name }}</span>
       </div>
-      <List
-        :data-list='userOprateList' @click='handleOprate' class='oprate-list text-sm text-gray-600 my-3'
-        item-class='cursor-pointer hover:bg-gray-200'
-      >
-        <template #default='{ item }'>
-          <div class='px-4 flex items-center' style='padding-top: 6px;padding-bottom: 6px;'>
-            <i class='iconfont justify-self-center text-xl mr-2' :class='`icon-${item.icon}`' />
+      <List :data-list="userOprateList" @click="handleOprate" class="oprate-list text-sm text-gray-600 my-3" item-class="cursor-pointer hover:bg-gray-200">
+        <template #default="{ item }">
+          <div class="px-4 flex items-center" style="padding-top: 6px; padding-bottom: 6px">
+            <i class="iconfont justify-self-center text-xl mr-2" :class="`icon-${item.icon}`" />
             <span>{{ item.title }}</span>
           </div>
         </template>
@@ -117,6 +115,7 @@ export default defineComponent({
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

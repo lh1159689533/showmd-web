@@ -21,21 +21,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <ul class='overflow-y-auto overflow-x-hidden'>
+  <ul class="overflow-y-auto overflow-x-hidden">
     <li
-      v-for='(item, index) in dataList'
-      :key='(item as any).id || (item as any).key || index'
-      :class='$attrs["item-class"]'
-      @click='(e) => $emit("click", item, e)'
-      @mouseenter='() => hoverIndex = index'
-      @mouseleave='() => hoverIndex = -1'
+      v-for="(item, index) in dataList"
+      :key="(item as any).id || (item as any).key || index"
+      :class="$attrs['item-class']"
+      @click="(e) => $emit('click', item, e)"
+      @mouseenter="() => (hoverIndex = index)"
+      @mouseleave="() => (hoverIndex = -1)"
     >
-      <slot :item='item' :index='index' :hover-index='hoverIndex'>
+      <slot :item="item" :index="index" :hover-index="hoverIndex">
         <span>{{ item }}</span>
       </slot>
     </li>
   </ul>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -15,11 +15,14 @@
   --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
 }
 
+html,
 body {
+  height: 100%;
   background-color: #f4f5f5;
 }
 
 #app {
+  height: 100%;
   background-color: #f4f5f5;
   position: relative;
 }
@@ -49,6 +52,18 @@ body {
   --el-button-disabled-border-color: transparent !important;
 }
 /** element-ui样式重写 end */
+
+/** windicss样式重写 start */
+h1 {
+  font-size: 2em !important;
+  font-weight: bold !important;
+}
+
+h3 {
+  font-size: 1.17em !important;
+  font-weight: bold !important;
+}
+/** windicss样式重写 end */
 
 /* 公共css start */
 .container {

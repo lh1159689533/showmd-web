@@ -66,7 +66,7 @@ export default defineComponent({
      */
     const handleChangeSubCategory = (subCategory) => {
       activeSubCategory.value = subCategory;
-      activeCategory.value = categoryList.value.find(c => c.key === subCategory.parent);
+      activeCategory.value = categoryList.value.find((c) => c.key === subCategory.parent);
       emit('change', activeCategory.value, activeSubCategory.value);
       changSubCategoryList(activeCategory.value);
     };
@@ -117,37 +117,43 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='h-full z-1000 bg-white relative' @mouseleave='hideSubCategory' @mouseenter='cancleHideSubCategoryTimer'>
-    <List :data-list='categoryList' class='category-list container h-full flex items-center text-sm text-gray-800'>
-      <template #default='{ item }'>
+  <div class="h-full z-1000 bg-white relative" @mouseleave="hideSubCategory" @mouseenter="cancleHideSubCategoryTimer">
+    <List :data-list="categoryList" class="category-list container h-full flex items-center text-sm text-gray-800">
+      <template #default="{ item }">
         <span
-          @click='() => handleChangeCategory(item)'
-          @mouseenter='() => hoverCategory(item)'
-          :class='[item.key === activeCategory.key ? "text-indigo-500" : ""]'
-          class='pr-6 cursor-pointer hover:text-indigo-500'
-        >{{ item.title }}</span>
+          @click="() => handleChangeCategory(item)"
+          @mouseenter="() => hoverCategory(item)"
+          :class="[item.key === activeCategory.key ? 'text-indigo-500' : '']"
+          class="pr-6 cursor-pointer hover:text-indigo-500"
+        >
+          {{ item.title }}
+        </span>
       </template>
     </List>
   </div>
   <div
-    v-show='isShowSubCategory && subCategoryList'
-    @mouseenter='cancleHideSubCategoryTimer'
-    @mouseleave='hideSubCategory'
-    class='sub-category bg-white animate__animated animate__faster animate__fadeInDown z-900'
+    v-show="isShowSubCategory && subCategoryList"
+    @mouseenter="cancleHideSubCategoryTimer"
+    @mouseleave="hideSubCategory"
+    class="sub-category bg-white animate__animated animate__faster animate__fadeInDown z-900"
   >
     <List
-      :data-list='subCategoryList'
-      :class='$attrs["item-class"]'
-      style='font-size: 0.85rem'
-      class='sub-category-list container flex flex-wrap bg-white items-center text-gray-800 py-2'
-      item-class='mr-4'
+      :data-list="subCategoryList"
+      :class="$attrs['item-class']"
+      style="font-size: 0.85rem"
+      class="sub-category-list container flex flex-wrap bg-white items-center text-gray-800 py-2"
+      item-class="mr-4"
     >
-      <template #default='{ item }'>
+      <template #default="{ item }">
         <span
-          @click='() => handleChangeSubCategory(item)'
-          :class='[item.key === activeSubCategory?.key && item.parent === activeSubCategory?.parent ? "bg-indigo-500 text-white hover:text-white" : "bg-gray-100"]'
-          class='cursor-pointer hover:text-indigo-500 px-2 py-1 rounded-full inline-block'
-        >{{ item.title }}</span>
+          @click="() => handleChangeSubCategory(item)"
+          :class="[
+            item.key === activeSubCategory?.key && item.parent === activeSubCategory?.parent ? 'bg-indigo-500 text-white hover:text-white' : 'bg-gray-100 hover:text-indigo-500',
+          ]"
+          class="cursor-pointer px-2 py-1 rounded-full inline-block"
+        >
+          {{ item.title }}
+        </span>
       </template>
     </List>
   </div>

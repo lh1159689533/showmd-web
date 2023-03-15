@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import dayjs from 'dayjs';
 import message from '@utils/message';
@@ -6,7 +6,7 @@ import { confirm } from '@utils/messageBox';
 import AddItem from './AddItem.vue';
 import { useStore } from 'vuex';
 
-import { addClass, removeClass } from '@src/components/Editor/vditorEditor';
+import { addClass, removeClass } from '@src/components/Editor/domUtil';
 // import { parseEmoji } from './Emoji/emoji.config';
 import { parse } from './utils';
 
@@ -183,57 +183,57 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='common-item flex w-full text-sm'>
+  <div class="common-item flex w-full text-sm">
     <img
-      :class='type === "comment" ? "w-8 h-8" : "w-6 h-6"'
-      class='user-avatar rounded-full cursor-pointer'
-      :src='data.user?.avatar'
-      @error='(e) => (e.target as HTMLImageElement).src="/img/avatars.jpeg"'
+      :class="type === 'comment' ? 'w-8 h-8' : 'w-6 h-6'"
+      class="user-avatar rounded-full cursor-pointer"
+      :src="data.user?.avatar"
+      @error="(e) => (e.target as HTMLImageElement).src='/img/avatars.jpeg'"
     />
-    <div class='content-box ml-3 flex-1 text-gray-500'>
-      <div @mouseenter='hoverItem = true' @mouseleave='hoverItem = false' class='content-section'>
-        <div class='user-box flex items-center'>
-          <div class='user flex-1'>
-            <span class='text-black cursor-pointer' style='font-size: 15px'>{{ data.user.name }}</span>
-            <span v-if='data.isAuthor' class='ml-1 text-indigo-500 bg-indigo-100 text-xs px-1'>作者</span>
-            <span v-if='data.isMyself' class='ml-1 text-block bg-gray-100 text-xs px-1'>本人</span>
+    <div class="content-box ml-3 flex-1 text-gray-500">
+      <div @mouseenter="hoverItem = true" @mouseleave="hoverItem = false" class="content-section">
+        <div class="user-box flex items-center">
+          <div class="user flex-1">
+            <span class="text-black cursor-pointer" style="font-size: 15px">{{ data.user.name }}</span>
+            <span v-if="data.isAuthor" class="ml-1 text-indigo-500 bg-indigo-100 text-xs px-1">作者</span>
+            <span v-if="data.isMyself" class="ml-1 text-block bg-gray-100 text-xs px-1">本人</span>
           </div>
-          <span class='time'>{{ formatDate(data.createTime) }}</span>
+          <span class="time">{{ formatDate(data.createTime) }}</span>
         </div>
-        <div class='content-box'>
-          <div ref='contentDom' class='content pr-4 text-gray-700'>
-            <span v-if='type === "reply" && data.replyToUserId' class='reply-to-user text-indigo-500 mr-1'>@{{ data.replyToUser.name }}</span>
-            <span v-html='parse(data.content)'></span>
+        <div class="content-box">
+          <div ref="contentDom" class="content pr-4 text-gray-700">
+            <span v-if="type === 'reply' && data.replyToUserId" class="reply-to-user text-indigo-500 mr-1">@{{ data.replyToUser.name }}</span>
+            <span v-html="parse(data.content)"></span>
           </div>
-          <div v-if='isShowLimit' @click='handleExpand' class='limit text-indigo-500 cursor-pointer mt-2'>{{ isExpand ? '收起' : '展开' }}</div>
+          <div v-if="isShowLimit" @click="handleExpand" class="limit text-indigo-500 cursor-pointer mt-2">{{ isExpand ? '收起' : '展开' }}</div>
         </div>
-        <div class='footer flex mt-4'>
-          <div class='action-box text-sm' style='color:#8a8d90'>
+        <div class="footer flex mt-4">
+          <div class="action-box text-sm" style="color: #8a8d90">
             <span
-              @click='() => !data.isMyself && handleDigg()'
-              :class='[{ "text-indigo-500": data.isDigg }, !data.isMyself ? "cursor-pointer hover:text-indigo-500" : "text-gray-400"]'
-              class='digg'
+              @click="() => !data.isMyself && handleDigg()"
+              :class="[{ 'text-indigo-500': data.isDigg }, !data.isMyself ? 'cursor-pointer hover:text-indigo-500' : 'text-gray-400']"
+              class="digg"
             >
-              <i class='iconfont icon-digg mr-1' />
+              <i class="iconfont icon-digg mr-1" />
               <span>{{ data.digg || '点赞' }}</span>
             </span>
-            <span v-show='!isShowAddReply' @click='showAddReply' class='reply mx-4 cursor-pointer hover:text-indigo-500'>
-              <i class='iconfont icon-reply mr-1' />
+            <span v-show="!isShowAddReply" @click="showAddReply" class="reply mx-4 cursor-pointer hover:text-indigo-500">
+              <i class="iconfont icon-reply mr-1" />
               <span>{{ data.replyCount || '回复' }}</span>
             </span>
-            <span v-show='isShowAddReply' @click='hideAddReply' class='reply mx-4 cursor-pointer text-indigo-500'>
-              <i class='iconfont icon-reply mr-1' />
+            <span v-show="isShowAddReply" @click="hideAddReply" class="reply mx-4 cursor-pointer text-indigo-500">
+              <i class="iconfont icon-reply mr-1" />
               <span>取消回复</span>
             </span>
-            <span v-if='data.isMyself && hoverItem' @click='() => handleDelItem(data)' class='del cursor-pointer hover:text-red-500 flex-1'>
-              <i class='iconfont icon-comment-del mr-1' />
+            <span v-if="data.isMyself && hoverItem" @click="() => handleDelItem(data)" class="del cursor-pointer hover:text-red-500 flex-1">
+              <i class="iconfont icon-comment-del mr-1" />
               <span>删除</span>
             </span>
           </div>
         </div>
       </div>
-      <AddItem v-if='isShowAddReply' @confirm='handleAddItem' @cancle='hideAddReply' ref='addItemDom' autofocus :placeholder='`回复${data.user.name}...`' class='add-reply mt-3' />
-      <slot name='replies' />
+      <AddItem v-if="isShowAddReply" @confirm="handleAddItem" @cancle="hideAddReply" ref="addItemDom" autofocus :placeholder="`回复${data.user.name}...`" class="add-reply mt-3" />
+      <slot name="replies" />
     </div>
   </div>
 </template>

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -26,24 +26,32 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='top-article-list bg-white' style='max-height: 610px; height: 330px'>
-    <h3 class='top-title text-sm py-2 pl-8 border-b'>热门文章</h3>
-    <List v-if='topList?.length' :data-list='topList' @click='(item) => toDetail(item?.id)' class='overflow-y-hidden h-full py-2' item-class='py-2 px-6 cursor-pointer hover:bg-gray-50'>
-      <template #default='{ item, index }'>
-        <el-tooltip effect='light' placement='left' :show-after='500'>
+  <div class="top-article-list bg-white" style="max-height: 610px; height: 330px">
+    <h5 class="top-title text-sm py-2 pl-8 border-b">热门文章</h5>
+    <List
+      v-if="topList?.length"
+      :data-list="topList"
+      @click="(item) => toDetail(item?.id)"
+      class="overflow-y-hidden h-full py-2"
+      item-class="py-2 px-6 cursor-pointer hover:bg-gray-50"
+    >
+      <template #default="{ item, index }">
+        <el-tooltip effect="light" placement="left" :show-after="500">
           <template #content>
-            <span class='overflow-clip inline-block' style='max-width:350px'>{{ item.summary ?? item.name }}</span>
+            <span class="overflow-clip inline-block" style="max-width: 350px">{{ item.summary ?? item.name }}</span>
           </template>
           <div>
-            <div class='title flex items-center'>
+            <div class="title flex items-center">
               <span
-                :class='`hotnum-${index + 1} hotnum`'
-                class='px-1 tabular-nums text-white flex justify-center items-center h-5 mr-1'
-                style='border-bottom-right-radius: 50%;border-bottom-left-radius: 50%;'
-              >{{ index + 1 }}</span>
-              <span class='text-sm text-gray-800 truncate'>{{ item.name }}</span>
+                :class="`hotnum-${index + 1} hotnum`"
+                class="px-1 tabular-nums text-white flex justify-center items-center h-5 mr-1"
+                style="border-bottom-right-radius: 50%; border-bottom-left-radius: 50%"
+              >
+                {{ index + 1 }}
+              </span>
+              <span class="text-sm text-gray-800 truncate">{{ item.name }}</span>
             </div>
-            <p class='text-xs text-gray-500 truncate pt-1'>{{ item.summary }}</p>
+            <p class="text-xs text-gray-500 truncate pt-1">{{ item.summary }}</p>
           </div>
         </el-tooltip>
       </template>
