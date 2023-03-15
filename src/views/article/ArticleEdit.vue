@@ -1,11 +1,14 @@
-<script lang='ts'>
-import { defineComponent, ref, reactive } from 'vue';
+<script lang="ts" setup>
+import { defineProps, ref, reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { ElMessage as message } from 'element-plus';
+import { confirm } from '@utils/messageBox';
+import message from '@utils/message';
 import PublishArticle from './ArticlePublish.vue';
 import storage from '@utils/storage';
 import { findById, saveArticle, ICover } from '@service/article';
 import { listContentTheme, listCodeTheme } from '@service/theme';
+import { findByArticleId } from '@service/column';
 
 interface IArticle {
   id?: number;
@@ -17,170 +20,233 @@ interface IArticle {
   cover?: ICover[];
   contentTheme?: string;
   codeTheme?: string;
+  columnId?: number;
 }
 
-export default defineComponent({
-  name: 'ArticleEdit',
-  components: { PublishArticle },
-  props: {
-    id: String,
-  },
-  setup(props) {
-    const router = useRouter();
+type EditorType = 'markdown' | 'richtext';
 
-    const isShowEditor = ref(false);
-    const isShowPublish = ref(false);
-    const contentThemeList = ref([]);
-    const codeThemeList = ref([]);
+const router = useRouter();
+const store = useStore();
 
-    const storageKey = props.id ? `update-article-${props.id}` : 'create-article';
+const props = defineProps<{
+  id?: number | null;
+}>();
 
-    const article = ref<IArticle>({
-      name: '',
-      content: '',
-      category: '',
-      tags: '',
-      summary: '',
-      cover: [],
-      contentTheme: 'Chinese-red',
-      codeTheme: 'github',
-    });
+const currentUser = ref();
 
-    const initPublishForm = reactive({
-      category: '',
-      tags: [],
-      summary: '',
-      cover: [],
-    });
+const isShowEditor = ref(false);
+const isShowPublish = ref(false);
+const contentThemeList = ref([]);
+const codeThemeList = ref([]);
+const editorType = ref<EditorType>('markdown');
 
-    async function init() {
-      contentThemeList.value = await listContentTheme();
-      codeThemeList.value = await listCodeTheme();
-      if (props.id) {
-        // 编辑文章,获取文章内容
-        const data = await findById(props.id);
-        if (!data) {
-          return message.error('文章不存在');
-        }
-        article.value = {
-          ...data,
-          content: decodeURIComponent(data.content),
-          cover: data.cover ? [data.cover] : [],
-        };
-        initPublishForm.category = data.category;
-        initPublishForm.tags = data.tags.split(',');
-        initPublishForm.cover = data.cover ? [data.cover] : [];
-        initPublishForm.summary = data.summary;
-        isShowEditor.value = true;
-      } else {
-        isShowEditor.value = true;
-      }
-      if (storage.getJson(storageKey)) {
-        article.value = {
-          ...article.value,
-          ...storage.getJson(storageKey)
-        };
-      }
-    }
+// const storageKey = props.id ? `update-article-${props.id}` : 'create-article';
+const storageKey = computed(() => (props.id ? `update-article-${editorType.value}-${props.id}` : `create-article-${editorType.value}`));
 
-    // 隐藏发布窗
-    const hidePublish = () => {
-      setTimeout(() => (isShowPublish.value = false), 100);
-    };
-
-    // 显示发布窗
-    const showPublish = () => {
-      function hide() {
-        hidePublish();
-        document.removeEventListener('click', hide);
-      }
-      if (isShowPublish.value) {
-        hidePublish();
-      } else {
-        isShowPublish.value = true;
-        // 点击其他区域隐藏
-        document.addEventListener('click', hide);
-      }
-    };
-
-    // 文章内容变化
-    const onChange = (value) => {
-      if (value.content) {
-        article.value.summary = value.content
-          .replace(/\s+/g, ' ')
-          .replace(/[^a-zA-Z0-9\s]+/g, '')
-          .substr(0, 100);
-        article.value.content = value.content;
-      } else if (value.contentTheme) {
-        article.value.contentTheme = value.contentTheme;
-      } else if (value.codeTheme) {
-        article.value.codeTheme = value.codeTheme;
-      }
-      storage.setJson(storageKey, article.value);
-    };
-
-    // 发布
-    const onPublish = async (art) => {
-      art = {
-        ...article.value,
-        ...art,
-        userId: 1,
-        content: encodeURIComponent(article.value.content),
-        tags: art.tags?.join(','),
-        coverMark: 'changed',
-      };
-      const formData = new FormData();
-      if (art.cover?.length) {
-        const coverFile = art.cover[0].raw ?? art.cover[0];
-        if (coverFile instanceof File) {
-          formData.append('cover', coverFile);
-        } else {
-          art.coverMark = 'noChange';
-        }
-      } else {
-        art.coverMark = 'deleted';
-      }
-      formData.append('article', JSON.stringify(art));
-      const result = await saveArticle(formData);
-      if (result) {
-        storage.setJson('publishedArticle', { ...art, id: result });
-        message.success('文章发布成功');
-        router.push('/published');
-        storage.remove(storageKey);
-      }
-    };
-
-    init();
-
-    return {
-      article,
-      isShowPublish,
-      showPublish,
-      hidePublish,
-      onChange,
-      onPublish,
-      isShowEditor,
-      contentThemeList,
-      codeThemeList,
-      initPublishForm,
-    };
-  },
+const article = ref<IArticle>({
+  name: '',
+  content: '',
+  category: '',
+  tags: '',
+  summary: '',
+  cover: [],
+  contentTheme: 'Chinese-red',
+  codeTheme: 'github',
+  columnId: null,
 });
+
+const initPublishForm = reactive({
+  category: '',
+  tags: [],
+  summary: '',
+  cover: [],
+  columnId: null,
+});
+
+const getCurrentUser = async () => {
+  currentUser.value = await store.dispatch('getUserById', 1);
+};
+
+const getArticle = async () => {
+  if (props.id) {
+    // 编辑文章,获取文章内容
+    const data = await findById(+props.id);
+    if (!data) {
+      return message.error('文章不存在');
+    }
+    const column = await findByArticleId(+props.id);
+    article.value = {
+      ...data,
+      content: decodeURIComponent(data.content),
+      cover: data.cover ? [data.cover] : [],
+      columnId: column?.id,
+    };
+    initPublishForm.category = data.category;
+    initPublishForm.tags = data.tags.split(',');
+    initPublishForm.cover = data.cover ? [data.cover] : [];
+    initPublishForm.summary = data.summary;
+    initPublishForm.columnId = column?.id;
+    isShowEditor.value = true;
+    editorType.value = data?.editorType === 1 ? 'markdown' : 'richtext';
+  } else {
+    isShowEditor.value = true;
+    const type = sessionStorage.getItem('editor-type') ?? 'markdown';
+    editorType.value = type as EditorType;
+  }
+  if (storage.getJson(storageKey.value)) {
+    article.value = {
+      ...article.value,
+      ...storage.getJson(storageKey.value),
+    };
+  }
+};
+
+const getTheme = async () => {
+  contentThemeList.value = await listContentTheme();
+  codeThemeList.value = await listCodeTheme();
+};
+
+async function init() {
+  getCurrentUser();
+  await getArticle();
+  editorType.value === 'markdown' && getTheme();
+}
+
+// 隐藏发布窗
+const hidePublish = () => {
+  setTimeout(() => (isShowPublish.value = false), 100);
+};
+
+// 显示发布窗
+const showPublish = () => {
+  function hide() {
+    hidePublish();
+    document.removeEventListener('click', hide);
+  }
+  if (isShowPublish.value) {
+    hidePublish();
+  } else {
+    isShowPublish.value = true;
+    // 点击其他区域隐藏
+    document.addEventListener('click', hide);
+  }
+};
+
+// 文章内容变化
+const onChange = (value) => {
+  if (editorType.value === 'markdown') {
+    if (value.content) {
+      article.value.summary = value.content
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-zA-Z0-9\s]+/g, '')
+        .substr(0, 100);
+      article.value.content = value.content;
+    } else if (value.contentTheme) {
+      article.value.contentTheme = value.contentTheme;
+    } else if (value.codeTheme) {
+      article.value.codeTheme = value.codeTheme;
+    }
+  } else {
+    article.value.content = value.content;
+    article.value.name = value.name;
+    article.value.contentTheme = '';
+    article.value.codeTheme = '';
+  }
+  storage.setJson(storageKey.value, article.value);
+};
+
+// 发布
+const onPublish = async (art) => {
+  art = {
+    ...article.value,
+    ...art,
+    userId: 1,
+    content: encodeURIComponent(article.value.content),
+    tags: art.tags?.join(','),
+    coverMark: 'changed',
+    editorType: editorType.value === 'markdown' ? 1 : 2, // 1 markdown, 2 richtext
+  };
+  const formData = new FormData();
+  if (art.cover?.length) {
+    const coverFile = art.cover[0].raw ?? art.cover[0];
+    if (coverFile instanceof File) {
+      formData.append('cover', coverFile);
+    } else {
+      art.coverMark = 'noChange';
+    }
+  } else {
+    art.coverMark = 'deleted';
+  }
+  formData.append('article', JSON.stringify(art));
+  const result = await saveArticle(formData);
+  if (result) {
+    storage.setJson('publishedArticle', { ...art, id: result });
+    // message.success('文章发布成功');
+    router.push('/published');
+    storage.remove(storageKey.value);
+  }
+};
+
+const changeEditorType = (type: EditorType) => {
+  confirm('切换写作模式后，当前内容不会迁移。', `切换为${type === 'markdown' ? 'Markdown编辑器' : '富文本编辑器'}`, {
+    callback(action) {
+      if (action === 'confirm') {
+        sessionStorage.setItem('editor-type', type);
+        location.reload();
+      }
+    },
+  });
+};
+
+init();
 </script>
 
 <template>
-  <div class='flex flex-col'>
-    <div class='tool flex items-center p-3 px-8 bg-white'>
-      <input v-model='article.name' placeholder='请输入文章标题...' class='flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none' />
-      <div class='rightGroups flex py-1 relative'>
-        <el-button>草稿箱</el-button>
-        <el-button type='primary' @click.stop='showPublish'>{{ id ? '更新' : '发布' }}</el-button>
-        <PublishArticle v-show='isShowPublish' :init-value='initPublishForm' @publish='onPublish' @close='hidePublish' />
+  <div v-if="editorType === 'markdown'" class="flex flex-col">
+    <div class="tool flex items-center p-3 px-8 bg-white">
+      <input v-model="article.name" placeholder="请输入文章标题..." class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
+      <div class="rightGroups flex py-1 relative items-center">
+        <!-- <el-button>草稿箱</el-button> -->
+        <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
+        <el-tooltip content="切换为富文本编辑器" effect="light">
+          <i @click="() => changeEditorType('richtext')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
+        </el-tooltip>
+        <img
+          :src="currentUser?.avatar"
+          class="w-7 h-7 rounded-full cursor-pointer ml-6"
+          @error="(e) => (e.target as HTMLImageElement).src ='https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+        />
       </div>
     </div>
-    <MDEditorIR v-if='isShowEditor' :data='article' :content-theme-list='contentThemeList' :code-theme-list='codeThemeList' @change='onChange' />
+    <MDEditorIR v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange" />
   </div>
+  <div v-if="editorType === 'richtext'" class="h-full">
+    <div style="height: calc(100% - 58px)">
+      <RTEditor v-if="isShowEditor" :data="article" @on-change="onChange" />
+    </div>
+    <div class="relative h-14 bg-white border-t px-6">
+      <div class="flex py-1 items-center justify-end container h-full">
+        <!-- <el-button>草稿箱</el-button> -->
+        <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
+        <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
+          <i @click="() => changeEditorType('markdown')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
+        </el-tooltip>
+        <img
+          :src="currentUser?.avatar"
+          class="w-7 h-7 rounded-full cursor-pointer ml-6"
+          @error="(e) => (e.target as HTMLImageElement).src = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
+        />
+      </div>
+    </div>
+  </div>
+  <PublishArticle
+    v-show="isShowPublish"
+    :init-value="initPublishForm"
+    :user-id="currentUser?.id"
+    :placement="editorType === 'markdown' ? 'top-right' : 'bottom-right'"
+    @publish="onPublish"
+    @close="hidePublish"
+  />
 </template>
 
-<style scope>
-</style>
+<style scope></style>

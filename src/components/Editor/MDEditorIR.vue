@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import Vditor from 'vditor';
 import {
@@ -11,7 +11,7 @@ import {
   getNodeByAttribute,
   getBoundingClientRect,
   getComputedStyleOf,
-} from './vditorEditor';
+} from './domUtil';
 import { upload } from '@src/utils/upload';
 import message from '@utils/message';
 
@@ -95,7 +95,7 @@ export default defineComponent({
               className: `${currentCodeTheme.value}`,
               click: () => setCodeTheme(t.value),
             })),
-            click: () => { },
+            click: () => {},
           },
           {
             name: 'contentTheme',
@@ -108,7 +108,7 @@ export default defineComponent({
               name: t.value,
               click: () => setContentTheme(t.value, t.path),
             })),
-            click: () => { },
+            click: () => {},
           },
           '|',
           {
@@ -128,7 +128,7 @@ export default defineComponent({
             className: 'right',
             icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M24 28.625v-4a6 6 0 1 0-6-6" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M24 37.625a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor"></path></svg>',
           },
-          'fullscreen',
+          // 'fullscreen',
         ],
         outline: {
           enable: false,
@@ -154,7 +154,8 @@ export default defineComponent({
         tab: '\t',
         value: (props?.data?.content ?? '').concat('\n\n'),
         after() {
-          (window as any).editor = editor.value;
+          // (window as any).editor = editor.value;
+          editor.value?.focus();
           if (isEditorInited) return;
           isEditorInited = true;
           onScroll();
@@ -162,6 +163,10 @@ export default defineComponent({
           onPreviewScroll();
           const editorContent = querySelector(getElementById('myEditorContent'), '.vditor-ir');
           addClass(editorContent, 'showmd');
+          // editorContent.addEventListener('click', () => {
+          //   console.log('dsdsdsds');
+          //   editor.value.focus();
+          // });
           const outlineTitle = querySelector(getElementById('myEditorContent'), '.vditor-content .vditor-outline .vditor-outline__title');
           if (outlineTitle) {
             outlineTitle.innerText = '目录';
@@ -181,7 +186,10 @@ export default defineComponent({
           accept: 'image/*',
           multiple: false, // 不支持多个文件同时上传
           filename(name) {
-            return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').replace('/\\s/g', '');
+            return name
+              .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
+              .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
+              .replace('/\\s/g', '');
           },
           // 自定义上传
           async handler(files: File[]) {
@@ -364,8 +372,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='myEditorIR'>
-    <div id='myEditorContent' v-bind='$attrs'></div>
+  <div id="myEditorIR">
+    <div id="myEditorContent" v-bind="$attrs"></div>
   </div>
 </template>
 
@@ -374,10 +382,10 @@ export default defineComponent({
   padding-right: 10px;
 }
 
-#myEditorIR .vditor-toolbar__item>button[data-type='record'],
-#myEditorIR .vditor-toolbar__item>button[data-type='undo'],
-#myEditorIR .vditor-toolbar__item>button[data-type='edit-mode'],
-#myEditorIR .vditor-toolbar__item>button[data-type='redo'] {
+#myEditorIR .vditor-toolbar__item > button[data-type='record'],
+#myEditorIR .vditor-toolbar__item > button[data-type='undo'],
+#myEditorIR .vditor-toolbar__item > button[data-type='edit-mode'],
+#myEditorIR .vditor-toolbar__item > button[data-type='redo'] {
   display: none;
 }
 
@@ -429,7 +437,7 @@ export default defineComponent({
   display: none;
 }
 
-#myEditorIR .toolbar__item>div {
+#myEditorIR .toolbar__item > div {
   max-height: 600px;
   overflow-y: auto;
 }
@@ -437,8 +445,7 @@ export default defineComponent({
 .showmd .vditor-reset {
   width: 1380px !important;
   margin: 0 auto !important;
-  flex: 1;
-  height: auto !important;
+  /* height: auto !important; */
   overflow-x: hidden;
 }
 
