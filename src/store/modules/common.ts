@@ -1,10 +1,14 @@
 const state = {
-  isShowHeader: true
+  isShowHeader: true,
+  catalogHeight: 0,
 };
 
 const getters = {
   isShowHeader(state) {
     return state.isShowHeader;
+  },
+  catalogHeight() {
+    return state.catalogHeight;
   }
 };
 
@@ -15,6 +19,9 @@ const mutations = {
   show(state) {
     state.isShowHeader = true;
   },
+  catalogHeight(state, hei: number) {
+    state.catalogHeight = hei;
+  }
 };
 
 export default {

@@ -11,7 +11,7 @@ interface IPublishForm {
   columnId?: number;
 }
 
-const props = defineProps<{ initValue: IPublishForm; userId: number; placement?: 'top-right' | 'bottom-right' }>();
+const props = defineProps<{ initValue: IPublishForm; placement?: 'top-right' | 'bottom-right' }>();
 const emit = defineEmits<{ (e: 'publish', value: IPublishForm): void; (e: 'close'): void }>();
 
 const cloumnList = ref([]);
@@ -73,15 +73,15 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  if (props.userId) {
-    findListByUserId(props.userId)
-      .then((data) => {
-        cloumnList.value = data ?? [];
-      })
-      .catch((e) => {
-        console.log('查询出错:', e);
-      });
-  }
+  // if (props.userId) {
+  findListByUserId()
+    .then((data) => {
+      cloumnList.value = data ?? [];
+    })
+    .catch((e) => {
+      console.log('查询出错:', e);
+    });
+  // }
 });
 </script>
 

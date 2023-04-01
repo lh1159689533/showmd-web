@@ -1,4 +1,4 @@
-import { saveComment, deleteById, findList, isAuthorOrMyself, digg, undigg } from '@service/comment';
+import { saveComment, deleteById, findList, digg, undigg } from '@service/comment';
 
 interface DiggData {
   commentId: number;
@@ -13,7 +13,7 @@ const state = {
     count: 0,
     articleId: 0
   },
-  articleAuthor: null, // 文章作者信息
+  // articleAuthor: null, // 文章作者信息
 };
 
 const getters = {
@@ -88,9 +88,9 @@ const mutations = {
     };
   },
 
-  setArticleAuthor(state, author) {
-    state.articleAuthor = author;
-  },
+  // setArticleAuthor(state, author) {
+  //   state.articleAuthor = author;
+  // },
 
   initCommentData(state, commentData) {
     state.commentData = commentData;
@@ -134,14 +134,14 @@ const mutations = {
 };
 
 const actions = {
-  async addComment({ commit, state, rootState }, { data, type = 'comment' }: { data: any, type: 'comment' | 'reply' }) {
-    const result = await saveComment({ ...data, userId: rootState.user.user.id }, type);
+  async addComment({ commit }, { data, type = 'comment' }: { data: any, type: 'comment' | 'reply' }) {
+    const result = await saveComment(data, type);
 
     if (!result) return false;
 
-    const currentUser = rootState.user.user;
-    const articleAuthor = state.articleAuthor;
-    isAuthorOrMyself([result], currentUser, articleAuthor);
+    // const currentUser = rootState.user.user;
+    // const articleAuthor = state.articleAuthor;
+    // isAuthorOrMyself([result], currentUser, articleAuthor);
     if (type === 'comment') {
       commit('addComment', result);
     } else {
@@ -167,12 +167,12 @@ const actions = {
     return true;
   },
 
-  async listComment({ commit, state, rootState }, articleId) {
-    const commentData = await findList(articleId, 'comment');
-    const currentUser = rootState.user.user;
+  async listComment({ commit }, article) {
+    const commentData = await findList(article.id, 'comment');
+    // const currentUser = rootState.user.user;
     if (commentData) {
-      isAuthorOrMyself(commentData.list, currentUser, state.articleAuthor);
-      commit('initCommentData', commentData);
+      // isAuthorOrMyself(commentData.list, currentUser, state.articleAuthor);
+      commit('initCommentData', { ...commentData, article });
     }
   },
 
@@ -182,7 +182,6 @@ const actions = {
       commentId,
       articleId,
       replyId,
-      userId,
     }, type);
 
     if (!isSucc) return false;
@@ -198,7 +197,6 @@ const actions = {
       commentId,
       articleId,
       replyId,
-      userId,
     }, type);
 
     if (!isSucc) return false;
@@ -208,11 +206,11 @@ const actions = {
     return true;
   },
 
-  async loadMoreReply({ commit, rootState, state }, commentId: number) {
+  async loadMoreReply({ commit }, commentId: number) {
     const replyData = await findList(commentId, 'reply');
     if (replyData) {
-      const currentUser = rootState.user.user;
-      isAuthorOrMyself(replyData.list, currentUser, state.articleAuthor);
+      // const currentUser = rootState.user.user;
+      // isAuthorOrMyself(replyData.list, currentUser, state.articleAuthor);
       commit('setReply', { commentId, replyData })
     }
   }

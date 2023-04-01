@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { ref, shallowRef, onBeforeUnmount, defineProps, defineEmits, toRefs } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-import { IToolbarConfig, IEditorConfig, IDomEditor } from '@wangeditor/editor';
-import '@wangeditor/editor/dist/css/style.css';
+import { IToolbarConfig, IEditorConfig, IDomEditor, SlateNode, DomEditor } from '@wangeditor/editor';
+import { upload } from '@src/utils/upload';
+import message from '@utils/message';
 
 const props = defineProps<{ data: { name: string; content: string }; isPreview?: boolean }>();
-const emit = defineEmits<{ (e: 'onChange', value: { name: string; content: string }): void }>();
+const emit = defineEmits<{ (e: 'onChange', value: { name: string; content: string }, textValue?: string): void }>();
 
 const { data } = toRefs(props);
 const name = ref(data.value?.name ?? '');
 const content = ref(data.value?.content ?? '');
+const headerList = ref([]);
 
 const editorRef = shallowRef<IDomEditor>();
 // const toolbar = computed(() => DomEditor.getToolbar(editorRef.value));
@@ -21,31 +23,44 @@ const editorConfig: Partial<IEditorConfig> = {
   readOnly: props.isPreview ?? false,
   MENU_CONF: {
     uploadImage: {
-      server: '', // 上传图片服务端地址
-      maxFileSize: 2 * 1024 * 1024, // 单个文件的最大体积限制，默认为 2M
-      maxNumberOfFiles: 10, // 最多可上传几个文件，默认为 100
+      maxFileSize: 50 * 1024 * 1024, // 单个文件的最大体积限制，默认为 2M
+      maxNumberOfFiles: 1, // 最多可上传几个文件，默认为 100
       allowedFileTypes: ['image/*'], // 选择文件时的类型限制，默认为 ['image/*'] 。如不想限制，则设置为 []
       meta: {}, // 自定义上传参数，例如传递验证的 token 等。参数会被添加到 formData 中，一起上传到服务端
-      customInsert(res: any, insertFn: (url: string, alt?: string, href?: string) => void) {
-        // 自定义返回格式, url: 图片src alt: 图片描述文字 href: 图片的链接
-        insertFn('');
+      async customUpload(file: File, insertFn: (url: string, alt?: string, href?: string) => void) {
+        const [err, res] = await upload(file);
+        if (!err && res.code === 0) {
+          insertFn(`/api/${res?.data?.path}`);
+          message.success('图片上传成功');
+        } else {
+          message.error('图片上传失败');
+        }
       },
     },
   },
 };
 
 const toolbarConfig: Partial<IToolbarConfig> = {};
+toolbarConfig.excludeKeys = ['fullScreen'];
 
 const handleCreate = (editor: IDomEditor) => {
   editorRef.value = editor;
   editorRef.value.setHtml(content.value ?? '');
   editorRef.value.focus();
-  // console.log(DomEditor.getToolbar(editor));
+  console.log(DomEditor.getToolbar(editor));
 };
 
 const handleChange = (editor: IDomEditor) => {
   content.value = editor.getHtml();
-  emit('onChange', { name: name.value, content: content.value });
+  emit('onChange', { name: name.value, content: content.value }, editor.getText());
+
+  // 更新目录
+  const headers = editor.getElemsByTypePrefix('header');
+  headerList.value = headers.map((header) => {
+    const text = SlateNode.string(header);
+    const { id, type } = header as any;
+    return { id: `catalog-${id}`, indent: type, title: text };
+  });
 };
 
 const handleNameChange = () => {
@@ -61,7 +76,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="rich-text-editor h-full overflow-hidden">
     <div class="editor-toolbar bg-white border-b">
-      <Toolbar :editor="editorRef" :default-config="toolbarConfig" mode="default" class="container" />
+      <Toolbar :editor="editorRef" :default-config="toolbarConfig" mode="default" class="container" style="min-width: 1380px" />
     </div>
     <div class="editor-content relative overflow-y-auto">
       <div class="content bg-white px-16 py-4">
@@ -69,8 +84,11 @@ onBeforeUnmount(() => {
           <input v-model="name" @change="handleNameChange" placeholder="请输入文章标题..." class="border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
         </div>
         <div class="editor-container" @click="() => editorRef.focus()">
-          <Editor @on-created="handleCreate" @on-change="handleChange" :default-config="editorConfig" class="" />
+          <Editor @on-created="handleCreate" @on-change="handleChange" :default-config="editorConfig" />
         </div>
+      </div>
+      <div class="absolute right-28" style="width: 260px; padding-left: 20px">
+        <slot :catalog-list="headerList"></slot>
       </div>
     </div>
   </div>

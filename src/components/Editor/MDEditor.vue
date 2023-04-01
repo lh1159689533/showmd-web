@@ -12,7 +12,7 @@ import {
   getComputedStyleOf,
 } from './domUtil';
 import Vditor from 'vditor';
-import 'vditor/dist/index.css';
+// import 'vditor/dist/index.css';
 
 interface IContentTheme {
   label: string;

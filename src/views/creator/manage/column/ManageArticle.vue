@@ -1,7 +1,7 @@
 <!-- 管理专栏文章 -->
 <script lang="ts" setup>
 import { ref, defineProps, defineEmits, watchEffect, computed } from 'vue';
-import Draggable from 'vuedraggable';
+import vuedraggable from 'vuedraggable';
 import message from '@utils/message';
 import { confirm } from '@utils/messageBox';
 import { findArticleList, removeArticle, sortArticle } from '@service/column';
@@ -113,44 +113,56 @@ const onSortEnd = () => {
 </script>
 
 <template>
-  <el-drawer :model-value="visible" :title="column?.name" direction="rtl" :close-on-click-modal="false" :before-close="onBeforeClose" destroy-on-close :size="600">
-    <div class="flex items-center justify-between pl-3 mb-2">
-      <el-checkbox
-        @change="toggleAllSelection"
-        :indeterminate="selectionArticles.length > 0 && selectionArticles.length < column?.articles?.length"
-        :model-value="selectionArticles.length > 0 && selectionArticles.length === column?.articles?.length"
-      />
-      <span class="text-sm mx-2 flex-1">全选</span>
-      <div>
-        <el-button type="primary" @click="showArticleList">添加文章</el-button>
-        <el-button @click="() => (showMoveDialog = true)" :disabled="selectionArticles?.length === 0">移动文章</el-button>
-        <el-button @click="() => remove(selectionArticles)" :disabled="selectionArticles?.length === 0">取消收录</el-button>
-      </div>
-    </div>
-    <Draggable
-      v-if="column?.articles?.length"
-      v-model="column.articles"
-      item-key="id"
-      :component-data="{
-        type: 'transition-group',
-        name: !drag ? 'flip-list' : null,
-      }"
-      @start="drag = true"
-      @end="onSortEnd"
-      v-bind="dragOptions"
-    >
-      <template #item="{ element: article }">
-        <div class="article-list-item flex gap-8 items-center cursor-move text-sm text-gray-800 px-3 py-2 border-b hover:bg-gray-50">
-          <el-checkbox :model-value="article?.isSel" @change="(isSel) => selectionChange(article?.id, isSel)" />
-          <div class="title text-sm text-gray-500 flex-1">
-            {{ article.name }}
-          </div>
-          <el-button link size="small" type="danger" @click="() => remove([article])">移除</el-button>
+  <h-drawer
+    :min="500"
+    :max="1200"
+    :visible="visible"
+    :title="column?.name"
+    direction="rtl"
+    :close-on-click-modal="false"
+    :before-close="onBeforeClose"
+    destroy-on-close
+    :size="600"
+  >
+    <template #default>
+      <div class="flex items-center justify-between pl-3 mb-2">
+        <el-checkbox
+          @change="toggleAllSelection"
+          :indeterminate="selectionArticles.length > 0 && selectionArticles.length < column?.articles?.length"
+          :model-value="selectionArticles.length > 0 && selectionArticles.length === column?.articles?.length"
+        />
+        <span class="text-sm mx-2 flex-1">全选</span>
+        <div>
+          <el-button type="primary" @click="showArticleList">添加文章</el-button>
+          <el-button @click="() => (showMoveDialog = true)" :disabled="selectionArticles?.length === 0">移动文章</el-button>
+          <el-button @click="() => remove(selectionArticles)" :disabled="selectionArticles?.length === 0">取消收录</el-button>
         </div>
-      </template>
-    </Draggable>
-    <div v-else class="text-sm text-gray-500 text-center pt-4">暂无收录文章</div>
-  </el-drawer>
+      </div>
+      <vuedraggable
+        v-if="column?.articles?.length"
+        v-model="column.articles"
+        item-key="id"
+        :component-data="{
+          type: 'transition-group',
+          name: !drag ? 'flip-list' : null,
+        }"
+        @start="drag = true"
+        @end="onSortEnd"
+        v-bind="dragOptions"
+      >
+        <template #item="{ element: article }">
+          <div class="article-list-item flex gap-8 items-center cursor-move text-sm text-gray-800 px-3 py-2 border-b hover:bg-gray-50">
+            <el-checkbox :model-value="article?.isSel" @change="(isSel) => selectionChange(article?.id, isSel)" />
+            <div class="title text-sm text-gray-500 flex-1">
+              {{ article.name }}
+            </div>
+            <el-button link size="small" type="danger" @click="() => remove([article])">移除</el-button>
+          </div>
+        </template>
+      </vuedraggable>
+      <div v-else class="text-sm text-gray-500 text-center pt-4">暂无收录文章</div>
+    </template>
+  </h-drawer>
   <AddArticle v-if="showDialog" :id="id" @close="showDialog = false" @callback="addSuccess" />
   <MoveArticle v-if="showMoveDialog" :column-id="id" :article-ids="selectionArticles.map((item) => item.id)" @close="showMoveDialog = false" @callback="addSuccess" />
 </template>

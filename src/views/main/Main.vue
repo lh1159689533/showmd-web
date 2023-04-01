@@ -1,11 +1,18 @@
 <script lang="ts" setup>
-import Header from '@src/views/main/Header.vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import Header from '@src/views/main/Header.vue';
 
 const router = useRouter();
+const store = useStore();
+
+const currentUser = computed(() => store.getters.getUser);
 
 const handleNoticeClick = (e) => {
-  if (e.target.dataset?.link) {
+  if (!currentUser.value?.id) {
+    store.commit('showLogin');
+  } else if (e.target.dataset?.link) {
     router.push(e.target.dataset?.link);
   }
 };

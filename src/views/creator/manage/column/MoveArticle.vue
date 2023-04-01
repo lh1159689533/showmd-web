@@ -1,7 +1,6 @@
 <!-- 专栏移动文章 -->
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits, watchEffect, computed } from 'vue';
-import { useStore } from 'vuex';
+import { ref, defineProps, defineEmits } from 'vue';
 import message from '@utils/message';
 import { findListByUserId, moveArticle } from '@service/column';
 
@@ -11,16 +10,13 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ (e: 'close'): void; (e: 'callback'): void }>();
 
-const store = useStore();
-const user = computed(() => store.getters.getUser);
-
 const tableRef = ref();
 const searchKey = ref('');
 const searchTimer = ref();
 const columnList = ref([]);
 
 const findColumnList = async (searchKey = '') => {
-  columnList.value = await findListByUserId(user.value?.id, searchKey);
+  columnList.value = await findListByUserId(searchKey);
   columnList.value = columnList.value.filter((item) => item.id !== props.columnId);
 };
 
@@ -53,11 +49,12 @@ const searchColumn = () => {
   }, 500);
 };
 
-watchEffect(() => {
-  if (user.value?.id) {
-    findColumnList();
-  }
-});
+// watchEffect(() => {
+//   if (user.value?.id) {
+//     findColumnList();
+//   }
+// });
+findColumnList();
 </script>
 
 <template>

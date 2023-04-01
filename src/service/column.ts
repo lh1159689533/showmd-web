@@ -54,8 +54,8 @@ async function saveColumn(article) {
 }
 
 // 查询用户发布的专栏
-async function findListByUserId(userId: number, searchKey?: string) {
-  const [err, res] = await http.request({ apiurl: 'column/findListByUserId', params: { userId, searchKey } });
+async function findListByUserId(searchKey?: string) {
+  const [err, res] = await http.request({ apiurl: 'column/findListByUserId', params: { searchKey } });
   if (err && res.code !== 0) return null;
   return res.data;
 }

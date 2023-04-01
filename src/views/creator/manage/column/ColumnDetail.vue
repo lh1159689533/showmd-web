@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { findById, findArticleList } from '@service/column';
 
 const store = useStore();
-const user = computed(() => store.getters.getUser);
+const currentUser = computed(() => store.getters.getUser);
 
 const router = useRouter();
 const route = useRoute();
@@ -62,15 +62,15 @@ watchEffect(() => {
             <span class="create-time">创建于 {{ column?.createTime }}</span>
           </div>
         </div>
-        <div><el-button @click="toManageColumn" v-if="user?.id === column?.userId" type="primary" plain>管理文章</el-button></div>
+        <div><el-button @click="toManageColumn" v-if="currentUser?.id === column?.user?.id" type="primary" plain>管理文章</el-button></div>
       </div>
       <div class="user p-3 bg-gray-50 rounded">
         <span class="text-gray-500 text-base font-bold">
-          作者: <span class="pl-4">{{ user?.name }}</span>
+          作者: <span class="pl-4">{{ column?.user?.name }}</span>
         </span>
         <div class="flex text-gray-500 gap-4 text-sm mt-3">
-          <span class="article-num">发表的文章: {{ user?.articleCnt }}</span>
-          <span class="article-num">创建的专栏: {{ user?.columnCnt }}</span>
+          <span class="article-num">发表的文章: {{ column?.user?.articleCnt }}</span>
+          <span class="article-num">创建的专栏: {{ column?.user?.columnCnt }}</span>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@ watchEffect(() => {
       </template>
     </List>
     <Empty v-else class="border-t">
-      <div v-if="user?.id === column?.userId">还没有文章，<span @click="toManageColumn" class="ml-2 text-indigo-500 cursor-pointer hover:underline">快去收录文章吧</span></div>
+      <div v-if="currentUser?.id === column?.user?.id">还没有文章，<span @click="toManageColumn" class="ml-2 text-indigo-500 cursor-pointer hover:underline">快去收录文章吧</span></div>
       <div v-else>暂无收录文章</div>
     </Empty>
   </div>

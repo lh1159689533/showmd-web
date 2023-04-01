@@ -7,7 +7,8 @@ export default {
   save: 'post showmd/article/update',
   upload: 'post showmd/file/upload',
   sliceUpload: 'post showmd/file/sliceUpload',
-  findListByUserId: 'get showmd/article/findListByUserId',
+  findListByUserId: 'get showmd/article/listArticleByUser',
   nextColumnArticle: 'post showmd/article/next',
   prevColumnArticle: 'post showmd/article/prev',
+  deleteById: 'delete showmd/article/delete/:id',
 };

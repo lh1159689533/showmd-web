@@ -22,6 +22,10 @@ const isShowHeader = computed(() => store.getters.isShowHeader);
 const activeId = ref('');
 let isCatalogClick = false; // 是否是点击目录，如果是则不触发onScroll
 
+// 根据body高度，计算出目录高度
+const bodyHeight = document.body.offsetHeight;
+const height = ref(bodyHeight * 0.5);
+
 /**
  * 选中的目录节点变化
  * @param newActiveId 新选中的节点id
@@ -90,6 +94,7 @@ onMounted(() => {
   contentLinkCatalog(props.data);
   document.addEventListener('scroll', onScroll);
   emit('onLoaded');
+  store.commit('catalogHeight', height.value);
 });
 
 onBeforeUnmount(() => {
@@ -99,9 +104,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div id="myPreviewEditorSider" v-if="data?.length" class="fixed bg-white" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']" style="transition: 300ms">
-    <nav style="height: 540px" class="relative">
+    <nav :style="{ height: `${height}px` }" class="relative">
       <h4 class="title font-bold pl-4 py-2 border-b" style="height: 50px">目录</h4>
-      <div id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full" style="max-height: 490px">
+      <div id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full" :style="{ maxHeight: `${height - 50}px` }">
         <List :data-list="data" @click="handleCatalogClick" class="w-full" item-class="py-2 truncate cursor-pointer hover:bg-gray-100 relative text-sm">
           <template #default="{ item }">
             <el-tooltip effect="light" placement="left" :show-after="500">

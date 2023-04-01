@@ -3,7 +3,8 @@ import 'element-plus/theme-chalk/el-message-box.css';
 
 const CONFIRM_DEFAULT_OPTIONS = {
   cancelButtonText: '取消',
-  confirmButtonText: '确定'
+  confirmButtonText: '确定',
+  closeOnClickModal: false
 };
 
 export function confirm(message: string, ...args) {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, computed, watch, watchEffect } from 'vue';
-import { useStore } from 'vuex';
+import { ref, watchEffect } from 'vue';
+// import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import Edit from './Edit.vue';
 import ManageArticle from './ManageArticle.vue';
@@ -8,8 +8,8 @@ import { findListByUserId, topColumn, deleteById } from '@service/column';
 import message from '@src/utils/message';
 import { confirm } from '@utils/messageBox';
 
-const store = useStore();
-const user = computed(() => store.getters.getUser);
+// const store = useStore();
+// const user = computed(() => store.getters.getUser);
 
 const router = useRouter();
 const route = useRoute();
@@ -65,8 +65,8 @@ const columnList = ref();
  * @param searchKeyword 关键词，用于搜索
  */
 const findColumnList = (searchKeyword = '') => {
-  if (!user.value?.id) return;
-  findListByUserId(user.value?.id, searchKeyword)
+  // if (!user.value?.id) return;
+  findListByUserId(searchKeyword)
     .then((data) => {
       columnList.value = data ?? [];
     })
@@ -144,9 +144,9 @@ const toDetail = (id) => {
   window.open(href, '_blank');
 };
 
-watch(user, () => {
-  findColumnList();
-});
+// watch(user, () => {
+//   findColumnList();
+// });
 
 watchEffect(() => {
   // 其他地方跳转且需要打开操作抽屉

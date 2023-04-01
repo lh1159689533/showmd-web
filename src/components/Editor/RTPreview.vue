@@ -2,7 +2,6 @@
 import { ref, shallowRef, onBeforeUnmount, defineProps, toRefs } from 'vue';
 import { Editor } from '@wangeditor/editor-for-vue';
 import { IEditorConfig, IDomEditor, SlateNode } from '@wangeditor/editor';
-import '@wangeditor/editor/dist/css/style.css';
 
 const props = defineProps<{ data: { name: string; content: string } }>();
 

@@ -15,7 +15,7 @@ import {
 import { upload } from '@src/utils/upload';
 import message from '@utils/message';
 
-import 'vditor/dist/index.css';
+// import 'vditor/dist/index.css';
 
 interface IContentTheme {
   label: string;
@@ -50,7 +50,7 @@ export default defineComponent({
     // const editorMode = 'both';
     let isEditorInited = false; // 编辑器是否初始化
     let isOutlineInited = false; // 目录是否初始化
-    let isShowOutline = false; // 是否显示目录
+    const isShowOutline = false; // 是否显示目录
     let outlineNodeList = []; // 目录节点列表
     const contentNodeTopList: { id: string; top: number }[] = []; // 编辑区h1-6节点id&top数据列表
     const previewNodeTopList: { id: string; top: number }[] = []; // 预览区h1-6节点id&top数据列表
@@ -59,6 +59,7 @@ export default defineComponent({
     const currentTheme = 'classic';
     const currentTontentTheme = ref(props.data?.contentTheme ?? 'Chinese-red');
     const currentCodeTheme = ref(props.data?.codeTheme ?? 'github');
+    const catalogList = ref([]);
 
     onMounted(() => {
       const previewThemeList = {};
@@ -110,25 +111,24 @@ export default defineComponent({
             })),
             click: () => {},
           },
-          '|',
-          {
-            name: 'Outline',
-            tip: '目录',
-            tipPosition: 'n',
-            className: 'right',
-            icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M26 24H14M34 15H14M32 33H14" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-            click() {
-              showOutline();
-            },
-          },
-          {
-            name: 'help',
-            tip: '帮助',
-            tipPosition: 'n',
-            className: 'right',
-            icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M24 28.625v-4a6 6 0 1 0-6-6" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M24 37.625a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor"></path></svg>',
-          },
-          // 'fullscreen',
+          // '|',
+          // {
+          //   name: 'Outline',
+          //   tip: '目录',
+          //   tipPosition: 'n',
+          //   className: 'right',
+          //   icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M26 24H14M34 15H14M32 33H14" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+          //   click() {
+          //     showOutline();
+          //   },
+          // },
+          // {
+          //   name: 'help',
+          //   tip: '帮助',
+          //   tipPosition: 'n',
+          //   className: 'right',
+          //   icon: '<svg width="1em" height="1em" viewBox="0 0 48 48" style="fill:none" xmlns="http://www.w3.org/2000/svg"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"></path><path d="M24 28.625v-4a6 6 0 1 0-6-6" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M24 37.625a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor"></path></svg>',
+          // },
         ],
         outline: {
           enable: false,
@@ -174,12 +174,14 @@ export default defineComponent({
           querySelector(getElementById('myEditorContent'), '.vditor-wysiwyg')?.remove();
           querySelector(getElementById('myEditorContent'), '.vditor-sv')?.remove();
           querySelector(getElementById('myEditorContent'), '.vditor-preview')?.remove();
+          loadCatalog(); // 加载目录
         },
         input(value) {
           const data = {
             content: value,
           };
           emit('change', data);
+          loadCatalog(); // 加载目录
         },
         // 上传图片
         upload: {
@@ -207,10 +209,17 @@ export default defineComponent({
       });
     });
 
-    onBeforeUnmount(() => {
-      // 组件销毁时销毁编辑器
-      editor.value?.destroy();
-    });
+    const loadCatalog = () => {
+      const editorNode = getElementById('myEditorContent');
+      const hList = querySelectorAll(editorNode, 'h1,h2,h3,h4,h5,h6');
+      if (hList?.length) {
+        catalogList.value = hList.map((h) => ({
+          id: `catalog-${h.id}`,
+          title: h.innerText.replaceAll('#', ''),
+          indent: h.nodeName,
+        }));
+      }
+    };
 
     function setContentTheme(contentTheme, contentThemePath) {
       emit('change', { contentTheme });
@@ -336,44 +345,56 @@ export default defineComponent({
     /**
      * 目录显示
      */
-    function showOutline() {
-      isShowOutline = !isShowOutline;
-      const editorContent = getElementById('myEditorContent');
-      const content = querySelector(editorContent, '.vditor-content');
-      const outline = querySelector(content, '.vditor-outline');
-      if (isShowOutline) {
-        // if (editorMode === 'preview') {
-        //   content.style.gridTemplateColumns = '1fr 250px';
-        // } else if (editorMode === 'edit') {
-        //   content.style.gridTemplateColumns = '1fr 250px';
-        // } else {
-        //   content.style.gridTemplateColumns = '1fr 1fr 250px';
-        // }
-        outline.style.display = 'block';
-        const contentNode = querySelector(content, '.vditor-sv.vditor-reset');
-        const targetId = findTargetIdNode(contentNode.scrollTop, contentNodeTopList);
-        const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', targetId) ?? outlineNodeList[0];
-        const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
-        removeClass(currentActiveNode, 'active');
-        addClass(newActiveNode, 'active');
-      } else {
-        outline.style.display = 'none';
-        // if (editorMode === 'preview') {
-        //   content.style.gridTemplateColumns = '1fr';
-        // } else if (editorMode === 'edit') {
-        //   content.style.gridTemplateColumns = '1fr';
-        // } else {
-        //   content.style.gridTemplateColumns = '1fr 1fr';
-        // }
-      }
-    }
+    // function showOutline() {
+    //   isShowOutline = !isShowOutline;
+    //   const editorContent = getElementById('myEditorContent');
+    //   const content = querySelector(editorContent, '.vditor-content');
+    //   const outline = querySelector(content, '.vditor-outline');
+    //   if (isShowOutline) {
+    //     // if (editorMode === 'preview') {
+    //     //   content.style.gridTemplateColumns = '1fr 250px';
+    //     // } else if (editorMode === 'edit') {
+    //     //   content.style.gridTemplateColumns = '1fr 250px';
+    //     // } else {
+    //     //   content.style.gridTemplateColumns = '1fr 1fr 250px';
+    //     // }
+    //     outline.style.display = 'block';
+    //     const contentNode = querySelector(content, '.vditor-sv.vditor-reset');
+    //     const targetId = findTargetIdNode(contentNode.scrollTop, contentNodeTopList);
+    //     const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', targetId) ?? outlineNodeList[0];
+    //     const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+    //     removeClass(currentActiveNode, 'active');
+    //     addClass(newActiveNode, 'active');
+    //   } else {
+    //     outline.style.display = 'none';
+    //     // if (editorMode === 'preview') {
+    //     //   content.style.gridTemplateColumns = '1fr';
+    //     // } else if (editorMode === 'edit') {
+    //     //   content.style.gridTemplateColumns = '1fr';
+    //     // } else {
+    //     //   content.style.gridTemplateColumns = '1fr 1fr';
+    //     // }
+    //   }
+    // }
+
+    onBeforeUnmount(() => {
+      // 组件销毁时销毁编辑器
+      editor.value?.destroy();
+    });
+
+    return {
+      catalogList,
+    };
   },
 });
 </script>
 
 <template>
-  <div id="myEditorIR">
+  <div id="myEditorIR" class="flex-1">
     <div id="myEditorContent" v-bind="$attrs"></div>
+    <div class="absolute right-28" style="width: 260px; padding-left: 20px">
+      <slot :catalog-list="catalogList"></slot>
+    </div>
   </div>
 </template>
 
@@ -390,7 +411,7 @@ export default defineComponent({
 }
 
 #myEditorIR #myEditorContent {
-  height: calc(100vh - 74px);
+  height: 100% !important;
   position: relative;
 }
 

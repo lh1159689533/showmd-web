@@ -56,8 +56,8 @@ async function findTopArticleList(data?) {
 }
 
 // 查询用户的文章
-async function findListByUserId(userId: number, searchKey?: string) {
-  const [err, res] = await http.request({ apiurl: 'article/findListByUserId', params: { userId, searchKey } });
+async function findListByUserId(searchKey?: string) {
+  const [err, res] = await http.request({ apiurl: 'article/findListByUserId', params: { searchKey } });
   if (err && res.code !== 0) return 0;
   return res.data;
 }
@@ -76,6 +76,13 @@ async function findNextColumnArticle(articleId: number) {
   return res.data;
 }
 
+// 删除文章
+async function deleteById(id: number) {
+  const [err, res] = await http.request({ apiurl: 'article/deleteById', segment: { id } });
+  if (err && res.code !== 0) return false;
+  return true;
+}
+
 export {
   findById,
   saveArticle,
@@ -83,5 +90,6 @@ export {
   findTopArticleList,
   findListByUserId,
   findPrevColumnArticle,
-  findNextColumnArticle
+  findNextColumnArticle,
+  deleteById
 }

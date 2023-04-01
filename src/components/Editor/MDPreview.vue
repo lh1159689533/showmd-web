@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps, toRefs, ref, onMounted } from 'vue';
 import Vditor from 'vditor/dist/method.min';
-import 'vditor/dist/index.css';
+// import 'vditor/dist/index.css';
 import { querySelectorAll, getElementById, getBoundingClientRect } from './domUtil';
 
 interface User {

@@ -9,6 +9,7 @@ import storage from '@utils/storage';
 import { findById, saveArticle, ICover } from '@service/article';
 import { listContentTheme, listCodeTheme } from '@service/theme';
 import { findByArticleId } from '@service/column';
+import Catalog from '@src/components/Editor/Catalog.vue';
 
 interface IArticle {
   id?: number;
@@ -39,6 +40,7 @@ const isShowPublish = ref(false);
 const contentThemeList = ref([]);
 const codeThemeList = ref([]);
 const editorType = ref<EditorType>('markdown');
+const wordCount = ref(0);
 
 // const storageKey = props.id ? `update-article-${props.id}` : 'create-article';
 const storageKey = computed(() => (props.id ? `update-article-${editorType.value}-${props.id}` : `create-article-${editorType.value}`));
@@ -64,7 +66,7 @@ const initPublishForm = reactive({
 });
 
 const getCurrentUser = async () => {
-  currentUser.value = await store.dispatch('getUserById', 1);
+  currentUser.value = await store.dispatch('getUserInfo');
 };
 
 const getArticle = async () => {
@@ -86,10 +88,8 @@ const getArticle = async () => {
     initPublishForm.cover = data.cover ? [data.cover] : [];
     initPublishForm.summary = data.summary;
     initPublishForm.columnId = column?.id;
-    isShowEditor.value = true;
     editorType.value = data?.editorType === 1 ? 'markdown' : 'richtext';
   } else {
-    isShowEditor.value = true;
     const type = sessionStorage.getItem('editor-type') ?? 'markdown';
     editorType.value = type as EditorType;
   }
@@ -99,6 +99,8 @@ const getArticle = async () => {
       ...storage.getJson(storageKey.value),
     };
   }
+  editorType.value === 'markdown' && (await getTheme());
+  isShowEditor.value = true;
 };
 
 const getTheme = async () => {
@@ -109,7 +111,6 @@ const getTheme = async () => {
 async function init() {
   getCurrentUser();
   await getArticle();
-  editorType.value === 'markdown' && getTheme();
 }
 
 // 隐藏发布窗
@@ -133,7 +134,8 @@ const showPublish = () => {
 };
 
 // 文章内容变化
-const onChange = (value) => {
+const onChange = (value, textValue = '') => {
+  wordCount.value = textValue.replace(/\s+/g, '')?.length;
   if (editorType.value === 'markdown') {
     if (value.content) {
       article.value.summary = value.content
@@ -160,7 +162,7 @@ const onPublish = async (art) => {
   art = {
     ...article.value,
     ...art,
-    userId: 1,
+    // userId: 1,
     content: encodeURIComponent(article.value.content),
     tags: art.tags?.join(','),
     coverMark: 'changed',
@@ -202,7 +204,7 @@ init();
 </script>
 
 <template>
-  <div v-if="editorType === 'markdown'" class="flex flex-col">
+  <div v-if="editorType === 'markdown'" class="flex flex-col h-full">
     <div class="tool flex items-center p-3 px-8 bg-white">
       <input v-model="article.name" placeholder="请输入文章标题..." class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
       <div class="rightGroups flex py-1 relative items-center">
@@ -211,38 +213,45 @@ init();
         <el-tooltip content="切换为富文本编辑器" effect="light">
           <i @click="() => changeEditorType('richtext')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
         </el-tooltip>
-        <img
-          :src="currentUser?.avatar"
-          class="w-7 h-7 rounded-full cursor-pointer ml-6"
-          @error="(e) => (e.target as HTMLImageElement).src ='https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-        />
+        <Avatar :src="currentUser?.avatar" class="w-7 h-7 rounded-full cursor-pointer ml-6" />
       </div>
     </div>
-    <MDEditorIR v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange" />
+    <MDEditorIR v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange">
+      <template #default="{ catalogList }">
+        <Catalog v-if="catalogList?.length" :data="catalogList" />
+      </template>
+    </MDEditorIR>
   </div>
   <div v-if="editorType === 'richtext'" class="h-full">
     <div style="height: calc(100% - 58px)">
-      <RTEditor v-if="isShowEditor" :data="article" @on-change="onChange" />
+      <RTEditor v-if="isShowEditor" :data="article" @on-change="onChange">
+        <template #default="{ catalogList }">
+          <Catalog v-if="catalogList?.length" :data="catalogList" />
+        </template>
+      </RTEditor>
     </div>
     <div class="relative h-14 bg-white border-t px-6">
-      <div class="flex py-1 items-center justify-end container h-full">
-        <!-- <el-button>草稿箱</el-button> -->
-        <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
-        <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
-          <i @click="() => changeEditorType('markdown')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
-        </el-tooltip>
-        <img
-          :src="currentUser?.avatar"
-          class="w-7 h-7 rounded-full cursor-pointer ml-6"
-          @error="(e) => (e.target as HTMLImageElement).src = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-        />
+      <div class="flex py-1 items-center justify-between container h-full">
+        <div class="left">
+          <span class="text-sm">共 {{ wordCount }} 字</span>
+        </div>
+        <div class="right flex">
+          <!-- <el-button>草稿箱</el-button> -->
+          <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
+          <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
+            <i @click="() => changeEditorType('markdown')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
+          </el-tooltip>
+          <Avatar
+            :src="currentUser?.avatar"
+            class="w-7 h-7 rounded-full cursor-pointer ml-6"
+          />
+        </div>
       </div>
     </div>
   </div>
   <PublishArticle
     v-show="isShowPublish"
     :init-value="initPublishForm"
-    :user-id="currentUser?.id"
     :placement="editorType === 'markdown' ? 'top-right' : 'bottom-right'"
     @publish="onPublish"
     @close="hidePublish"

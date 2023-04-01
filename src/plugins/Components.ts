@@ -12,6 +12,8 @@ const Empty = defineAsyncComponent(() => import('@components/Empty.vue'));
 const Comment = defineAsyncComponent(() => import('@components/Comment/Comment.vue'));
 const RTEditor = defineAsyncComponent(() => import('@src/components/Editor/RTEditor.vue'));
 const RTPreview = defineAsyncComponent(() => import('@src/components/Editor/RTPreview.vue'));
+const HDrawer = defineAsyncComponent(() => import('@src/components/HDrawer.vue'));
+const Avatar = defineAsyncComponent(() => import('@src/components/Avatar.vue'));
 
 const Components = {
   List,
@@ -23,6 +25,8 @@ const Components = {
   RTEditor,
   RTPreview,
   Comment,
+  HDrawer,
+  Avatar,
 };
 
 export default {

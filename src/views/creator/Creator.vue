@@ -1,6 +1,13 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import Header from './Header.vue';
 import Sider from './Sider.vue';
+
+const { beforeEach } = useRouter();
+
+beforeEach((to, from) => {
+  console.log(to, from)
+});
 </script>
 
 <template>

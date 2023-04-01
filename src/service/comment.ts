@@ -55,7 +55,6 @@ interface CommentResponseData {
 interface DiggData {
   commentId: number;
   articleId?: number;
-  userId: number;
   replyId?: number;
 }
 
@@ -90,28 +89,28 @@ async function undigg(data: DiggData, type: 'comment' | 'reply') {
   return true;
 }
 
-function isAuthorOrMyself(list, currentUser, articleAuthor) {
-  list.forEach(item => {
-    if (item.user?.id === currentUser?.id) {
-      item.isMyself = true;
-    }
-    if (item.user?.id === articleAuthor?.id) {
-      item.isAuthor = true;
-    }
-    if (item.diggUsers?.split(',')?.includes(`${currentUser.id}`)) {
-      item.isDigg = true;
-    }
-    if (item.replies?.length) {
-      isAuthorOrMyself(item.replies, currentUser, articleAuthor);
-    }
-  });
-}
+// function isAuthorOrMyself(list, currentUser, articleAuthor) {
+//   list.forEach(item => {
+//     if (item.user?.id === currentUser?.id) {
+//       item.isMyself = true;
+//     }
+//     if (item.user?.id === articleAuthor?.id) {
+//       item.isAuthor = true;
+//     }
+//     if (item.diggUsers?.split(',')?.includes(`${currentUser.id}`)) {
+//       item.isDigg = true;
+//     }
+//     if (item.replies?.length) {
+//       isAuthorOrMyself(item.replies, currentUser, articleAuthor);
+//     }
+//   });
+// }
 
 export {
   findList,
   saveComment,
   deleteById,
-  isAuthorOrMyself,
+  // isAuthorOrMyself,
   digg,
   undigg,
 }

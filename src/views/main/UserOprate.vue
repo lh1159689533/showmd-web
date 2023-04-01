@@ -1,77 +1,61 @@
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+<script lang="ts" setup>
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import Login from '@src/views/main/Login.vue';
 
-export default defineComponent({
-  name: 'UserOprate',
-  setup() {
-    const router = useRouter();
-    const store = useStore();
+const router = useRouter();
+const store = useStore();
 
-    // 用户操作选项
-    const userOprateList = [
-      {
-        title: '写文章',
-        icon: 'bianji',
-        key: 'newArticle',
-      },
-      {
-        title: '草稿箱',
-        icon: 'draftbox',
-        key: 'draft',
-      },
-      {
-        title: '退出',
-        icon: 'tuichu',
-        key: 'logout',
-      },
-    ];
-
-    // 是否展示用户操作
-    const isShow = ref(false);
-    const user = computed(() => store.getters.getUser);
-
-    // 显示用户操作栏
-    const show = () => {
-      isShow.value = true;
-    };
-
-    const hide = () => {
-      isShow.value = false;
-    };
-
-    // 操作
-    const handleOprate = ({ key }) => {
-      if (key === 'newArticle') {
-        const { href } = router.resolve('/article/new');
-        window.open(href, '_blank');
-      }
-      hide();
-    };
-
-    return {
-      user,
-      userOprateList,
-      isShow,
-      show,
-      hide,
-      handleOprate,
-    };
+// 用户操作选项
+const userOprateList = [
+  {
+    title: '写文章',
+    icon: 'bianji',
+    key: 'newArticle',
   },
-});
+  {
+    title: '草稿箱',
+    icon: 'draftbox',
+    key: 'draft',
+  },
+  {
+    title: '退出',
+    icon: 'tuichu',
+    key: 'logout',
+  },
+];
+
+// 是否展示用户操作
+const isShow = ref(false);
+const isShowLogin = computed(() => store.getters.isShowLogin);
+const currentUser = computed(() => store.getters.getUser);
+
+// 显示用户操作栏
+const show = () => {
+  isShow.value = true;
+};
+
+const hide = () => {
+  isShow.value = false;
+};
+
+// 操作
+const handleOprate = ({ key }) => {
+  if (key === 'newArticle') {
+    const { href } = router.resolve('/article/new');
+    window.open(href, '_blank');
+  }
+  hide();
+};
 </script>
 
 <template>
-  <div class="user" @mouseenter="show" @mouseleave="hide">
-    <img
-      :src="user.avatar"
-      :style="[isShow ? 'transform:scale(1.5) translate(0,8px)' : '']"
-      @error="(e) => (e.target as HTMLImageElement).src = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"
-    />
+  <div v-if="currentUser?.id" class="user" @mouseenter="show" @mouseleave="hide">
+    <Avatar :src="currentUser.avatar" :style="[isShow ? 'transform:scale(1.5) translate(0,8px)' : '']" />
     <div class="oprate-box show-ani absolute bg-white" :style="[isShow ? 'display:block' : 'display:none']">
       <div class="pt-3 pb-2 flex justify-center items-center border-b">
-        <span>{{ user.name }}</span>
+        <span>{{ currentUser.name }}</span>
       </div>
       <List :data-list="userOprateList" @click="handleOprate" class="oprate-list text-sm text-gray-600 my-3" item-class="cursor-pointer hover:bg-gray-200">
         <template #default="{ item }">
@@ -83,6 +67,10 @@ export default defineComponent({
       </List>
     </div>
   </div>
+  <div v-else @click="() => store.commit('showLogin')" class="flex items-center justify-center w-9 h-9 mr-8 rounded-full cursor-pointer bg-gray-200 text-sm text-gray-600">
+    登录
+  </div>
+  <Login v-if="isShowLogin" @close="() => store.commit('hideLogin')" />
 </template>
 
 <style scoped>

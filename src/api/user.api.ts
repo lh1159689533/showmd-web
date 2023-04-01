@@ -1,8 +1,12 @@
 export default {
   namespace: 'user',
 
+  login: 'post showmd/user/login',
+  register: 'post showmd/user/register',
+  checkUserName: 'get showmd/user/check',
   findUserById: 'get showmd/user/:id',
-  listMenuByRoleId: 'get showmd/list/menu/:roleId',
+  findUserInfo: 'get showmd/user/info',
+  listMenu: 'get showmd/list/menu',
 
   holiday: 'get showmd/holiday'
 };

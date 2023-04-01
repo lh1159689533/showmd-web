@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { ref, computed, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import message from '@utils/message';
 import { confirm } from '@utils/messageBox';
-import { findListByUserId } from '@service/article';
+import { findListByUserId, deleteById } from '@service/article';
 
 const router = useRouter();
-const store = useStore();
-
-const user = computed(() => store.getters.getUser);
 
 const articleList = ref();
 const searchKeyword = ref('');
@@ -46,15 +43,15 @@ const oprateList = [
 ];
 
 watchEffect(() => {
-  if (user.value?.id) {
-    findListByUserId(user.value?.id)
+  // if (currentUser.value?.id) {
+    findListByUserId()
       .then((data) => {
         articleList.value = data ?? [];
       })
       .catch((e) => {
         console.log('查询出错:', e);
       });
-  }
+  // }
 });
 
 const toDetail = (id) => {
@@ -62,12 +59,18 @@ const toDetail = (id) => {
   window.open(href, '_blank');
 };
 
-const delArticle = (id) => {
-  console.log(id);
+const delArticle = async (id) => {
+  const result = await deleteById(id);
+  if (result) {
+    message.success('删除成功');
+    handleSearch();
+  } else {
+    message.error('删除失败');
+  }
 };
 
 const handleSearch = async () => {
-  const data = await findListByUserId(user.value?.id, searchKeyword.value);
+  const data = await findListByUserId(searchKeyword.value);
   articleList.value = data;
 };
 </script>

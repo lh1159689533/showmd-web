@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount, defineProps } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Search } from '@element-plus/icons-vue';
-import { listMenuByRoleId } from '@service/user';
+import { listMenu } from '@service/user';
 
 import UserOprate from './UserOprate.vue';
 import Holiday from '@components/Holiday.vue';
@@ -29,8 +29,8 @@ const currentScrollTop = ref(0);
 const isShowHeader = computed(() => store.getters.isShowHeader);
 
 async function init() {
-  const user = await store.dispatch('getUserById', 1);
-  const menus = await listMenuByRoleId(user?.roleId);
+  store.dispatch('getUserInfo');
+  const menus = await listMenu();
   menuList.value = menus.map((m) => ({
     ...m,
     key: m.title,

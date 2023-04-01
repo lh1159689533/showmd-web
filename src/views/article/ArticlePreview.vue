@@ -16,8 +16,6 @@ const props = defineProps<{
 const router = useRouter();
 const store = useStore();
 
-const isShowHeader = computed(() => store.getters.isShowHeader);
-
 const commentDom = ref();
 
 const article = ref();
@@ -28,8 +26,10 @@ const isShowToTop = ref(false); // 是否显示回到顶部按钮
 
 const isShowCatalog = ref(false); // 是否显示目录
 
+const isShowHeader = computed(() => store.getters.isShowHeader);
 const commentData = computed(() => store.state.comment.commentData);
 const currentUser = computed(() => store.getters.getUser);
+const catalogHeight = computed(() => store.getters.catalogHeight);
 
 async function getArticle() {
   // 编辑文章,获取文章内容
@@ -46,9 +46,11 @@ async function getArticle() {
     column,
   };
 
-  if (result.user) {
-    store.commit('setArticleAuthor', result.user);
-  }
+  // if (result.user) {
+  //   store.commit('setArticleAuthor', result.user);
+  // }
+  const { id, name, user } = article.value;
+  store.dispatch('listComment', { id, name, user });
 
   setTimeout(() => (loading.value = false), 1000);
 }
@@ -66,7 +68,6 @@ async function next() {
 async function init() {
   if (props.id) {
     await getArticle();
-    store.dispatch('listComment', props.id);
     next();
     prev();
   }
@@ -152,7 +153,7 @@ init();
           </div>
         </el-badge>
       </li>
-      <li @click="toEdit" v-show="currentUser?.id === article?.user?.id && isShowToTop" class="edit mt-6">
+      <li @click="toEdit" v-if="currentUser?.id === article?.user?.id && isShowToTop" class="edit mt-6">
         <div class="w-10 h-10 flex justify-center items-center bg-white rounded-full cursor-pointer">
           <i class="iconfont icon-bianji text-gray-600"></i>
         </div>
@@ -163,13 +164,13 @@ init();
       <div class="px-10 bg-white rounded-t-md" style="width: calc(100% - 260px)">
         <h1 class="title font-bold pt-4 text-3xl text-gray-600">{{ article?.name }}</h1>
         <div class="flex mt-3 text-gray-400 items-center">
-          <img :src="currentUser?.avatar" class="w-10 h-10 rounded-full mr-4 cursor-pointer" />
+          <Avatar :src="article?.user?.avatar" class="w-10 h-10 rounded-full mr-4 cursor-pointer" />
           <div class="flex flex-col">
-            <span class="user mr-6 text-xl text-gray-600 cursor-pointer">{{ currentUser?.name }}</span>
+            <span class="user mr-6 text-xl text-gray-600 cursor-pointer">{{ article?.user?.name }}</span>
             <div>
               <span class="createTime">{{ article?.updateTime ?? article?.createTime }}</span>
               <span class="ml-6">阅读 {{ article?.readCount ?? 0 }}</span>
-              <a @click="() => toEdit()" class="ml-6 cursor-pointer text-indigo-500 hover:underline">编辑</a>
+              <a v-if="currentUser?.id === article?.user?.id" @click="() => toEdit()" class="ml-6 cursor-pointer text-indigo-500 hover:underline">编辑</a>
             </div>
           </div>
         </div>
@@ -190,7 +191,7 @@ init();
           <Catalog v-if="catalogList?.length" :data="catalogList" @on-loaded="() => (isShowCatalog = true)" />
         </template>
       </MDPreview>
-      <RTPreview v-else-if="!loading && article?.editorType === 2" :data="article">
+      <RTPreview v-if="!loading && article?.editorType === 2" :data="article">
         <template #default="{ catalogList }">
           <Catalog v-if="catalogList?.length" :data="catalogList" @on-loaded="() => (isShowCatalog = true)" />
         </template>
@@ -201,7 +202,7 @@ init();
       v-show="!loading"
       class="absolute right-0"
       style="width: 240px; transition: 300ms"
-      :style="[isShowHeader ? (isShowCatalog ? 'top: 560px' : 'top: 0px') : isShowCatalog ? 'top: 487px' : 'top: -48px']"
+      :style="[isShowHeader ? (isShowCatalog ? `top: ${catalogHeight + 20}px` : 'top: 0px') : isShowCatalog ? `top: ${catalogHeight - 53}px` : 'top: -48px']"
     >
       <div class="flex-col fixed">
         <div v-if="prevColumnArticle" class="w-full h-24 px-4 py-2 bg-white mb-3 rounded" style="box-shadow: 0px 0px 8px -6px #000; width: 260px">
@@ -229,7 +230,7 @@ init();
       </div>
     </div>
     <!-- 评论 -->
-    <div ref="commentDom" class="comment px-10 py-2 bg-white border-t pb-16 rounded-md mb-12 mt-4" style="width: calc(100% - 260px)">
+    <div v-if="!loading" ref="commentDom" class="comment px-10 py-2 bg-white border-t pb-16 rounded-md mb-12 mt-4" style="width: calc(100% - 260px)">
       <Comment :data="commentData" />
     </div>
     <div class="oprate flex flex-col fixed right-36 bottom-20">
