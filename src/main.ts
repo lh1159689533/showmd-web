@@ -3,8 +3,8 @@ import router from './router';
 import App from './App.vue';
 import { store } from './store'
 import Components from '@plugins/Components';
-import './index.css';
-import 'element-plus/theme-chalk/index.css';
+import 'virtual:windi.css';
+// import 'element-plus/theme-chalk/index.css';
 import 'animate.css';
 
 import dayjs from 'dayjs';

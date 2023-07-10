@@ -55,12 +55,11 @@ interface CommentResponseData {
 interface DiggData {
   commentId: number;
   articleId?: number;
-  userId: number;
   replyId?: number;
 }
 
 async function findList(id: number, type: 'comment' | 'reply') {
-  const [err, res] = await http.request({ apiurl: 'comment/findList', segment: { id, type } });
+  const [err, res] = await http.request({ apiurl: 'comment/findList', params: { id, type } });
   if (err && res.code !== 0) return null;
   const data: CommentResponseData = res.data;
   return data;
@@ -73,7 +72,7 @@ async function saveComment(comment: CommentData | ReplyData, type: 'comment' | '
 }
 
 async function deleteById(id: number, type: 'comment' | 'reply') {
-  const [err, res] = await http.request({ apiurl: 'comment/delete', segment: { id, type } });
+  const [err, res] = await http.request({ apiurl: 'comment/delete', params: { id, type } });
   if (err && res.code !== 0) return false;
   return res.data;
 }
@@ -90,28 +89,28 @@ async function undigg(data: DiggData, type: 'comment' | 'reply') {
   return true;
 }
 
-function isAuthorOrMyself(list, currentUser, articleAuthor) {
-  list.forEach(item => {
-    if (item.user?.id === currentUser?.id) {
-      item.isMyself = true;
-    }
-    if (item.user?.id === articleAuthor?.id) {
-      item.isAuthor = true;
-    }
-    if (item.diggUsers?.split(',')?.includes(`${currentUser.id}`)) {
-      item.isDigg = true;
-    }
-    if (item.replies?.length) {
-      isAuthorOrMyself(item.replies, currentUser, articleAuthor);
-    }
-  });
-}
+// function isAuthorOrMyself(list, currentUser, articleAuthor) {
+//   list.forEach(item => {
+//     if (item.user?.id === currentUser?.id) {
+//       item.isMyself = true;
+//     }
+//     if (item.user?.id === articleAuthor?.id) {
+//       item.isAuthor = true;
+//     }
+//     if (item.diggUsers?.split(',')?.includes(`${currentUser.id}`)) {
+//       item.isDigg = true;
+//     }
+//     if (item.replies?.length) {
+//       isAuthorOrMyself(item.replies, currentUser, articleAuthor);
+//     }
+//   });
+// }
 
 export {
   findList,
   saveComment,
   deleteById,
-  isAuthorOrMyself,
+  // isAuthorOrMyself,
   digg,
   undigg,
 }

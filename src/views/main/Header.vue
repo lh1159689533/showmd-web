@@ -1,106 +1,123 @@
-<script lang='ts'>
-import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
+<script lang="ts" setup>
+import { ref, computed, onMounted, onBeforeUnmount, defineProps, watchEffect } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Search } from '@element-plus/icons-vue';
+
 import UserOprate from './UserOprate.vue';
-import { listMenuByRoleId } from '@service/user';
+import Holiday from '@components/Holiday.vue';
 
-export default defineComponent({
-  name: 'Header',
-  components: { UserOprate },
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    const store = useStore();
-    // 顶部导航菜单
-    const menuList = ref([]);
+const props = defineProps<{
+  isShowMenu?: boolean;
+  isShowSearch?: boolean;
+  isToHome?: boolean;
+  title?: string;
+}>();
 
-    // 选中的顶部导航菜单key
-    const activeKey = ref('');
-    const headerCls = ref('');
-    const currentScrollTop = ref(0);
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
+// 顶部导航菜单
+// const menuList = ref([]);
 
-    async function init() {
-      const user = await store.dispatch('getUserById', 1);
-      const menus = await listMenuByRoleId(user?.roleId);
-      menuList.value = menus.map(m => ({
-        ...m,
-        key: m.title
-      }));
+// 选中的顶部导航菜单key
+const activeKey = ref('');
+const headerCls = ref('');
+const currentScrollTop = ref(0);
 
-      // 根据路由适配导航菜单
-      const menu = menuList.value.find((nav) => nav.path === route.path);
-      activeKey.value = menu?.key ?? '';
-    }
+const isShowHeader = computed(() => store.getters.isShowHeader);
+// 顶部导航菜单
+const menuList = computed(() => store.getters.getMenus);
 
-    // 导航变化
-    const changeNav = (nav) => {
-      activeKey.value = nav.key;
-      router.push(nav.path);
-    };
+async function init() {
+  store.dispatch('getUserInfo');
+  store.dispatch('getUserMenu');
+  // const menus = await listMenu();
+  // menuList.value = menus.map((m) => ({
+  //   ...m,
+  //   key: m.title,
+  // }));
 
-    // 滚动事件，滚动高度大于500时隐藏header头
-    function onScroll() {
-      const { scrollTop } = document.documentElement;
-      if (scrollTop > 500) {
-        headerCls.value = 'animate__animated animate__fadeOutUp animate__faster';
-      }
-      if (scrollTop < currentScrollTop.value) {
-        headerCls.value = 'animate__animated animate__fadeInDown animate__faster';
-      }
-      currentScrollTop.value = scrollTop;
-    }
+  // // 根据路由适配导航菜单
+  // const menu = menuList.value.find((nav) => nav.path === route.path);
+  // activeKey.value = menu?.key ?? '';
+}
 
-    onMounted(() => {
-      document.addEventListener('scroll', onScroll);
-    });
+// 导航变化
+const changeNav = (nav) => {
+  activeKey.value = nav.key;
+  router.push(nav.path);
+};
 
-    onBeforeUnmount(() => {
-      document.removeEventListener('scroll', onScroll);
-    });
+const toHomePage = () => {
+  props.isToHome && router.push('/');
+};
 
-    init();
+// 滚动事件，滚动高度大于500时隐藏header头
+function onScroll() {
+  const { scrollTop } = document.documentElement;
+  if (scrollTop > 500 && isShowHeader.value) {
+    store.commit('hide');
+    headerCls.value = 'animate__animated animate__slideOutUp animate__faster';
+  }
+  if (scrollTop < currentScrollTop.value && !isShowHeader.value) {
+    store.commit('show');
+    headerCls.value = 'animate__animated animate__slideInDown animate__faster';
+  }
+  currentScrollTop.value = scrollTop;
+}
 
-    return {
-      menuList,
-      activeKey,
-      changeNav,
-      Search,
-      headerCls,
-    };
-  },
+onMounted(() => {
+  document.addEventListener('scroll', onScroll);
 });
+
+onBeforeUnmount(() => {
+  document.removeEventListener('scroll', onScroll);
+});
+
+watchEffect(() => {
+  // 根据路由适配导航菜单
+  const menu = menuList.value.find((nav) => nav.path === route.path);
+  activeKey.value = menu?.key ?? '';
+});
+
+init();
 </script>
 
 <template>
-  <div class='h-14 bg-white border-b sticky top-0 z-2000' :class='headerCls'>
-    <header class='container h-full flex items-center'>
-      <div class='logo mr-8 text-2xl font-bold text-indigo-500 cursor-pointer'>Lanis</div>
-      <List :data-list='menuList' @click='changeNav' class='flex text-black mr-16 h-full flex-1' item-class='nav-list text-gray-800 min-w-max hover:text-black'>
-        <template #default='{ item }'>
-          <span :class='[item.key === activeKey ? "text-indigo-500 font-bold" : ""]'>{{ item.title }}</span>
-        </template>
-      </List>
-      <div class='flex items-center h-10 relative w-80'>
-        <el-input :prefix-icon='Search' placeholder='Search projects' class='text-gray-400 bg-white caret-gray-400 w-full text-sm hover:border-gray-400' />
+  <div class="h-12 w-full bg-white border-b fixed top-0 z-2000" :class="headerCls">
+    <Holiday />
+    <header class="container h-full flex items-center">
+      <div @click="toHomePage" class="lanis-logo mr-6 text-2xl font-bold text-indigo-500 cursor-pointer"></div>
+      <div class="flex-1 flex items-center h-full">
+        <List v-if="isShowMenu" :data-list="menuList" @click="changeNav" class="flex text-black mr-16 h-full flex-1" item-class="nav-list text-gray-800 min-w-max hover:text-black">
+          <template #default="{ item }">
+            <span :class="[item.key === activeKey ? 'text-indigo-500 font-bold' : '']">{{ item.title }}</span>
+          </template>
+        </List>
+        <div v-if="title">{{ title }}</div>
       </div>
-      <div class='notice flex ml-16 items-center h-full'>
-        <span class='message relative cursor-pointer'>
-          <i class='iconfont icon-notice text-gray-400 w-6 h-6 text-4xl hover:text-gray-500' />
-          <span class='num rounded-full bg-red-500 text-white px-1 text-xs inline-block text-center absolute right-0 top-0'>8</span>
-        </span>
-        <div class='user h-full flex items-center relative'>
-          <UserOprate />
-        </div>
+      <div v-if="isShowSearch" class="flex items-center h-10 relative w-80">
+        <el-input :prefix-icon="Search" placeholder="Search projects" class="text-gray-400 caret-gray-400 w-full text-sm hover:border-gray-400" />
+      </div>
+      <div class="flex ml-16 items-center h-full">
+        <UserOprate />
+        <slot name="other"></slot>
       </div>
     </header>
   </div>
 </template>
 
 <style>
+.lanis-logo {
+  background-image: url('/api/lanis-logo.webp');
+  background-size: 100% 100%;
+  width: 83px;
+  height: 32px;
+}
+
 .nav-list {
-  @apply h-full cursor-pointer flex items-center mr-8 relative text-sm;
+  @apply h-full cursor-pointer flex items-center mr-6 relative text-sm;
 }
 
 .nav-list:hover::after {

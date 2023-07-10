@@ -26,9 +26,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <List :data-list='sortList' class='sort-list flex text-gray-800 p-3' style='font-size: 0.85rem'>
-    <template #default='{ item }'>
-      <span @click='() => handleSortChange(item.key)' :class='[item.key === sort ? "text-indigo-500" : ""]' class='cursor-pointer hover:text-indigo-500 px-4'>{{ item.title }}</span>
+  <List :data-list="sortList" class="sort-list flex text-gray-800 p-3" style="font-size: 0.85rem">
+    <template #default="{ item }">
+      <span @click="() => handleSortChange(item.key)" :class="[item.key === sort ? 'text-indigo-500' : '']" class="cursor-pointer hover:text-indigo-500 px-4">{{
+        item.title
+      }}</span>
     </template>
   </List>
 </template>

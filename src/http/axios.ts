@@ -1,12 +1,13 @@
 import axios from 'axios';
+import router from "../router";
+import auth from '@utils/auth';
 
 import { AxiosResponse, AxiosInstance, AxiosRequestConfig, Response } from './types';
 
-let PREFIX = "/api",
-  IP = "";
+let PREFIX = "/api";
 if (process.env.NODE_ENV === "development") {
   PREFIX = "/api";
-  IP = "http://localhost:3000";
+  // IP = "http://localhost:3000";
 }
 
 // 创建axios实例
@@ -16,22 +17,8 @@ const instance: AxiosInstance = axios.create({
 
 // request拦截器
 instance.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: any) => {
     config.url = `${PREFIX}/${config.url}`;
-    
-    if (config.url?.endsWith(".json")) {
-      config.url = IP + config.url.replace("/api", "");
-    } else if (config.url?.endsWith("picture/upload")) {
-      config.headers = {
-        ...config.headers,
-        'Content-Type': 'multipart/form-data'
-      };
-    } else {
-      config.headers = {
-        ...config.headers,
-        'Content-Type': 'application/json;charset=UTF-8'
-      };
-    }
     return config;
   },
   (error) => {
@@ -45,12 +32,19 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse<Response, AxiosRequestConfig>) => {
     if (response.status === 200) {
-      let data: Response = response.data;
-      const contentType = response.headers['content-type'];
-      if (contentType && contentType.indexOf('application/json') !== -1 && typeof data === 'string') {
-        data = JSON.parse(data);
+      let resp: Response = response.data;
+      if (resp.code === 401 && auth(router.currentRoute.value.path)) {
+        router.push('/blog');
+        return;
       }
-      return data;
+      if (resp instanceof Blob) {
+        return response;
+      }
+      const contentType = response.headers['content-type'];
+      if (contentType && contentType.indexOf('application/json') !== -1 && typeof resp === 'string') {
+        resp = JSON.parse(resp);
+      }
+      return resp;
     } else {
       return Promise.reject("error:" + response.status);
     }

@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -40,27 +40,27 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class='w-full flex flex-col items-center mt-16' v-bind='$attrs'>
-    <div @click='upload' class='border border-dashed w-4/5 h-40 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6'>
-      <el-icon>
-        <Upload class='w-14 h-14 text-indigo-600' />
-      </el-icon>
+  <div class="w-full flex flex-col items-center mt-16" v-bind="$attrs">
+    <div @click="upload" class="border border-dashed w-4/5 h-60 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6">
+      <i class="iconfont icon-upload text-6xl text-gray-400"></i>
+      <span class="text-gray-600 my-5">拖拽图片到此或点击上传</span>
+      <el-button type="primary">上传图片</el-button>
       <slot />
-      <slot name='hint' />
+      <slot name="hint" />
     </div>
-    <input ref='inputRef' type='file' :webkitdirectory='directory' :accept='accept' class='hidden' />
-    <List :data-list='fileList' class='w-4/5 mt-4 h-96'>
-      <template #default='{ item, index, hoverIndex }'>
-        <p class='mt-2 text-left flex items-center text-sm'>
+    <input ref="inputRef" type="file" :webkitdirectory="directory" :accept="accept" class="hidden" />
+    <List :data-list="fileList" class="w-4/5 mt-4 h-96">
+      <template #default="{ item, index, hoverIndex }">
+        <p class="mt-2 text-left flex items-center text-sm">
           <el-icon>
-            <Paperclip class='text-gray-400 w-3.5 h-3.5 mr-2' />
+            <Paperclip class="text-gray-400 w-3.5 h-3.5 mr-2" />
           </el-icon>
-          <span class='file-name flex-1 relative'>{{ item }}</span>
+          <span class="file-name flex-1 relative">{{ item }}</span>
           <el-icon>
             <Close
-              @click='() => remove(index)'
-              :class='[index === hoverIndex ? "block" : "hidden"]'
-              class='remove-file text-gray-500 w-3.5 h-3.5 mr-2 hover:text-indigo-500 cursor-pointer'
+              @click="() => remove(index)"
+              :class="[index === hoverIndex ? 'block' : 'hidden']"
+              class="remove-file text-gray-500 w-3.5 h-3.5 mr-2 hover:text-indigo-500 cursor-pointer"
             />
           </el-icon>
         </p>
@@ -69,5 +69,4 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

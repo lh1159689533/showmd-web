@@ -1,238 +1,221 @@
-<script lang='ts'>
-import { defineComponent, ref, onMounted } from 'vue';
+<script lang="ts" setup>
+import { defineProps, toRefs, withDefaults, ref, onMounted, computed } from 'vue';
 import dayjs from 'dayjs';
 import message from '@utils/message';
 import { confirm } from '@utils/messageBox';
 import AddItem from './AddItem.vue';
 import { useStore } from 'vuex';
 
-import { addClass, removeClass } from '@src/components/Editor/vditorEditor';
-import { parseEmoji } from './Emoji/emoji.config';
+import { addClass, removeClass } from '@src/components/Editor/domUtil';
+import { parse } from './utils';
 
-export default defineComponent({
-  name: 'Item',
-  components: { AddItem },
-  props: {
-    data: {
-      type: Object,
-      default: () => {},
-    },
-    type: {
-      type: String,
-      default: 'comment', // comment评论 reply回复
-    },
-  },
-  emits: ['add', 'del'],
-  setup(props) {
-    const store = useStore();
-    // 内容dom
-    const contentDom = ref();
-    const addItemDom = ref();
-    // 是否显示添加回复textarea
-    const isShowAddReply = ref(false);
-    // 是否显示'展开/收起'(内容过多时)
-    const isShowLimit = ref(false);
-    // 内容是否已展开(内容过多时)
-    const isExpand = ref(false);
-    // 选中了改条目
-    const hoverItem = ref(false);
+const props = withDefaults(
+  defineProps<{
+    data: any;
+    type: 'comment' | 'reply';
+  }>(),
+  {
+    data: {},
+    type: 'comment',
+  }
+);
 
-    onMounted(() => {
-      // 判断内容是否超过了显示的最大行数，是则显示'展开/收起'
-      const offsetHei = contentDom.value.offsetHeight;
-      const scrollHei = contentDom.value.scrollHeight;
-      if (offsetHei < scrollHei) {
-        isShowLimit.value = true;
-      } else {
-        isShowLimit.value = false;
-      }
-    });
+const store = useStore();
 
-    /**
-     * 显示添加回复框
-     */
-    const showAddReply = () => {
-      isShowAddReply.value = true;
-    };
+const currentUser = computed(() => store.getters.getUser);
 
-    /**
-     * 隐藏添加回复框
-     */
-    const hideAddReply = () => {
-      isShowAddReply.value = false;
-    };
+const { data, type } = toRefs(props);
+// 内容dom
+const contentDom = ref();
+const addItemDom = ref();
+// 是否显示添加回复textarea
+const isShowAddReply = ref(false);
+// 是否显示'展开/收起'(内容过多时)
+const isShowLimit = ref(false);
+// 内容是否已展开(内容过多时)
+const isExpand = ref(false);
+// 选中了改条目
+const hoverItem = ref(false);
 
-    /**
-     * 内容的展开与收起事件
-     */
-    const handleExpand = () => {
-      if (isExpand.value) {
-        removeClass(contentDom.value, 'expand');
-      } else {
-        addClass(contentDom.value, 'expand');
-      }
-      isExpand.value = !isExpand.value;
-    };
-
-    const delItem = async (item) => {
-      const { id, commentId } = item;
-      const isDel = await store.dispatch('delComment', { id, commentId, type: props.type });
-      if (isDel) {
-        message.success('删除成功');
-      } else {
-        message.error('删除失败');
-      }
-    };
-
-    /**
-     * 删除条目
-     */
-    const handleDelItem = (item) => {
-      confirm('你确定要删除这条评论吗？', {
-        callback(action) {
-          if (action === 'confirm') {
-            delItem(item);
-          }
-        },
-      });
-    };
-
-    /**
-     * 添加条目
-     */
-    const handleAddItem = async (itemValue) => {
-      const { type, data } = props;
-      let item = {
-        content: itemValue, // 内容
-        parentId: 0, // 父id
-        commentId: data?.id,
-        replyToUserId: null,
-      };
-      if (type === 'reply') {
-        item = {
-          ...item,
-          parentId: data?.id ?? 0, // 父id
-          commentId: data?.commentId,
-          replyToUserId: data?.user?.id,
-        };
-      }
-      const isSucc = await store.dispatch('addComment', { data: item, type: 'reply' });
-      if (isSucc) {
-        hideAddReply();
-        addItemDom.value?.success();
-        message.success('评论成功');
-      } else {
-        addItemDom.value?.failed();
-        message.error('评论失败');
-      }
-    };
-
-    const handleDigg = () => {
-      const { type, data } = props;
-      let payload = null;
-      if (type === 'reply') {
-        payload = {
-          commentId: data?.commentId,
-          replyId: data?.id,
-          type,
-        };
-      } else {
-        payload = {
-          commentId: data?.id,
-          articleId: data?.articleId,
-          type,
-        };
-      }
-      if (data.isDigg) {
-        store.dispatch('undiggComment', payload); // 取消点赞
-      } else {
-        store.dispatch('diggComment', payload); // 点赞
-      }
-    };
-
-    const formatDate = (date) => {
-      if (dayjs().isSame(date, 'day')) {
-        return dayjs(date).fromNow();
-      } else if (dayjs().isSame(date, 'year')) {
-        return dayjs(date).format('MM-DD');
-      } else {
-        return dayjs(date).format('YYYY-MM-DD');
-      }
-    };
-
-    return {
-      dayjs,
-      contentDom,
-      isShowAddReply,
-      isShowLimit,
-      isExpand,
-      hoverItem,
-      addItemDom,
-      showAddReply,
-      hideAddReply,
-      handleExpand,
-      handleDelItem,
-      handleAddItem,
-      handleDigg,
-      formatDate,
-      parseEmoji,
-    };
-  },
+onMounted(() => {
+  // 判断内容是否超过了显示的最大行数，是则显示'展开/收起'
+  const offsetHei = contentDom.value.offsetHeight;
+  const scrollHei = contentDom.value.scrollHeight;
+  if (offsetHei < scrollHei) {
+    isShowLimit.value = true;
+  } else {
+    isShowLimit.value = false;
+  }
 });
+
+/**
+ * 显示添加回复框
+ */
+const showAddReply = () => {
+  if (!currentUser.value?.id) {
+    return store.commit('showLogin');
+  }
+  isShowAddReply.value = true;
+};
+
+/**
+ * 隐藏添加回复框
+ */
+const hideAddReply = () => {
+  isShowAddReply.value = false;
+};
+
+/**
+ * 内容的展开与收起事件
+ */
+const handleExpand = () => {
+  if (isExpand.value) {
+    removeClass(contentDom.value, 'expand');
+  } else {
+    addClass(contentDom.value, 'expand');
+  }
+  isExpand.value = !isExpand.value;
+};
+
+const delItem = async (item) => {
+  const { id, commentId } = item;
+  const isDel = await store.dispatch('delComment', { id, commentId, type: type.value });
+  if (isDel) {
+    message.success('删除成功');
+  } else {
+    message.error('删除失败');
+  }
+};
+
+/**
+ * 删除条目
+ */
+const handleDelItem = (item) => {
+  confirm('你确定要删除这条评论吗？', {
+    callback(action) {
+      if (action === 'confirm') {
+        delItem(item);
+      }
+    },
+  });
+};
+
+/**
+ * 添加条目
+ */
+const handleAddItem = async (itemValue) => {
+  let item = {
+    content: itemValue, // 内容
+    parentId: 0, // 父id
+    commentId: data.value?.id,
+    replyToUserId: null,
+  };
+  if (type.value === 'reply') {
+    item = {
+      ...item,
+      parentId: data.value?.id ?? 0, // 父id
+      commentId: data.value?.commentId,
+      replyToUserId: data.value?.user?.id,
+    };
+  }
+  const isSucc = await store.dispatch('addComment', { data: item, type: 'reply' });
+  if (isSucc) {
+    hideAddReply();
+    addItemDom.value?.success();
+    message.success('评论成功');
+  } else {
+    addItemDom.value?.failed();
+    message.error('评论失败');
+  }
+};
+
+const handleDigg = () => {
+  if (!currentUser.value?.id) {
+    return store.commit('showLogin');
+  }
+  let payload = null;
+  if (type.value === 'reply') {
+    payload = {
+      commentId: data.value?.commentId,
+      replyId: data.value?.id,
+      type: type.value,
+    };
+  } else {
+    payload = {
+      commentId: data.value?.id,
+      articleId: data.value?.articleId,
+      type: type.value,
+    };
+  }
+  if (isDigg.value) {
+    store.dispatch('undiggComment', payload); // 取消点赞
+  } else {
+    store.dispatch('diggComment', payload); // 点赞
+  }
+};
+
+const formatDate = (date) => {
+  if (dayjs().isSame(date, 'day')) {
+    return dayjs(date).fromNow();
+  } else if (dayjs().isSame(date, 'year')) {
+    return dayjs(date).format('MM-DD');
+  } else {
+    return dayjs(date).format('YYYY-MM-DD');
+  }
+};
+
+const isMyself = computed(() => data.value.user?.id === currentUser.value?.id);
+const isAuthor = computed(() => data.value.article?.user?.id === data.value.user?.id);
+const isDigg = computed(() => data.value.diggUsers?.split(',')?.includes(`${currentUser.value.id}`));
 </script>
 
 <template>
-  <div class='common-item flex w-full text-sm'>
-    <img
-      :class='type === "comment" ? "w-8 h-8" : "w-6 h-6"'
-      class='user-avatar rounded-full cursor-pointer'
-      :src='data.user?.avatar'
-      @error='(e) => (e.target as HTMLImageElement).src="/img/avatars.jpeg"'
-    />
-    <div class='content-box ml-3 flex-1 text-gray-500'>
-      <div @mouseenter='hoverItem = true' @mouseleave='hoverItem = false' class='content-section'>
-        <div class='user-box flex items-center'>
-          <div class='user flex-1'>
-            <span class='text-black cursor-pointer' style='font-size: 15px'>{{ data.user.name }}</span>
-            <span v-if='data.isAuthor' class='ml-1 text-indigo-500 bg-indigo-100 text-xs px-1'>作者</span>
-            <span v-if='data.isMyself' class='ml-1 text-block bg-gray-100 text-xs px-1'>本人</span>
+  <div class="common-item flex w-full text-sm">
+    <Avatar :src="data.user?.avatar" :class="type === 'comment' ? 'w-8 h-8' : 'w-6 h-6'" class="user-avatar rounded-full cursor-pointer" />
+    <div class="content-box ml-3 flex-1 text-gray-500">
+      <div @mouseenter="hoverItem = true" @mouseleave="hoverItem = false" class="content-section">
+        <div class="user-box flex items-center">
+          <div class="user flex-1">
+            <span class="text-black cursor-pointer" style="font-size: 15px">{{ data.user.name }}</span>
+            <span v-if="isAuthor" class="ml-1 text-indigo-500 bg-indigo-100 text-xs px-1">作者</span>
+            <span v-if="isMyself" class="ml-1 text-block bg-gray-100 text-xs px-1">本人</span>
           </div>
-          <span class='time'>{{ formatDate(data.createTime) }}</span>
+          <span class="time">{{ formatDate(data.createTime) }}</span>
         </div>
-        <div class='content-box'>
-          <div ref='contentDom' class='content pr-4 text-gray-700'>
-            <span v-if='type === "reply" && data.replyToUserId' class='reply-to-user text-indigo-500 mr-1'>@{{ data.replyToUser.name }}</span>
-            <span v-html='parseEmoji(data.content)'></span>
+        <div class="content-box">
+          <div ref="contentDom" class="content pr-4 text-gray-700">
+            <span v-if="type === 'reply' && data.replyToUserId" class="reply-to-user text-indigo-500 mr-1">@{{ data.replyToUser.name }}</span>
+            <span v-html="parse(data.content)"></span>
           </div>
-          <div v-if='isShowLimit' @click='handleExpand' class='limit text-indigo-500 cursor-pointer mt-2'>{{ isExpand ? '收起' : '展开' }}</div>
+          <div v-if="isShowLimit" @click="handleExpand" class="limit text-indigo-500 cursor-pointer mt-2">{{ isExpand ? '收起' : '展开' }}</div>
         </div>
-        <div class='footer flex mt-4'>
-          <div class='action-box text-sm' style='color:#8a8d90'>
+        <div class="footer flex mt-4">
+          <div class="action-box text-sm" style="color: #8a8d90">
             <span
-              @click='() => !data.isMyself && handleDigg()'
-              :class='[{ "text-indigo-500": data.isDigg }, !data.isMyself ? "cursor-pointer hover:text-indigo-500" : "text-gray-400"]'
-              class='digg'
+              @click="() => !isMyself && handleDigg()"
+              :class="[{ 'text-indigo-500': isDigg }, !isMyself ? 'cursor-pointer hover:text-indigo-500' : 'text-gray-400']"
+              class="digg"
             >
-              <i class='iconfont icon-digg mr-1' />
+              <i class="iconfont icon-digg mr-1" />
               <span>{{ data.digg || '点赞' }}</span>
             </span>
-            <span v-show='!isShowAddReply' @click='showAddReply' class='reply mx-4 cursor-pointer hover:text-indigo-500'>
-              <i class='iconfont icon-reply mr-1' />
+            <span v-show="!isShowAddReply" @click="showAddReply" class="reply mx-4 cursor-pointer hover:text-indigo-500">
+              <i class="iconfont icon-reply mr-1" />
               <span>{{ data.replyCount || '回复' }}</span>
             </span>
-            <span v-show='isShowAddReply' @click='hideAddReply' class='reply mx-4 cursor-pointer text-indigo-500'>
-              <i class='iconfont icon-reply mr-1' />
+            <span v-show="isShowAddReply" @click="hideAddReply" class="reply mx-4 cursor-pointer text-indigo-500">
+              <i class="iconfont icon-reply mr-1" />
               <span>取消回复</span>
             </span>
-            <span v-if='data.isMyself && hoverItem' @click='() => handleDelItem(data)' class='del cursor-pointer hover:text-red-500 flex-1'>
-              <i class='iconfont icon-comment-del mr-1' />
+            <span v-if="isMyself && hoverItem" @click="() => handleDelItem(data)" class="del cursor-pointer hover:text-red-500 flex-1">
+              <i class="iconfont icon-comment-del mr-1" />
               <span>删除</span>
             </span>
           </div>
         </div>
       </div>
-      <AddItem v-if='isShowAddReply' @confirm='handleAddItem' @cancle='hideAddReply' ref='addItemDom' autofocus :placeholder='`回复${data.user.name}...`' class='add-reply mt-3' />
-      <slot name='replies' />
+      <AddItem v-if="isShowAddReply" @confirm="handleAddItem" @cancle="hideAddReply" ref="addItemDom" autofocus :placeholder="`回复${data.user.name}...`" class="add-reply mt-3" />
+      <slot name="replies" />
     </div>
   </div>
 </template>

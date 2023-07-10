@@ -1,14 +1,3 @@
-interface IEmoji {
-  title: string;
-  key?: string;
-  path: string;
-}
-
-interface IEmojiExpand extends IEmoji {
-  width: string;
-  height: string;
-}
-
 const emojiConf = [
   {
     type: 'smiley',
@@ -210,33 +199,4 @@ const emojiConf = [
   }
 ];
 
-const emojiMap = new Map<string, IEmojiExpand>();
-const emojiKeys: string[] = [];
-
-emojiConf
-  .reduce((acc, item) => {
-    return [...acc, ...item.list.map(em => ({ ...em, width: item.width, height: item.height }))];
-  }, [])
-  .map((em) => {
-    emojiMap.set(`[${em.key ?? em.title}]`, em);
-    emojiKeys.push(em.key ?? em.title);
-  });
-
-const regExp = new RegExp(`(\\[(${emojiKeys.join('|')})\\])`, 'g');
-
-const parseEmoji = (text: string): string => {
-  return text.replace(regExp, (item: string) => {
-    const emoji: IEmojiExpand = emojiMap.get(item);
-    return `<img src='${emoji.path}' alt='${emoji.title}' class='textarea-emoji' style='width:${emoji.width};height:${emoji.height};padding:4px' />`;
-  });
-};
-
-const formatEmoji = (emoji: IEmoji): string => {
-  return `[${emoji.key ?? emoji.title}]`;
-};
-
-export {
-  emojiConf,
-  parseEmoji,
-  formatEmoji,
-};
+export default emojiConf;

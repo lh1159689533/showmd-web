@@ -1,4 +1,4 @@
-import { getElementById } from '@src/components/Editor/vditorEditor';
+import { getElementById } from '@src/components/Editor/domUtil';
 
 let canvas = null;
 let ctx = null;
@@ -14,7 +14,8 @@ function randomNum(x, y) {
 }
 
 function Ball() {
-  this.r = randomNum(0.1, 3);
+  // this.r = randomNum(0.1, 3);
+  this.r = 2;
   this.color = 'white';
 
   this.x = randomNum(this.r, width - this.r);
@@ -105,7 +106,8 @@ function draw() {
 }
 
 function createBall() {
-  for (let i = 0; i < 0.0002 * width * height; i++) {
+  const ballNum = Math.floor(0.0001 * width * height);
+  for (let i = 0; i < ballNum; i++) {
     const ball = new Ball();
     balls.push(ball);
   }

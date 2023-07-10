@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue';
 import {
   querySelector,
@@ -10,9 +10,9 @@ import {
   getNodeByAttribute,
   getBoundingClientRect,
   getComputedStyleOf,
-} from './vditorEditor';
+} from './domUtil';
 import Vditor from 'vditor';
-import 'vditor/dist/index.css';
+// import 'vditor/dist/index.css';
 
 interface IContentTheme {
   label: string;
@@ -159,7 +159,7 @@ export default defineComponent({
           actions: [],
           theme: {
             current: props?.data?.contentTheme ?? 'Chinese-red',
-            path: 'http://localhost:1229/editor/theme',
+            path: '/api/editor/theme',
             list: previewThemeList,
           },
           hljs: {
@@ -402,8 +402,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id='myEditor'>
-    <div id='myEditorContent' v-bind='$attrs' />
+  <div id="myEditor">
+    <div id="myEditorContent" v-bind="$attrs" />
   </div>
 </template>
 

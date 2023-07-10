@@ -1,15 +1,7 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
-export default defineComponent({
-  name: 'Home',
-});
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <div id='home' class='container'>
-    11111222
-  </div>
+  <div id="home" class="container">11111222</div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
