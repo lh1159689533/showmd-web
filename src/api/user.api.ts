@@ -8,5 +8,7 @@ export default {
   findUserInfo: 'get showmd/user/info',
   listMenu: 'get showmd/list/menu',
 
-  holiday: 'get showmd/holiday'
+  holiday: 'get showmd/holiday',
+  process: 'post showmd/image/process',
+  download: 'post showmd/image/download',
 };

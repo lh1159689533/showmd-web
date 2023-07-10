@@ -129,6 +129,7 @@ onBeforeUnmount(() => {
   box-shadow: 0px 0px 8px -6px #000;
   border-radius: 3px;
   width: 260px;
+  z-index: 2000;
 }
 
 #myPreviewEditorOutlineList ul > li > span.active::before {

@@ -86,7 +86,7 @@ const handleSearch = async () => {
       <template #default="{ item: article }">
         <div class="article-list-item flex justify-between text-sm text-gray-800 px-6 py-4 border-t hover:bg-gray-50">
           <div class="article-list-item-content flex flex-col flex-1">
-            <div @click="() => toDetail(article?.id)" class="title text-xl mb-3 text-gray-900 cursor-pointer hover:text-indigo-600">
+            <div @click="() => toDetail(article?.id)" class="title text-base mb-3 text-gray-900 cursor-pointer hover:text-indigo-600">
               {{ article.name }}
             </div>
             <div class="truncate text-gray-600">{{ article.summary }}</div>

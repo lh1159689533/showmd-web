@@ -45,6 +45,18 @@ async function holiday() {
   return res.data;
 }
 
+async function imageProcess(formData) {
+  const [err, res] = await http.request({ apiurl: 'user/process', data: formData });
+  if (err && !res.data) return null;
+  return res.data;
+}
+
+async function imageDownload(formData) {
+  const [err, res] = await http.request({ apiurl: 'user/download', data: formData, responseType: 'blob' });
+  if (err && !res) return null;
+  return res;
+}
+
 export {
   login,
   register,
@@ -52,5 +64,7 @@ export {
   findUserById,
   listMenu,
   holiday,
-  findUserInfo
+  findUserInfo,
+  imageProcess,
+  imageDownload
 };

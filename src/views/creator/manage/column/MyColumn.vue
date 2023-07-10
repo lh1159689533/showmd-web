@@ -130,11 +130,12 @@ const top = async (id: number, action: 0 | 1) => {
 
 // 删除专栏
 const del = async (id: number) => {
-  if (await deleteById(id)) {
+  const [err, res] = await deleteById(id);
+  if (!err && res.code === 0) {
     message.success('删除成功');
     findColumnList();
   } else {
-    message.error('删除失败');
+    message.error(err?.message || res.message || '删除失败');
   }
 };
 

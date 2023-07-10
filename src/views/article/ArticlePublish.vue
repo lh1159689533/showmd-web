@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, reactive, ref, watchEffect } from 'vue';
 import { listCategory } from '@service/category';
-import { findListByUserId } from '@service/column';
 
 interface IPublishForm {
   category?: string;
@@ -72,17 +71,17 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  // if (props.userId) {
-  findListByUserId()
-    .then((data) => {
-      cloumnList.value = data ?? [];
-    })
-    .catch((e) => {
-      console.log('查询出错:', e);
-    });
-  // }
-});
+// watchEffect(() => {
+//   // if (props.userId) {
+//   findListByUserId()
+//     .then((data) => {
+//       cloumnList.value = data ?? [];
+//     })
+//     .catch((e) => {
+//       console.log('查询出错:', e);
+//     });
+//   // }
+// });
 </script>
 
 <template>
@@ -140,10 +139,11 @@ watchEffect(() => {
 
 <style>
 .publish-article {
-  @apply absolute z-10 bg-white rounded-sm;
+  @apply absolute bg-white rounded-sm;
   width: 600px;
   box-shadow: 1px 1px 10px -2px #ddd;
   border: 1px solid #ddd;
+  z-index: 2001;
 }
 
 .top-right {

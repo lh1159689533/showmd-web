@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeUnmount, defineProps } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, defineProps, watchEffect } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { Search } from '@element-plus/icons-vue';
-import { listMenu } from '@service/user';
 
 import UserOprate from './UserOprate.vue';
 import Holiday from '@components/Holiday.vue';
@@ -19,7 +18,7 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 // 顶部导航菜单
-const menuList = ref([]);
+// const menuList = ref([]);
 
 // 选中的顶部导航菜单key
 const activeKey = ref('');
@@ -27,18 +26,21 @@ const headerCls = ref('');
 const currentScrollTop = ref(0);
 
 const isShowHeader = computed(() => store.getters.isShowHeader);
+// 顶部导航菜单
+const menuList = computed(() => store.getters.getMenus);
 
 async function init() {
   store.dispatch('getUserInfo');
-  const menus = await listMenu();
-  menuList.value = menus.map((m) => ({
-    ...m,
-    key: m.title,
-  }));
+  store.dispatch('getUserMenu');
+  // const menus = await listMenu();
+  // menuList.value = menus.map((m) => ({
+  //   ...m,
+  //   key: m.title,
+  // }));
 
-  // 根据路由适配导航菜单
-  const menu = menuList.value.find((nav) => nav.path === route.path);
-  activeKey.value = menu?.key ?? '';
+  // // 根据路由适配导航菜单
+  // const menu = menuList.value.find((nav) => nav.path === route.path);
+  // activeKey.value = menu?.key ?? '';
 }
 
 // 导航变化
@@ -71,6 +73,12 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('scroll', onScroll);
+});
+
+watchEffect(() => {
+  // 根据路由适配导航菜单
+  const menu = menuList.value.find((nav) => nav.path === route.path);
+  activeKey.value = menu?.key ?? '';
 });
 
 init();

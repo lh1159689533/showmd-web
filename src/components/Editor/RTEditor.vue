@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { ref, shallowRef, onBeforeUnmount, defineProps, defineEmits, toRefs } from 'vue';
+import { ref, shallowRef, onBeforeUnmount, defineProps, defineEmits, toRefs, defineExpose } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { IToolbarConfig, IEditorConfig, IDomEditor, SlateNode, DomEditor } from '@wangeditor/editor';
 import { upload } from '@src/utils/upload';
 import message from '@utils/message';
+import { querySelector } from './domUtil';
 
 const props = defineProps<{ data: { name: string; content: string }; isPreview?: boolean }>();
 const emit = defineEmits<{ (e: 'onChange', value: { name: string; content: string }, textValue?: string): void }>();
@@ -12,6 +13,8 @@ const { data } = toRefs(props);
 const name = ref(data.value?.name ?? '');
 const content = ref(data.value?.content ?? '');
 const headerList = ref([]);
+// 缩放参数
+const editorTransform = ref({ scale: 1, translate: 0 });
 
 const editorRef = shallowRef<IDomEditor>();
 // const toolbar = computed(() => DomEditor.getToolbar(editorRef.value));
@@ -67,9 +70,34 @@ const handleNameChange = () => {
   emit('onChange', { name: name.value, content: content.value });
 };
 
+/**
+ * 编辑器缩放
+ * @param scale 缩放比例
+ */
+const scaleEditor = (scale: number) => {
+  const translate = (800 - 800 * scale) / 2;
+  editorTransform.value = {
+    scale,
+    translate,
+  };
+  const editorDom = querySelector(editorRef.value.getEditableContainer(), '.w-e-scroll>div:first-child');
+  if (editorDom) {
+    editorDom.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${translate}, 0)`;
+  }
+};
+
+// 获取文章文本内容
+const getText = () => editorRef.value.getText();
+
 onBeforeUnmount(() => {
   const editor = editorRef.value;
   editor?.destroy();
+});
+
+// 将方法暴露出去
+defineExpose({
+  scaleEditor,
+  getText
 });
 </script>
 
@@ -78,35 +106,66 @@ onBeforeUnmount(() => {
     <div class="editor-toolbar bg-white border-b">
       <Toolbar :editor="editorRef" :default-config="toolbarConfig" mode="default" class="container" style="min-width: 1380px" />
     </div>
-    <div class="editor-content relative overflow-y-auto">
-      <div class="content bg-white px-16 py-4">
-        <div class="title py-5 border-b">
-          <input v-model="name" @change="handleNameChange" placeholder="请输入文章标题..." class="border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
-        </div>
-        <div class="editor-container" @click="() => editorRef.focus()">
-          <Editor @on-created="handleCreate" @on-change="handleChange" :default-config="editorConfig" />
+    <div class="editor-container relative overflow-y-auto">
+      <div class="editor-content">
+        <div class="editor-content-container">
+          <div :style="{ transform: `matrix(${editorTransform.scale}, 0, 0, ${editorTransform.scale}, ${editorTransform.translate}, 81)` }" class="title py-5 border-b">
+            <input
+              v-model="name"
+              @change="handleNameChange"
+              placeholder="请输入文章标题..."
+              class="w-full border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none"
+            />
+          </div>
+          <div class="content" @click="() => editorRef.focus()">
+            <Editor @on-created="handleCreate" @on-change="handleChange" :default-config="editorConfig" class="absolute w-full" />
+          </div>
         </div>
       </div>
-      <div class="absolute right-28" style="width: 260px; padding-left: 20px">
+      <div class="absolute right-10" style="width: 260px; padding-left: 20px">
         <slot :catalog-list="headerList"></slot>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.editor-content {
+<style>
+.editor-container {
   height: calc(100% - 40px);
 }
 
-.content {
+.editor-content {
   width: 800px;
-  margin: 20px auto 20px auto;
-  box-shadow: 0px 0px 8px -4px #000;
-  border-radius: 3px;
+  margin: -38px auto 20px auto;
+  position: relative;
+  height: 100%;
 }
 
-.editor-container {
-  min-height: 980px;
+.editor-content-container .title {
+  transform-origin: 0 0;
+  z-index: 1;
+  @apply py-4 px-16 bg-white relative;
+}
+
+.content {
+  min-height: 1080px;
+  height: 100%;
+  position: relative;
+}
+
+.editor-content-container .w-e-text-container > .w-e-scroll > div:first-child {
+  transform-origin: 0 0;
+  box-shadow: 0px 0px 8px -4px #000;
+  border-radius: 3px;
+  padding-top: 82px !important;
+  @apply py-4 px-16 bg-white;
+}
+
+.w-e-text-container {
+  background-color: transparent !important;
+}
+
+.w-e-bar-item-group .w-e-bar-item-menus-container {
+  z-index: 2001;
 }
 </style>

@@ -42,6 +42,10 @@ const codeThemeList = ref([]);
 const editorType = ref<EditorType>('markdown');
 const wordCount = ref(0);
 
+// 富文本编辑器缩放相关
+const editorRef = ref();
+const scale = ref(100);
+
 // const storageKey = props.id ? `update-article-${props.id}` : 'create-article';
 const storageKey = computed(() => (props.id ? `update-article-${editorType.value}-${props.id}` : `create-article-${editorType.value}`));
 
@@ -127,6 +131,11 @@ const showPublish = () => {
   if (isShowPublish.value) {
     hidePublish();
   } else {
+    if (!props.id) {
+      const text = editorRef.value.getText();
+      console.log('text:', text);
+      initPublishForm.summary = text?.replace(/\s+/g, ' ').substr(0, 100);
+    }
     isShowPublish.value = true;
     // 点击其他区域隐藏
     document.addEventListener('click', hide);
@@ -200,6 +209,23 @@ const changeEditorType = (type: EditorType) => {
   });
 };
 
+/**
+ * 富文本编辑器缩放
+ * @param type 缩放的比例值或缩放类型(- 缩小, + 放大)
+ */
+const editorScale = (type: number | string) => {
+  let currScale = 0;
+  if (typeof type === 'number') {
+    currScale = type;
+  } else {
+    currScale = type === '+' ? scale.value + 5 : scale.value - 5;
+  }
+  if (currScale <= 150 && currScale >= 50) {
+    scale.value = currScale;
+    editorRef.value.scaleEditor(scale.value / 100);
+  }
+};
+
 init();
 </script>
 
@@ -216,7 +242,7 @@ init();
         <Avatar :src="currentUser?.avatar" class="w-7 h-7 rounded-full cursor-pointer ml-6" />
       </div>
     </div>
-    <MDEditorIR v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange">
+    <MDEditorIR ref="editorRef" v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange">
       <template #default="{ catalogList }">
         <Catalog v-if="catalogList?.length" :data="catalogList" />
       </template>
@@ -224,7 +250,7 @@ init();
   </div>
   <div v-if="editorType === 'richtext'" class="h-full">
     <div style="height: calc(100% - 58px)">
-      <RTEditor v-if="isShowEditor" :data="article" @on-change="onChange">
+      <RTEditor ref="editorRef" v-if="isShowEditor" :data="article" @on-change="onChange">
         <template #default="{ catalogList }">
           <Catalog v-if="catalogList?.length" :data="catalogList" />
         </template>
@@ -237,14 +263,23 @@ init();
         </div>
         <div class="right flex">
           <!-- <el-button>草稿箱</el-button> -->
+          <div class="scale-editor flex items-center gap-2 text-sm mr-6">
+            <i @click="() => editorScale('-')" class="iconfont icon-jianhao text-sm" :class="[scale === 50 ? 'cursor-not-allowed' : 'cursor-pointer']"></i>
+            <el-dropdown trigger="click" @command="(command) => editorScale(command)">
+              <span class="text-xs text-gray-500 w-8 text-center">{{ scale }}%</span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="item in [50, 75, 100, 125, 150]" :key="item" :command="item" :class="[scale === item ? 'scale-active' : '']">{{ item }}%</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            <i @click="() => editorScale('+')" class="iconfont icon-jiahao text-sm" :class="[scale === 150 ? 'cursor-not-allowed' : 'cursor-pointer']"></i>
+          </div>
           <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
           <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
             <i @click="() => changeEditorType('markdown')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
           </el-tooltip>
-          <Avatar
-            :src="currentUser?.avatar"
-            class="w-7 h-7 rounded-full cursor-pointer ml-6"
-          />
+          <Avatar :src="currentUser?.avatar" class="w-7 h-7 rounded-full cursor-pointer ml-6" />
         </div>
       </div>
     </div>
@@ -258,4 +293,9 @@ init();
   />
 </template>
 
-<style scope></style>
+<style scope>
+.scale-active {
+  color: var(--el-color-primary) !important;
+  background-color: var(--el-color-primary-light-9) !important;
+}
+</style>

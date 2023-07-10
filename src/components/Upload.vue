@@ -41,10 +41,10 @@ export default defineComponent({
 
 <template>
   <div class="w-full flex flex-col items-center mt-16" v-bind="$attrs">
-    <div @click="upload" class="border border-dashed w-4/5 h-40 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6">
-      <el-icon>
-        <Upload class="w-14 h-14 text-indigo-600" />
-      </el-icon>
+    <div @click="upload" class="border border-dashed w-4/5 h-60 rounded bg-gray-50 hover:border-indigo-500 cursor-pointer flex flex-col items-center p-6">
+      <i class="iconfont icon-upload text-6xl text-gray-400"></i>
+      <span class="text-gray-600 my-5">拖拽图片到此或点击上传</span>
+      <el-button type="primary">上传图片</el-button>
       <slot />
       <slot name="hint" />
     </div>

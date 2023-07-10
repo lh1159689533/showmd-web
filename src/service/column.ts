@@ -67,9 +67,7 @@ async function topColumn(id: number, action: 0 | 1): Promise<boolean> {
 }
 
 async function deleteById(id: number) {
-  const [err, res] = await http.request({ apiurl: 'column/deleteById', segment: { id } });
-  if (err && res.code !== 0) return false;
-  return true;
+  return await http.request({ apiurl: 'column/deleteById', segment: { id } });
 }
 
 async function findArticleList(id: number) {

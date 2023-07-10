@@ -8,6 +8,8 @@ const router = useRouter();
 const store = useStore();
 
 const currentUser = computed(() => store.getters.getUser);
+// 顶部导航菜单
+// const menuList = computed(() => store.getters.getMenus);
 
 const handleNoticeClick = (e) => {
   if (!currentUser.value?.id) {
@@ -16,6 +18,17 @@ const handleNoticeClick = (e) => {
     router.push(e.target.dataset?.link);
   }
 };
+
+// TODO-没有权限的菜单，直接url访问如何处理
+// watchEffect(() => {
+//   if (!menuList.value?.length) {
+//     return;
+//   }
+//   const menu = menuList.value.find((nav) => nav.path === route.path);
+//   if (!menu) {
+//     router.push('/404');
+//   }
+// });
 </script>
 
 <template>

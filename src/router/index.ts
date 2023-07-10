@@ -1,5 +1,6 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import auth from '@utils/auth';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -14,6 +15,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/blog',
         component: () => import('@views/study/Study.vue'),
+      },
+      {
+        path: '/tool',
+        component: () => import('@views/mytool/Mytool.vue'),
       },
       {
         path: '/published',
@@ -75,18 +80,11 @@ const router = createRouter({
   routes,
 });
 
-// 需要用户登录的页面
-const needAuthList = [
-  '/article/new',
-  '/article/edit',
-  '/creator'
-];
-
 router.beforeEach((to, from, next) => {
   const isLogin = Cookies.get('token');
   if (to.matched.length === 0) {  //如果未匹配到路由
     next('/404');
-  } else if (!isLogin && needAuthList.some(item => to.path.startsWith(item))) {
+  } else if (!isLogin && auth(to.path)) {
     next('/blog');
   } else {
     next();

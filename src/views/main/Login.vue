@@ -96,7 +96,8 @@ const changeType = () => {
     align-center
   >
     <template #header>
-      <img src="/api/lanis-logo.webp" alt="" />
+      <!-- <img src="/api/lanis-logo.webp" alt="" /> -->
+      <div class="lanis-logo"></div>
     </template>
     <div class="flex justify-between gap-6">
       <el-form ref="ruleFormRef" :model="userForm" :rules="publishRules" label-width="0" size="default" class="flex-1">

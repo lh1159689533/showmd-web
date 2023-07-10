@@ -1,6 +1,6 @@
 import axios from './axios';
 import * as apis from '../api';
-import { JsonData, RequestData, AxiosRequestConfig, Method, Response } from './types';
+import { JsonData, RequestData, AxiosRequestConfig, Method, Response, ResponseType } from './types';
 
 export * from './types';
 
@@ -20,10 +20,11 @@ interface RequestProps {
   data?: RequestData;
   segment?: JsonData;
   params?: JsonData;
+  responseType?: ResponseType;
 }
 
 function request(props: RequestProps): Promise<[Error, Response]> {
-  const { apiurl, data, params, headers, segment, prefix } = props;
+  const { apiurl, data, params, headers, segment, prefix, responseType } = props;
   let [method, url] = services.get(apiurl)?.split(' ') || [];
 
   if (segment) {
@@ -51,6 +52,10 @@ function request(props: RequestProps): Promise<[Error, Response]> {
 
   if (headers) {
     config.headers = headers;
+  }
+
+  if (responseType) {
+    config.responseType = responseType;
   }
 
   return new Promise<[Error | null, Response | null]>(resolve => {

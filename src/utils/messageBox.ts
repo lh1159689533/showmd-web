@@ -7,7 +7,7 @@ const CONFIRM_DEFAULT_OPTIONS = {
   closeOnClickModal: false
 };
 
-export function confirm(message: string, ...args) {
+export function confirm(message: any, ...args) {
   if (typeof args[0] === 'string') {
     messageBox.confirm(message, args[0], { ...CONFIRM_DEFAULT_OPTIONS, ...(args?.[1] ?? {}) });
   } else {

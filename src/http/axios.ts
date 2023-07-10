@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from "../router";
+import auth from '@utils/auth';
 
 import { AxiosResponse, AxiosInstance, AxiosRequestConfig, Response } from './types';
 
@@ -18,20 +19,6 @@ const instance: AxiosInstance = axios.create({
 instance.interceptors.request.use(
   (config: any) => {
     config.url = `${PREFIX}/${config.url}`;
-    
-    // if (config.url?.endsWith(".json")) {
-    //   config.url = IP + config.url.replace("/api", "");
-    // } else if (config.url?.endsWith("picture/upload")) {
-    //   config.headers = {
-    //     ...config.headers,
-    //     'Content-Type': 'multipart/form-data'
-    //   };
-    // } else {
-    //   config.headers = {
-    //     ...config.headers,
-    //     'Content-Type': 'application/json;charset=UTF-8'
-    //   };
-    // }
     return config;
   },
   (error) => {
@@ -46,9 +33,12 @@ instance.interceptors.response.use(
   (response: AxiosResponse<Response, AxiosRequestConfig>) => {
     if (response.status === 200) {
       let resp: Response = response.data;
-      if (resp.code === 401) {
+      if (resp.code === 401 && auth(router.currentRoute.value.path)) {
         router.push('/blog');
         return;
+      }
+      if (resp instanceof Blob) {
+        return response;
       }
       const contentType = response.headers['content-type'];
       if (contentType && contentType.indexOf('application/json') !== -1 && typeof resp === 'string') {
