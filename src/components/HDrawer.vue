@@ -17,12 +17,13 @@ const props = withDefaults(defineProps<IProps>(), {
   min: 200,
   max: 600,
 });
-const { min, max, ...others } = toRefs(props);
+const { min, max, size, title, beforeClose, direction } = toRefs(props);
 
 const drawerRef = ref();
 const dragCls = ref('');
 
 let timer = null;
+let time = null;
 
 watchEffect(() => {
   if (!props.visible) {
@@ -31,20 +32,28 @@ watchEffect(() => {
 });
 
 function mouseMove(e) {
-  if (timer) return;
-  const width = document.body.clientWidth - e.clientX;
+  let width = document.body.clientWidth - e.clientX;
   if (width <= min.value) {
     dragCls.value = 'min';
-    drawerRef.value.drawerRef.style.width = `${min}px`;
+    width = min.value;
   } else if (width >= max.value) {
     dragCls.value = 'max';
-    drawerRef.value.drawerRef.style.width = `${max}px`;
+    width = max.value;
+  }
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+  }
+  const curr = new Date().getTime();
+  if (curr - time > 50) {
+    drawerRef.value.drawerRef.style.width = `${width}px`;
+    time = curr;
   } else {
     timer = setTimeout(() => {
       drawerRef.value.drawerRef.style.width = `${width}px`;
       clearTimeout(timer);
       timer = null;
-    }, 50);
+    }, 20);
   }
 }
 function mouseUp() {
@@ -54,12 +63,16 @@ function mouseUp() {
 
 function mousedown(e) {
   e.preventDefault();
+  time = new Date().getTime();
   document.addEventListener('mousemove', mouseMove);
   document.addEventListener('mouseup', mouseUp);
 }
 </script>
 <template>
-  <el-drawer v-if="visible" :model-value="true" v-bind="others" ref="drawerRef">
+  <el-drawer
+    v-if="visible" :model-value="true" :title="title" :direction="direction" :before-close="beforeClose" ref="drawerRef" :size="size" :close-on-click-modal="false"
+    :destroy-on-close="true"
+  >
     <div @mousedown="mousedown" class="drag" :class="dragCls"></div>
     <slot></slot>
     <template #footer>
@@ -70,17 +83,21 @@ function mousedown(e) {
 <style>
 .drag {
   width: 5px;
-  height: calc(100% - 51px);
+  /* height: calc(100% - 51px); */
+  height: 100%;
   float: left;
   background-color: #fff;
   margin-left: -16px;
   cursor: ew-resize;
   top: 0;
+  left: 15px;
   position: absolute;
 }
+
 .drag.min {
   cursor: w-resize;
 }
+
 .drag.max {
   cursor: e-resize;
 }

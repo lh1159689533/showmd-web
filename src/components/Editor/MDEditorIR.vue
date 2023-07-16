@@ -350,6 +350,10 @@ defineExpose({
 </template>
 
 <style>
+#myEditorIR {
+  height: calc(100% - 65px);
+}
+
 #myEditorIR .vditor-toolbar__item {
   padding-right: 10px;
 }
@@ -376,6 +380,7 @@ defineExpose({
 #myEditorIR #myEditorContent .vditor-content {
   display: flex;
   overflow: auto;
+  height: calc(100% - 36px);
 }
 
 /* #myEditorIR #myEditorContent .vditor-content .vditor-preview {
@@ -417,7 +422,7 @@ defineExpose({
 .showmd .vditor-reset {
   width: 1380px !important;
   margin: 0 auto !important;
-  /* height: auto !important; */
+  height: auto !important;
   overflow-x: hidden;
 }
 

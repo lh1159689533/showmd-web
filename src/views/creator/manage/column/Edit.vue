@@ -99,15 +99,8 @@ const submitForm = async (formEl) => {
 
 <template>
   <h-drawer
-    :min="500"
-    :max="1200"
-    :visible="visible"
-    :title="columnForm?.id ? '修改专栏' : '新建专栏'"
-    direction="rtl"
-    :close-on-click-modal="false"
-    :before-close="() => $emit('close')"
-    :destroy-on-close="true"
-    :size="600"
+    :min="500" :max="1200" :visible="visible" :title="columnForm?.id ? '修改专栏' : '新建专栏'" direction="rtl"
+    :before-close="() => $emit('close')" :size="600"
   >
     <template #default>
       <el-form ref="ruleFormRef" :model="columnForm" :rules="publishRules" label-width="120px">
@@ -115,18 +108,15 @@ const submitForm = async (formEl) => {
           <el-input v-model="columnForm.name" placeholder="请输入专栏名称" />
         </el-form-item>
         <el-form-item label="专栏简介" prop="desc">
-          <el-input v-model="columnForm.desc" :rows="5" resize="none" maxlength="100" show-word-limit type="textarea" placeholder="请输入专栏简介..." />
+          <el-input
+            v-model="columnForm.desc" :rows="5" resize="none" maxlength="100" show-word-limit type="textarea"
+            placeholder="请输入专栏简介..."
+          />
         </el-form-item>
         <el-form-item label="专栏封面">
           <el-upload
-            :class="{ isUpload: columnForm.cover?.length }"
-            list-type="picture-card"
-            :on-change="handleChange"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :limit="1"
-            action="#"
-            :auto-upload="false"
+            :class="{ isUpload: columnForm.cover?.length }" list-type="picture-card" :on-change="handleChange"
+            :on-preview="handlePreview" :on-remove="handleRemove" :limit="1" action="#" :auto-upload="false"
             :file-list="columnForm.cover"
           >
             <div class="flex flex-col">
