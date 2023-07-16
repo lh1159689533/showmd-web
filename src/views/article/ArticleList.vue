@@ -14,15 +14,20 @@ const toDetail = (id: number) => {
 const toUserDetail = (id) => {
   console.log(id);
 };
+
+const onImgError = (item, e: Event) => {
+  item.hasCover = false;
+  (e?.target as HTMLElement)?.classList?.add?.('hidden');
+};
 </script>
 
 <template>
   <div id="articleList" class="article-list">
     <el-skeleton v-if="!data" :rows="3" animated class="p-6" />
-    <List v-else-if="data?.length" :data-list="data" @click="(item) => toDetail(item?.id)">
+    <List v-else-if="data?.length" :data-list="data" @click="(item) => toDetail(item?.id)" item-class="">
       <template #default="{ item }">
-        <div class="article-list-item flex justify-between text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50">
-          <div class="flex flex-col">
+        <div class="article-list-item flex text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50">
+          <div class="flex flex-col flex-1" :style="`max-width: ${!item?.hasCover ? '100%' : '80%'};`">
             <div class="article-list-item-header flex">
               <a @click="toUserDetail" class="pr-3 cursor-pointer hover:text-indigo-500">{{ item.user.name }}</a>
               <span class="modify-time relative px-3 flex items-center">{{ item.updateTime }}</span>
@@ -42,7 +47,7 @@ const toUserDetail = (id) => {
               <div class="desc truncate">{{ item.summary }}</div>
             </div>
           </div>
-          <img :src="item.cover" @error="(e) => (e?.target as HTMLElement)?.classList?.add?.('hidden')" style="width: 120px; height: 80px" />
+          <img :src="item.cover" @error="(e) => onImgError(item, e)" style="width: 120px; height: 80px" />
         </div>
       </template>
     </List>
