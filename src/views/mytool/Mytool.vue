@@ -67,7 +67,7 @@ const show = (tool: ITool) => {
 
 <style>
 .mytool-modal {
-  max-width: 72%;
+  max-width: 72% !important;
   height: 90%;
   padding: 0;
 }

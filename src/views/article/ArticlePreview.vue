@@ -162,15 +162,15 @@ init();
     <!-- 内容区 -->
     <div>
       <div class="px-10 bg-white rounded-t-md" style="width: calc(100% - 260px)">
-        <h1 class="title font-bold pt-4 text-3xl text-gray-600">{{ article?.name }}</h1>
-        <div class="flex mt-3 text-gray-400 items-center">
+        <h2 class="title font-bold pt-4 text-3xl text-gray-600">{{ article?.name }}</h2>
+        <div class="flex mt-5 text-gray-400 items-center">
           <Avatar :src="article?.user?.avatar" class="w-10 h-10 rounded-full mr-4 cursor-pointer" />
           <div class="flex flex-col">
-            <span class="user mr-6 text-xl text-gray-600 cursor-pointer">{{ article?.user?.name }}</span>
+            <span class="user mr-6 text-base text-gray-600 cursor-pointer">{{ article?.user?.name }}</span>
             <div>
-              <span class="createTime">{{ article?.updateTime ?? article?.createTime }}</span>
-              <span class="ml-6">阅读 {{ article?.readCount ?? 0 }}</span>
-              <a v-if="currentUser?.id === article?.user?.id" @click="() => toEdit()" class="ml-6 cursor-pointer text-indigo-500 hover:underline">编辑</a>
+              <span class="createTime text-sm">{{ article?.updateTime ?? article?.createTime }}</span>
+              <span class="ml-6 text-sm">阅读 {{ article?.readCount ?? 0 }}</span>
+              <a v-if="currentUser?.id === article?.user?.id" @click="() => toEdit()" class="ml-6 cursor-pointer text-sm text-indigo-500 hover:underline">编辑</a>
             </div>
           </div>
         </div>

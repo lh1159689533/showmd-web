@@ -182,7 +182,7 @@ onMounted(() => {
 <template>
   <div v-bind="$attrs" class="w-full flex flex-row">
     <div id="myPreviewEditorContainer" class="content bg-white rounded-b-md" style="width: calc(100% - 260px)">
-      <div id="myPreviewEditor" class="showmd px-12 pb-10 mt-4" style="min-height: 1140px" />
+      <div id="myPreviewEditor" class="showmd px-12 pb-10 mt-2" style="min-height: 1140px" />
     </div>
     <div class="rightSider relative w-1/4" style="width: 260px; padding-left: 20px">
       <slot :catalog-list="outlineNodeList"></slot>

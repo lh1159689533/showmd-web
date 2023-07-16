@@ -42,7 +42,7 @@ const loadMoreReply = (commentId) => {
     </div>
   </div>
   <div v-if="data?.count" class="comment-list-box">
-    <h1 class="text-lg my-6">全部评论 {{ data.count }}</h1>
+    <h2 class="text-lg my-6 font-bold">全部评论 {{ data.count }}</h2>
     <List class="comment-list" :data-list="data.list" item-class="mb-8">
       <template #default="{ item }">
         <Item :data="{...item, article: data?.article }" type="comment">
