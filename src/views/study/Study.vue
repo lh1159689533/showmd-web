@@ -36,7 +36,8 @@ async function getArticleList(category, subCategory, sort?) {
   findArticleList(params).then((result) => {
     articleList.value = result?.map((item) => ({
       ...item,
-      tags: [{ 'front-dev': '前端', 'backend-dev': '后端' }[item.category], ...item.tags.split(',')],
+      // tags: [{ 'front-dev': '前端', 'backend-dev': '后端' }[item.category], ...item.tags.split(',')],
+      tags: [item.category, ...item.tags.split(',')],
       updateTime: dayjs(item.updateTime).fromNow(),
     }));
   });

@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+import { defineProps, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 defineProps<{ data: any[] }>();
 
 const router = useRouter();
+const categorys = computed(() => store.getters.getCategoryList);
 
 const toDetail = (id: number) => {
   const { href } = router.resolve(`/article/preview/${id}`);
@@ -33,7 +37,7 @@ const onImgError = (item, e: Event) => {
               <span class="modify-time relative px-3 flex items-center">{{ item.updateTime }}</span>
               <span class="tag-list pl-3 flex items-center">
                 <a
-                  v-for="(tag, index) in item.tags"
+                  v-for="(tag, index) in item.tags?.map(tag => categorys?.find(c => c.key === tag)?.title)"
                   :key="`${tag}-${index}`"
                   class="cursor-pointer hover:text-indigo-500 px-2 flex items-center"
                   :class="[index !== item.tags.length - 1 ? 'delimiter relative' : '']"

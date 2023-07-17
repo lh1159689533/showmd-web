@@ -1,10 +1,12 @@
 import { findUserInfo } from '@service/user';
 import { listMenu } from '@service/user';
+import { listCategory } from '@service/category';
 
 const state = {
   user: {},
   isShowLogin: false, // 是否展示登录窗
-  menus: []
+  menus: [],
+  categoryList: null
 };
 
 const getters = {
@@ -16,7 +18,10 @@ const getters = {
   },
   isShowLogin(state) {
     return state.isShowLogin;
-  }
+  },
+  getCategoryList(state) {
+    return state.categoryList;
+  },
 };
 
 const mutations = {
@@ -31,7 +36,10 @@ const mutations = {
   },
   showLogin(state) {
     state.isShowLogin = true;
-  }
+  },
+  categoryChanged(state, categorys) {
+    state.categoryList = categorys;
+  },
 };
 
 const actions = {
@@ -47,6 +55,14 @@ const actions = {
       ...m,
       key: m.title,
     })));
+  },
+  async listCategory({ commit, rootState }) {
+    if (rootState.user.categoryList?.length) {
+      return rootState.user.categoryList;
+    }
+    const categorys = await listCategory();
+    commit('categoryChanged', categorys);
+    return categorys;
   }
 };
 
