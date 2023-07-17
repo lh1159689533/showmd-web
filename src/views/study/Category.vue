@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { defineEmits, ref } from 'vue';
-
-import { listCategory } from '@service/category';
+import { useStore } from 'vuex';
 
 interface IEmits {
   (e: 'change', activeCategory?: string, activeSubCategory?: string ): void;
 }
 
 const emit = defineEmits<IEmits>();
+
+const store = useStore();
 
 const categoryAllList = ref([]); // 全部分类
 const categoryList = ref([]); // 分类
@@ -19,7 +20,8 @@ const isShowSubCategory = ref(false); // 是否显示子分类
 const hideSubCategoryTimer = ref(null);
 
 async function init() {
-  categoryAllList.value = await listCategory();
+  // categoryAllList.value = await listCategory();
+  categoryAllList.value = await store.dispatch('listCategory');
   categoryList.value = categoryAllList.value
     .filter((c) => c.parent === '0')
     .map((item) => {

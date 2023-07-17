@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, reactive, ref, watchEffect } from 'vue';
-import { listCategory } from '@service/category';
+import { useStore } from 'vuex';
 
 interface IPublishForm {
   category?: string;
@@ -12,6 +12,8 @@ interface IPublishForm {
 
 const props = defineProps<{ initValue: IPublishForm; placement?: 'top-right' | 'bottom-right' }>();
 const emit = defineEmits<{ (e: 'publish', value: IPublishForm): void; (e: 'close'): void }>();
+
+const store = useStore();
 
 const cloumnList = ref([]);
 const categoryAllList = ref([]);
@@ -31,7 +33,7 @@ const publishRules = reactive({
 });
 
 async function init() {
-  categoryAllList.value = await listCategory();
+  categoryAllList.value = await store.dispatch('listCategory');
   categoryList.value = categoryAllList.value.filter((c) => c.parent === '0' && c.key !== 'all');
   subCategoryList.value = categoryAllList.value.filter((c) => c.parent !== '0');
 }
