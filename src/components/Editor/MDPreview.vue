@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { defineProps, toRefs, ref, onMounted } from 'vue';
 import Vditor from 'vditor/dist/method.min';
+import gsap from 'gsap';
 // import 'vditor/dist/index.css';
-import { querySelectorAll, getElementById, getBoundingClientRect } from './domUtil';
+import { querySelectorAll, getElementById, getBoundingClientRect, querySelector, createElement } from './domUtil';
 
 interface User {
   name: string;
@@ -32,7 +33,6 @@ const { data } = toRefs<Props>(props);
 const outlineNodeList = ref([]); // 目录对象
 
 function initPreview() {
-  let count = 0;
   Vditor.preview(getElementById('myPreviewEditor'), data.value?.content, {
     hljs: {
       style: data.value?.codeTheme ?? 'github',
@@ -60,11 +60,10 @@ function initPreview() {
         if (entering) {
           return [
             `<div class="code-block">
-                  <input type='checkbox' id='codeSuofang${count}' class='code-suofang-checkbox' style='display: none' />
-                  <div class='code-block-menus'>
-                    <label></label><label for='codeSuofang${count++}'></label><label></label>
-                  </div>
-                  <div class='code-content'>`,
+              <div class='code-block-menus'>
+                <i></i><i title='最小化' class='code-suofang-checkbox'></i><i title='全屏' class='code-fullscreen-checkbox'></i>
+              </div>
+              <div class='code-content'>`,
             // eslint-disable-next-line
             Lute.WalkContinue,
           ];
@@ -80,8 +79,123 @@ function initPreview() {
       outlineRender();
       // 预览图片的处理
       previewImg();
+      // 代码块缩放
+      codeblockZoom();
     },
   });
+}
+
+/**
+ * 代码块支持全屏、全屏后的关闭、最小化、退出全屏
+ */
+function codeblockZoom() {
+  // 全屏及全屏后的操作
+  const fullscreenDom = querySelectorAll(getElementById('myPreviewEditor'), '.code-fullscreen-checkbox');
+  fullscreenDom.forEach(dom => dom.addEventListener('click', function (e) {
+    const target = (e.target as HTMLInputElement);
+    const codeBlock = target.closest('.code-block');
+    const { top, left, width, height } = getBoundingClientRect(codeBlock);
+    const pre = querySelector(codeBlock, '.code-content pre');
+    const container = createElement('div', {
+      class: 'showmd',
+      style: `position: fixed; top: ${top}px; left: ${left}px; z-index: 10000; width: ${width}px; height: ${height}px; background-color: #fff`
+    },
+      createElement('div', {
+        class: 'code-block', style: 'height: 100%; margin: 0; border-radiu: 0;'
+      },
+        createElement('div', { class: 'code-block-menus' },
+          createElement('i', {
+            style: 'width: 10px; height: 10px; background-color: #F87171; border-radius: 50%; cursor: pointer;',
+            title: '关闭',
+            onclick() {
+              gsap.to(container, {
+                scale: 2,
+                opacity: 0,
+                transformOrigin: '50vw 50vh',
+                onStart() {
+                  document.body.classList.remove('overflow-hidden');
+                },
+                onComplete() {
+                  document.body.removeChild(container);
+                }
+              });
+            }
+          }),
+          createElement('i', {
+            style: 'width: 10px; height: 10px; background-color: #FBBF24; border-radius: 50%; cursor: pointer;',
+            title: '最小化',
+            onclick() {
+              gsap.to(container, {
+                width: `${width}px`,
+                height: 0,
+                top: `${top}px`,
+                left: `${left}px`,
+                overflow: 'hidden',
+                onStart() {
+                  document.body.classList.remove('overflow-hidden');
+                },
+                onComplete() {
+                  document.body.removeChild(container);
+                }
+              });
+            }
+          }),
+          createElement('i', {
+            style: 'width: 10px; height: 10px; background-color: #34D399; border-radius: 50%; cursor: pointer;',
+            title: '退出全屏',
+            onclick() {
+              gsap.to(container, {
+                width: `${width}px`,
+                height: `${height}px`,
+                top: `${top}px`,
+                left: `${left}px`,
+                transformOrigin: '50vw 50vh',
+                onStart() {
+                  document.body.classList.remove('overflow-hidden');
+                },
+                onComplete() {
+                  document.body.removeChild(container);
+                }
+              });
+            }
+          }),
+        ),
+        createElement(pre.cloneNode(true), {
+          onmouseover: function () {
+            querySelector(this, '.vditor-copy').style.display = 'block';
+          },
+          onmouseout: function () {
+            querySelector(this, '.vditor-copy').style.display = 'none';
+          },
+        })
+      ));
+    document.body.appendChild(container);
+    gsap.to(container, {
+      width: '100vw',
+      height: '100vh',
+      top: 0,
+      left: 0,
+      transformOrigin: '50vw 50vh',
+      onComplete() {
+        document.body.classList.add('overflow-hidden');
+      }
+    });
+  }));
+
+  // 收起/展开代码
+  const suofangDom = querySelectorAll(getElementById('myPreviewEditor'), '.code-suofang-checkbox');
+  suofangDom.forEach(dom => dom.addEventListener('click', function (e) {
+    const target = (e.target as HTMLInputElement);
+    const codeBlock = target.closest('.code-block');
+    const { height } = getBoundingClientRect(codeBlock);
+    const originHeight = codeBlock.getAttribute('origin-height');
+    gsap.to(codeBlock, {
+      height: originHeight ?? 20,
+      onComplete() {
+        codeBlock.setAttribute('origin-height', `${height}px`);
+      }
+    });
+  }));
 }
 
 /**
@@ -97,7 +211,6 @@ function previewImg() {
       const scrollTop = document.documentElement.scrollTop;
       const { innerWidth, innerHeight } = window;
       const duration = 300;
-      // const scale = Math.min(innerWidth / width, innerHeight / height) - 0.5;
       const scale = Math.min(innerWidth / width, innerHeight / height, 2) - 0.5;
       // 添加遮罩层
       const imgWrapper = document.createElement('div');
@@ -151,7 +264,7 @@ function previewImg() {
 function codeCopy() {
   const editorNode = getElementById('myPreviewEditor');
   const copyNodeList = querySelectorAll(editorNode, '.vditor-copy>span[aria-label="复制"]');
-  [].slice.call(copyNodeList).map((node) => {
+  copyNodeList.map((node) => {
     node?.addEventListener('click', function () {
       this.setAttribute('aria-label', '已复制');
     });

@@ -4,7 +4,9 @@
  * @param className className
  */
 function getNodeByClassName(nodeList: Element[], className: string): Element {
-  return nodeList?.length ? nodeList.find((node) => node.classList.value.indexOf(className) !== -1) : null;
+  return nodeList?.length
+    ? nodeList.find((node) => node.classList.value.indexOf(className) !== -1)
+    : null;
 }
 
 /**
@@ -13,8 +15,14 @@ function getNodeByClassName(nodeList: Element[], className: string): Element {
  * @param attributeName 属性名
  * @param attributeValue 属性值
  */
-function getNodeByAttribute(nodeList: Element[], attributeName: string, attributeValue: string | number): Element {
-  return nodeList?.find((node) => node.getAttribute(attributeName) === attributeValue);
+function getNodeByAttribute(
+  nodeList: Element[],
+  attributeName: string,
+  attributeValue: string | number
+): Element {
+  return nodeList?.find(
+    (node) => node.getAttribute(attributeName) === attributeValue
+  );
 }
 
 /**
@@ -48,7 +56,10 @@ function getElementById(id: string): HTMLElement {
  * @param node 目标节点
  * @param selector css选择器
  */
-function querySelector(node: Element | Document = document, selector: string): HTMLElement {
+function querySelector(
+  node: Element | Document = document,
+  selector: string
+): HTMLElement {
   return node?.querySelector(selector);
 }
 
@@ -57,7 +68,10 @@ function querySelector(node: Element | Document = document, selector: string): H
  * @param node 目标节点
  * @param selector css选择器
  */
-function querySelectorAll(node: Element | Document = document, selector: string): HTMLElement[] {
+function querySelectorAll(
+  node: Element | Document = document,
+  selector: string
+): HTMLElement[] {
   return toArray<HTMLElement>(node?.querySelectorAll(selector));
 }
 
@@ -93,6 +107,39 @@ function toArray<T>(arrayLike): T[] {
   return arrayLike?.length ? [].slice.call(arrayLike) : [];
 }
 
+/**
+ * 创建dom元素
+ * @param ele 元素标签名/元素
+ * @param props 属性
+ * @param children 子元素
+ */
+function createElement(
+  ele: string | Node,
+  props: { [key: string]: string | ((e?: any) => void) },
+  ...children: Node[]
+) {
+  let dom: HTMLElement = null;
+  if (typeof ele === 'string') {
+    dom = document.createElement(ele);
+  } else {
+    dom = ele as HTMLElement;
+  }
+  for (const key in props) {
+    const prop = props[key];
+    if (typeof prop === 'string') {
+      dom.setAttribute(key, prop);
+    } else {
+      dom[key] = prop; // 绑定函数
+    }
+  }
+  if (children?.length) {
+    children.forEach((child) => {
+      dom.appendChild(child);
+    });
+  }
+  return dom;
+}
+
 export {
   getNodeByClassName,
   getNodeByAttribute,
@@ -103,4 +150,5 @@ export {
   querySelectorAll,
   getComputedStyleOf,
   getBoundingClientRect,
+  createElement,
 };
