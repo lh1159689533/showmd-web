@@ -114,15 +114,8 @@ const onSortEnd = () => {
 
 <template>
   <h-drawer
-    :min="500"
-    :max="1200"
-    :visible="visible"
-    :title="column?.name"
-    direction="rtl"
-    :close-on-click-modal="false"
-    :before-close="onBeforeClose"
-    destroy-on-close
-    :size="600"
+    :min="500" :max="1200" :visible="visible" :title="column?.name" direction="rtl" :close-on-click-modal="false"
+    :before-close="onBeforeClose" destroy-on-close :size="600"
   >
     <template #default>
       <div class="flex items-center justify-between pl-3 mb-2">
@@ -139,32 +132,31 @@ const onSortEnd = () => {
         </div>
       </div>
       <vuedraggable
-        v-if="column?.articles?.length"
-        v-model="column.articles"
-        item-key="id"
-        :component-data="{
+        v-if="column?.articles?.length" v-model="column.articles" item-key="id" :component-data="{
           type: 'transition-group',
           name: !drag ? 'flip-list' : null,
-        }"
-        @start="drag = true"
-        @end="onSortEnd"
-        v-bind="dragOptions"
+        }" @start="drag = true" @end="onSortEnd" v-bind="dragOptions"
       >
         <template #item="{ element: article }">
-          <div class="article-list-item flex gap-8 items-center cursor-move text-sm text-gray-800 px-3 py-2 border-b hover:bg-gray-50">
+          <div
+            class="article-list-item flex gap-8 items-center cursor-move text-sm px-3 py-2 border-b hover:bg-gray-50 text-gray-800 dark:hover:bg-zinc-800 dark:border-zinc-800"
+          >
             <el-checkbox :model-value="article?.isSel" @change="(isSel) => selectionChange(article?.id, isSel)" />
-            <div class="title text-sm text-gray-500 flex-1">
+            <div class="title text-sm flex-1 text-gray-500 dark:text-zinc-300">
               {{ article.name }}
             </div>
             <el-button link size="small" type="danger" @click="() => remove([article])">移除</el-button>
           </div>
         </template>
       </vuedraggable>
-      <div v-else class="text-sm text-gray-500 text-center pt-4">暂无收录文章</div>
+      <div v-else class="text-sm text-center pt-4 text-gray-500 dark:text-zinc-300">暂无收录文章</div>
     </template>
   </h-drawer>
   <AddArticle v-if="showDialog" :id="id" @close="showDialog = false" @callback="addSuccess" />
-  <MoveArticle v-if="showMoveDialog" :column-id="id" :article-ids="selectionArticles.map((item) => item.id)" @close="showMoveDialog = false" @callback="addSuccess" />
+  <MoveArticle
+    v-if="showMoveDialog" :column-id="id" :article-ids="selectionArticles.map((item) => item.id)"
+    @close="showMoveDialog = false" @callback="addSuccess"
+  />
 </template>
 
 <style>

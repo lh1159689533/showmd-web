@@ -54,19 +54,19 @@ getArticleList(filters.category, filters.subCategory, currentSort.value);
 </script>
 
 <template>
-  <div id="study">
+  <div id="blog">
     <nav
-      class="fixed w-full h-12 left-0 z-1000 shadow bg-white" :class="[isShowHeader ? 'top-12' : 'top-0']"
+      class="fixed w-full h-12 left-0 z-1000 shadow bg-white dark:bg-zinc-900" :class="[isShowHeader ? 'top-12' : 'top-0']"
       style="transition: top 500ms"
     >
       <Category @change="handleCategoryChange" />
     </nav>
     <section class="pt-20 relative">
       <div class="relative pr-8" style="width: 78%">
-        <div class="content bg-white">
+        <div class="content bg-white dark:bg-zinc-900">
           <div class="pl-6 py-3 text-sm text-indigo-500">
             <span>{{ filters.category?.title || '综合' }}</span>
-            <span class="separator px-2 text-gray-300">/</span>
+            <span class="separator px-2 text-gray-300 dark:text-zinc-500">/</span>
             <span>{{ filters.subCategory?.title || '全部' }}</span>
           </div>
           <ArticleList :data="articleList" />
@@ -82,21 +82,21 @@ getArticleList(filters.category, filters.subCategory, currentSort.value);
 </template>
 
 <style scoped>
-#study {
+#blog {
   max-width: 1380px;
   margin: 0 auto;
 }
 
-#study .content {
+#blog .content {
   box-shadow: 1px 1px 10px -8px #333;
 }
 
 @media (max-width: 960px) {
-  #study .content {
+  #blog .content {
     width: 100% !important;
   }
 
-  #study .content-aside {
+  #blog .content-aside {
     display: none;
   }
 }

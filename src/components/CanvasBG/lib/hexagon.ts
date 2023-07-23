@@ -31,7 +31,9 @@ function particle() {
   // H：0(或360)表示红色，120表示绿色，240表示蓝色，也可取其他数值来指定颜色。取值为：0 - 360。
   // S：取值为：0.0% - 100.0%；0% 意味着灰色，而 100% 是全彩
   // L：取值为：0.0% - 100.0%；0% 是黑色，100% 是白色。
-  this.color = 'hsl(' + ((Date.now() / 240.0) % 360.0) + ', 84%, 67%)';
+  // this.color = 'hsl(' + ((Date.now() / 240.0) % 360.0) + ', 84%, 64%)';
+  // this.color = 'hsl(' + (Math.random() * 360) + ', 84%, 64%)';
+  this.color = 'hsl(' + (Math.random() * 360) + ',' + (Math.random() * 100) + '%,' + (Math.random() * 100) + '%)';
 }
 
 particle.prototype.updateAndDraw = function () {
@@ -53,8 +55,6 @@ particle.prototype.updateAndDraw = function () {
   // 画圆
   ctx.arc(width / 2.0 + this.x, height / 2.0 + this.y, settings.radius, 0, 6.3);
 
-  // ctx.shadowBlur = settings.radius / 10;
-  // ctx.shadowColor = this.color;
   ctx.fill();
 
   this.x += this.dir[0] * settings.speed;
@@ -66,8 +66,7 @@ function updateAndDraw() {
 
   ctx.fillStyle = 'rgb(55, 65, 81, 0.03)';
   ctx.fillRect(0, 0, width, height);
-  // ctx.globalCompositeOperation = 'lighter';
-  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalCompositeOperation = 'hard-light';
 
   for (let i = particles.length - 1; i >= 0; i--) {
     // 移动粒子
@@ -95,7 +94,7 @@ function onResize() {
   (width = canvas.width = window.innerWidth), (height = canvas.height = window.innerHeight);
 
   // particles.length = 0; // 重加载的时候是否需要清除粒子树
-  ctx.fillStyle = '#374151';
+  ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, width, height);
 }
 
@@ -106,7 +105,7 @@ function init() {
   width = canvas.width = window.innerWidth;
   height = canvas.height = window.innerHeight;
 
-  ctx.fillStyle = '#374151';
+  ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, width, height);
 
   window.onresize = onResize;

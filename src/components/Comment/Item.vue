@@ -176,9 +176,9 @@ const isDigg = computed(() => data.value.diggUsers?.split(',')?.includes(`${curr
       <div @mouseenter="hoverItem = true" @mouseleave="hoverItem = false" class="content-section">
         <div class="user-box flex items-center">
           <div class="user flex-1">
-            <span class="text-black cursor-pointer" style="font-size: 15px">{{ data.user.name }}</span>
-            <span v-if="isAuthor" class="ml-1 text-indigo-500 bg-indigo-100 text-xs px-1">作者</span>
-            <span v-if="isMyself" class="ml-1 text-block bg-gray-100 text-xs px-1">本人</span>
+            <span class="cursor-pointer text-black dark:text-zinc-300" style="font-size: 15px">{{ data.user.name }}</span>
+            <span v-if="isAuthor" class="ml-1 text-indigo-500 bg-indigo-100 dark:bg-zinc-700 text-xs px-1">作者</span>
+            <span v-if="isMyself" class="ml-1 text-xs px-1 text-block bg-gray-100 dark:bg-zinc-700 dark:text-zinc-400">本人</span>
           </div>
           <span class="time">{{ formatDate(data.createTime) }}</span>
         </div>

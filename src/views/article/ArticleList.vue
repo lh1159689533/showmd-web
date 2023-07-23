@@ -30,10 +30,10 @@ const onImgError = (item, e: Event) => {
     <el-skeleton v-if="!data" :rows="3" animated class="p-6" />
     <List v-else-if="data?.length" :data-list="data" @click="(item) => toDetail(item?.id)" item-class="">
       <template #default="{ item }">
-        <div class="article-list-item flex text-sm text-gray-800 px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50">
+        <div class="article-list-item flex text-sm px-6 pt-4 pb-4 cursor-pointer border-t dark:border-zinc-800 text-gray-800 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800">
           <div class="flex flex-col flex-1" :style="`max-width: ${!item?.hasCover ? '100%' : '80%'};`">
             <div class="article-list-item-header flex">
-              <a @click="toUserDetail" class="pr-3 cursor-pointer hover:text-indigo-500">{{ item.user.name }}</a>
+              <a @click="toUserDetail" class="pr-3 cursor-pointer hover:text-indigo-500 dark:text-zinc-300 dark:hover:text-indigo-500">{{ item.user.name }}</a>
               <span class="modify-time relative px-3 flex items-center">{{ item.updateTime }}</span>
               <span class="tag-list pl-3 flex items-center">
                 <a
@@ -47,7 +47,7 @@ const onImgError = (item, e: Event) => {
               </span>
             </div>
             <div class="article-list-item-content flex flex-col mt-3">
-              <div class="title text-lg mb-3 text-gray-900">{{ item.name }}</div>
+              <div class="title text-lg mb-3 text-gray-900 dark:text-zinc-300">{{ item.name }}</div>
               <div class="desc truncate">{{ item.summary }}</div>
             </div>
           </div>
@@ -70,6 +70,7 @@ const onImgError = (item, e: Event) => {
   width: 1px;
   height: 70%;
   background-color: #dddddd;
+  @apply bg-gray-300 dark:bg-zinc-600;
 }
 
 .article-list .article-list-item .article-list-item-header .modify-time::before {

@@ -13,18 +13,58 @@
   --el-color-primary-light-7: rgba(79, 70, 229, 0.3) !important;
   --el-color-primary-light-8: rgba(79, 70, 229, 0.2) !important;
   --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
+
+  --showmd-bg-color-primary: #fff;
+  --showmd-bg-color-hover: #27272a;
+  --showmd-text-color-primary: #4b5563; /*600*/
+  --showmd-text-color-weak: #9ca3af; /*400*/
+  --showmd-border-color: #e5e7eb; /*200*/
+}
+
+:root.dark {
+  /* richtext暗黑样式 start */
+  --w-e-textarea-bg-color: #18181b;
+  --w-e-textarea-color: #d4d4d8;
+  --w-e-textarea-slight-bg-color: #27272a;
+  --w-e-textarea-slight-border-color: #27272a;
+  --w-e-textarea-selected-border-color: #71717a;
+  /* richtext暗黑样式 end */
+
+  --showmd-bg-color-primary: #18181b;
+  /*900*/
+  --showmd-bg-color-hover: #27272a;
+  /*800*/
+  --showmd-text-color-primary: #d4d4d8;
+  /*300*/
+  --showmd-text-color-weak: #71717a;
+  /*500*/
+  --showmd-border-color: #27272a;
+  /*800*/
 }
 
 html,
 body {
-  height: 100%;
-  background-color: #f4f5f5;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  overflow-y: scroll;
+  @apply bg-gray-100;
+}
+
+.dark body {
+  @apply bg-black;
 }
 
 #app {
   height: 100%;
-  background-color: #f4f5f5;
   position: relative;
+  overflow-y: hidden;
+}
+
+.dark .w-e-text-container pre>code {
+  text-shadow: 0 1px #000;
 }
 
 /** element-ui样式重写 start */
@@ -51,6 +91,23 @@ body {
   --el-button-disabled-bg-color: rgba(79, 70, 229, 0.5) !important;
   --el-button-disabled-border-color: transparent !important;
 }
+
+.el-popper.is-customized {
+  padding: 6px 12px;
+  @apply border;
+  background-color: var(--showmd-bg-color-primary);
+  color: var(--showmd-text-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
+.el-popper.is-customized .el-popper__arrow::before {
+  @apply border;
+  right: 0;
+  background-color: var(--showmd-bg-color-primary);
+  color: var(--showmd-text-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
 /** element-ui样式重写 end */
 
 /** windicss样式重写 start */
@@ -63,6 +120,7 @@ h3 {
   font-size: 1.17em !important;
   font-weight: bold !important;
 }
+
 /** windicss样式重写 end */
 
 /* 公共css start */
@@ -81,7 +139,8 @@ h3 {
   align-items: center;
 }
 
-.delimiter>span:last-child::before, .delimiter>span:not(:first-child):not(:last-child)::before {
+.delimiter>span:last-child::before,
+.delimiter>span:not(:first-child):not(:last-child)::before {
   content: ' ';
   position: absolute;
   display: block;
@@ -93,7 +152,8 @@ h3 {
   color: #000;
 }
 
-.delimiter>span:first-child::after, .delimiter>span:not(:first-child):not(:last-child)::after {
+.delimiter>span:first-child::after,
+.delimiter>span:not(:first-child):not(:last-child)::after {
   content: ' ';
   position: absolute;
   display: block;
@@ -104,6 +164,7 @@ h3 {
   right: -10px;
   color: #000;
 }
+
 /* 公共css end */
 @media screen and (max-width: 1065px) {
   .container {
@@ -142,18 +203,41 @@ h3 {
 
 ::-webkit-scrollbar-thumb {
   /* 滚动条上的滚动滑块 */
-  background-color: #e4e6eb;
   outline: none;
   border-radius: 2px;
+  @apply bg-gray-200;
 }
 
 ::-webkit-scrollbar-track-piece {
   /* 滚动条没有滑块的轨道部分 */
-  background: transparent;
+  @apply bg-gray-100;
 }
 
 ::-webkit-scrollbar-track {
   box-shadow: none;
   border-radius: 2px;
 }
-</style>
+
+.dark ::-webkit-scrollbar-thumb {
+  /* 滚动条上的滚动滑块 */
+  @apply bg-zinc-800;
+}
+
+.dark ::-webkit-scrollbar-track-piece {
+  /* 滚动条没有滑块的轨道部分 */
+  @apply bg-zinc-900;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999;
+}</style>

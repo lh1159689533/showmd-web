@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/blog',
-        component: () => import('@views/study/Study.vue'),
+        component: () => import('@views/blog/Blog.vue'),
       },
       {
         path: '/tool',

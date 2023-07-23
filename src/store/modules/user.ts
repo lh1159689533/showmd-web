@@ -6,7 +6,7 @@ const state = {
   user: {},
   isShowLogin: false, // 是否展示登录窗
   menus: [],
-  categoryList: null
+  categoryList: null,
 };
 
 const getters = {

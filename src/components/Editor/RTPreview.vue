@@ -34,7 +34,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="px-16 bg-white rounded-b-md" style="width: calc(100% - 260px)">
+  <div class="px-16 rounded-b-md bg-white dark:bg-zinc-900" style="width: calc(100% - 260px)">
     <Editor @on-created="handleCreate" :default-config="editorConfig" />
   </div>
   <div class="rightSider absolute top-0 right-0" style="width: 260px; padding-left: 20px">

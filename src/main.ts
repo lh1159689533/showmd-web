@@ -5,6 +5,7 @@ import { store } from './store'
 import Components from '@plugins/Components';
 import 'virtual:windi.css';
 // import 'element-plus/theme-chalk/index.css';
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'animate.css';
 
 import dayjs from 'dayjs';

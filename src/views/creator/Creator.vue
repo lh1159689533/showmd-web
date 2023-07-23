@@ -17,7 +17,7 @@ beforeEach((to, from) => {
       <div class="w-52 h-full">
         <Sider />
       </div>
-      <div class="flex-1 bg-white overflow-hidden">
+      <div class="flex-1 overflow-hidden bg-white dark:bg-zinc-900">
         <router-view />
       </div>
     </div>

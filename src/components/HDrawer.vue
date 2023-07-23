@@ -70,8 +70,8 @@ function mousedown(e) {
 </script>
 <template>
   <el-drawer
-    v-if="visible" :model-value="true" :title="title" :direction="direction" :before-close="beforeClose" ref="drawerRef" :size="size" :close-on-click-modal="false"
-    :destroy-on-close="true"
+    v-if="visible" :model-value="true" :title="title" :direction="direction" :before-close="beforeClose"
+    ref="drawerRef" :size="size" :close-on-click-modal="false" :destroy-on-close="true"
   >
     <div @mousedown="mousedown" class="drag" :class="dragCls"></div>
     <slot></slot>
@@ -92,6 +92,14 @@ function mousedown(e) {
   top: 0;
   left: 15px;
   position: absolute;
+}
+
+.dark .el-drawer__title {
+  @apply dark:text-zinc-300;
+}
+
+.dark .drag {
+  @apply bg-zinc-900;
 }
 
 .drag.min {

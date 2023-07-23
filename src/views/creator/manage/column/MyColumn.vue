@@ -1,15 +1,11 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue';
-// import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import Edit from './Edit.vue';
 import ManageArticle from './ManageArticle.vue';
 import { findListByUserId, topColumn, deleteById } from '@service/column';
 import message from '@src/utils/message';
 import { confirm } from '@utils/messageBox';
-
-// const store = useStore();
-// const user = computed(() => store.getters.getUser);
 
 const router = useRouter();
 const route = useRoute();
@@ -145,10 +141,6 @@ const toDetail = (id) => {
   window.open(href, '_blank');
 };
 
-// watch(user, () => {
-//   findColumnList();
-// });
-
 watchEffect(() => {
   // 其他地方跳转且需要打开操作抽屉
   if (route.query?.columnId) {
@@ -175,29 +167,42 @@ findColumnList();
     <el-skeleton v-if="!columnList" :rows="3" animated class="p-6" />
     <List v-else-if="columnList?.length" :data-list="columnList">
       <template #default="{ item: column }">
-        <div class="flex gap-8 border-t px-6 py-4 hover:bg-gray-50">
+        <div class="flex gap-8 px-6 py-4 border-t hover:bg-gray-50 dark:hover:bg-zinc-800 dark:border-zinc-800">
           <img
-            :src="`${column.cover}?t=${new Date(column.updateTime).getTime()}`"
-            class="w-36 h-24 cursor-pointer"
+            :src="`${column.cover}?t=${new Date(column.updateTime).getTime()}`" class="w-36 h-24 cursor-pointer"
             @error="(e) => (e.target as HTMLImageElement).src = '/img/column-default-cover.webp'"
             @click="() => toDetail(column?.id)"
           />
           <div class="detail flex-1 flex flex-col gap-2">
             <div class="title flex items-center gap-2">
-              <span class="attrs text-indigo-500 text-sm bg-indigo-100 px-1" style="border-radius: 1px">{{ column.isPrivate ? '私有' : '公开' }}</span>
-              <span v-if="column.isTop === 1" class="text-indigo-500 text-sm bg-indigo-100 flex items-center px-1" style="border-radius: 1px">
+              <span
+                class="attrs text-sm px-1 bg-indigo-100 text-indigo-500 dark:bg-zinc-800"
+                style="border-radius: 1px"
+              >{{ column.isPrivate ? '私有' : '公开' }}</span>
+              <span
+                v-if="column.isTop === 1"
+                class="flex items-center px-1 text-sm text-indigo-500 bg-indigo-100 dark:bg-zinc-800"
+                style="border-radius: 1px"
+              >
                 <i class="iconfont icon-top"></i>置顶
               </span>
-              <span @click="() => toDetail(column?.id)" class="text-xl cursor-pointer hover:text-indigo-600 flex-1">{{ column.name }}</span>
+              <span
+                @click="() => toDetail(column?.id)"
+                class="text-xl cursor-pointer flex-1 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-600"
+              >{{
+                column.name }}</span>
             </div>
-            <span class="desc text-gray-600 text-sm">{{ column.desc }}</span>
+            <span class="desc text-sm text-gray-600 dark:text-zinc-500">{{ column.desc }}</span>
             <div class="footer flex text-sm">
-              <div class="flex text-gray-500 delimiter flex-1">
+              <div class="flex delimiter flex-1 text-gray-500 dark:text-zinc-500">
                 <span class="create-time">{{ column.createTime }}</span>
                 <span class="article-num">文章数 {{ column.articleCnt }}</span>
                 <span class="article-num">订阅数 {{ column.subscribeCnt }}</span>
               </div>
-              <List :data-list="oprateList" class="oprate flex gap-4 text-gray-600" item-class="hover:text-indigo-500 cursor-pointer" @click="(oprate) => oprate.handle?.(column)">
+              <List
+                :data-list="oprateList" class="oprate flex gap-4 text-gray-600 dark:text-zinc-500"
+                item-class="hover:text-indigo-500 cursor-pointer" @click="(oprate) => oprate.handle?.(column)"
+              >
                 <template #default="{ item }">
                   <span :class="[item.key === 'del' ? 'hover:text-red-500' : 'hover:text-indigo-500']">
                     {{ typeof item.title === 'function' ? item.title(column) : item.title }}
@@ -211,7 +216,12 @@ findColumnList();
     </List>
     <Empty v-else class="border-t">
       <div v-if="searchKeyword">暂无搜索结果</div>
-      <div v-else>还没有专栏，<span @click="handleShowEdit" class="ml-2 text-indigo-500 cursor-pointer hover:underline">新建一个专栏吧</span></div>
+      <div v-else>
+        还没有专栏，<span
+          @click="handleShowEdit"
+          class="ml-2 text-indigo-500 cursor-pointer hover:underline"
+        >新建一个专栏吧</span>
+      </div>
     </Empty>
     <Edit :visible="showEditDrawer" :id="currentColumn" @close="handleClose" @confirm="handleSuccess" />
     <ManageArticle :visible="showEditArticleDrawer" :id="currentColumn" @close="handleClose" @callback="findColumnList" />

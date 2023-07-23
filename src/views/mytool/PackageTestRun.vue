@@ -148,18 +148,18 @@ onUnmounted(() => {
 <template>
   <div @click="() => inputDom.focus()" class="test flex flex-col h-full p-2 overflow-y-auto">
     <div v-show="result.length > 0" class="result-box w-full px-2 py-2">
-      <div v-for="item in result" :key="item" class="border-b py-1">
+      <div v-for="item in result" :key="item" class="border-b py-1 dark:border-zinc-800">
         <p><i class="iconfont icon-left text-xs text-gray-500 mr-1"></i>{{ item.text }}</p>
         <p class="px-1" v-html="item.value"></p>
       </div>
     </div>
     <div class="input-box w-full items-start p-2 relative">
-      <div class="input-box flex items-center w-full border-b">
+      <div class="input-box flex items-center w-full border-b dark:border-zinc-800">
         <i class="iconfont icon-left text-sm text-indigo-500"></i>
         <input
           ref="inputDom"
           contenteditable
-          class="flex-1 py-2 px-1 outline-none caret-indigo-500 overflow-hidden"
+          class="flex-1 py-2 px-1 outline-none caret-indigo-500 overflow-hidden dark:bg-zinc-900"
           :placeholder="inputPlaceholder"
           @keydown.enter="handleEnter"
           @keydown.up="handleUp"

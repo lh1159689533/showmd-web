@@ -48,16 +48,17 @@ const show = (tool: ITool) => {
 <template>
   <div class="mytool flex flex-col items-center h-full">
     <List
-      :data-list="tools"
-      @click="(item) => show(item)"
-      class="mt-4 tool-list py-8 w-full flex flex-row flex-wrap gap-4"
-      item-class="tool-item-box cursor-pointer text-base bg-white rounded-sm"
+      :data-list="tools" @click="(item) => show(item)"
+      class="mt-4 tool-list py-8 w-full flex flex-row flex-wrap gap-4 pl-4"
+      item-class="tool-item-box cursor-pointer text-base rounded-sm bg-white dark:bg-zinc-900"
     >
       <template #default="{ item }">
         <div class="tool-item flex flex-col">
           <div class="tool-item-body flex-1 box-border p-4">
-            <div class="tool-item-name text font-medium text-base cursor-pointer text-gray-900 truncate">{{ item.name }} <Copy text="{item.app_name_en}" /></div>
-            <div class="tool-item-desc my-2 text-gray-600 text-sm h-10">{{ item.description }}</div>
+            <div class="tool-item-name text font-medium text-base cursor-pointer truncate text-gray-900 dark:text-zinc-300">
+              {{ item.name }}
+            </div>
+            <div class="tool-item-desc my-2 text-sm h-10 text-gray-600 dark:text-zinc-500">{{ item.description }}</div>
           </div>
         </div>
       </template>
@@ -77,7 +78,8 @@ const show = (tool: ITool) => {
 }
 
 .mytool-modal .el-message-box__header {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid;
+  @apply border-gray-200 dark:border-zinc-800;
 }
 
 .mytool-modal .el-message-box__content {
@@ -105,11 +107,17 @@ const show = (tool: ITool) => {
 .mytool .tool-list .tool-item-box {
   transition: box-shadow 0.3s, border-color 0.3s;
   transform-origin: center;
-  border: 1px solid #f0f0f0;
+  border: 1px solid;
+  @apply border-gray-200 dark: border-zinc-900;
 }
 
 .mytool .tool-list .tool-item-box:hover {
   box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  border-color: transparent;
+}
+
+.dark .mytool .tool-list .tool-item-box:hover {
+  box-shadow: 0 1px 2px -2px rgba(255, 255, 255, 0.10), 0 3px 6px 0 rgba(255, 255, 255, 0.10), 0 5px 12px 4px rgba(255, 255, 255, 0.10);
   border-color: transparent;
 }
 

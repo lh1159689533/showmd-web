@@ -46,7 +46,7 @@ function moveStars() {
 function drawStars() {
   const focalLength = width * 2;
   let pixelX, pixelY, pixelRadius;
-  ctx.fillStyle = "rgba(0,10,20,1)";
+  ctx.fillStyle = "rgba(0,0,0,1)";
   ctx.fillRect(0, 0, width, height);
   for (i = 0; i < numStars; i++) {
     star = stars[i];

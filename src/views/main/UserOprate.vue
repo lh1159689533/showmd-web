@@ -53,11 +53,11 @@ const handleOprate = ({ key }) => {
 <template>
   <div v-if="currentUser?.id" class="user" @mouseenter="show" @mouseleave="hide">
     <Avatar :src="currentUser.avatar" :style="[isShow ? 'transform:scale(1.5) translate(0,8px)' : '']" />
-    <div class="oprate-box show-ani absolute bg-white" :style="[isShow ? 'display:block' : 'display:none']">
-      <div class="pt-3 pb-2 flex justify-center items-center border-b">
+    <div class="oprate-box show-ani absolute bg-white dark:bg-zinc-900" :style="[isShow ? 'display:block' : 'display:none']">
+      <div class="pt-3 pb-2 flex justify-center items-center border-b dark:border-zinc-600 dark:text-zinc-300">
         <span>{{ currentUser.name }}</span>
       </div>
-      <List :data-list="userOprateList" @click="handleOprate" class="oprate-list text-sm text-gray-600 my-3" item-class="cursor-pointer hover:bg-gray-200">
+      <List :data-list="userOprateList" @click="handleOprate" class="oprate-list my-3 text-sm text-gray-600 dark:text-zinc-400" item-class="cursor-pointer hover:bg-gray-200 dark:hover:bg-zinc-800">
         <template #default="{ item }">
           <div class="px-4 flex items-center" style="padding-top: 6px; padding-bottom: 6px">
             <i class="iconfont justify-self-center text-xl mr-2" :class="`icon-${item.icon}`" />
@@ -86,7 +86,7 @@ const handleOprate = ({ key }) => {
 .user .oprate-box {
   top: 100%;
   z-index: -1;
-  box-shadow: 0px 0px 10px -6px #666;
+  box-shadow: 0px 0px 15px -6px #666;
   border-radius: 3px;
   width: 160px;
 }

@@ -26,8 +26,8 @@ const handleMenuChange = ({ key }) => {
       <List
         :data-list="menuList"
         @click="handleMenuChange"
-        class="flex h-full text-black mr-16 flex-1"
-        item-class="h-full cursor-pointer flex items-center justify-center mr-6 relative text-sm text-gray-800"
+        class="flex h-full mr-16 flex-1"
+        item-class="h-full cursor-pointer flex items-center justify-center mr-6 relative text-sm text-gray-800 dark:text-zinc-300"
       >
         <template #default="{ item }">
           <span :class="[item.key === activeKey ? 'menu-item__active' : '']" class="menu-item h-full hover:text-indigo-500">{{ item.title }}</span>

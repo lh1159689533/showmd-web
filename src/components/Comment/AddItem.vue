@@ -175,17 +175,16 @@ export default defineComponent({
 <template>
   <div class="add-item" :class="$attrs.class">
     <div
-      ref="dom"
-      id="textareaBox"
-      contenteditable="true"
-      :placeholder="placeholder"
-      @input="handleValueChange"
-      @focus="handleFoucs"
-      @blur="handleBlur"
-      class="textarea w-full p-2 text-sm rounded border-gray-300 border focus:border-indigo-500"
-    ></div>
-    <div v-show="isShowAction" class="action-box text-sm text-gray-500 mt-2 flex items-center gap-4">
-      <el-dropdown @visible-change="handleIsShowEmoji" trigger="click" placement="bottom-start" popper-class="emoji-dropdown">
+      ref="dom" id="textareaBox" contenteditable="true" :placeholder="placeholder" @input="handleValueChange"
+      @focus="handleFoucs" @blur="handleBlur"
+      class="textarea w-full p-2 text-sm rounded border border-gray-300 focus:border-indigo-500 dark:border-zinc-800 dark:focus:border-indigo-500"
+    >
+    </div>
+    <div v-show="isShowAction" class="action-box text-sm mt-2 flex items-center gap-4 text-gray-500 dark:text-zinc-500">
+      <el-dropdown
+        @visible-change="handleIsShowEmoji" trigger="click" placement="bottom-start"
+        popper-class="emoji-dropdown"
+      >
         <div class="flex items-center">
           <i class="iconfont icon-emoji text-xl mr-1"></i>
           <span>表情</span>
@@ -194,7 +193,10 @@ export default defineComponent({
           <Emoji @change="handleEmojiChange" />
         </template>
       </el-dropdown>
-      <el-dropdown @visible-change="handleIsShowEmoji" trigger="click" class="flex-1" placement="bottom-start" popper-class="emoji-dropdown">
+      <el-dropdown
+        @visible-change="handleIsShowEmoji" trigger="click" class="flex-1" placement="bottom-start"
+        popper-class="emoji-dropdown"
+      >
         <div class="flex items-center">
           <i class="iconfont icon-code text-xl mr-1"></i>
           <span>代码</span>
@@ -204,7 +206,10 @@ export default defineComponent({
         </template>
       </el-dropdown>
       <span>⌘ + Enter</span>
-      <button @click="addItem" :disabled="!value || isPublish" class="ml-2 bg-indigo-500 py-2 px-5 text-white rounded disabled:bg-indigo-300">
+      <button
+        @click="addItem" :disabled="!value || isPublish"
+        class="ml-2 py-2 px-5 rounded text-white bg-indigo-500 disabled:bg-indigo-300 dark:text-zinc-300 dark:disabled:bg-zinc-500"
+      >
         {{ isPublish ? '发布中' : '发布' }}
       </button>
     </div>

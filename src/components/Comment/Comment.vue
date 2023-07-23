@@ -42,7 +42,7 @@ const loadMoreReply = (commentId) => {
     </div>
   </div>
   <div v-if="data?.count" class="comment-list-box">
-    <h2 class="text-lg my-6 font-bold">全部评论 {{ data.count }}</h2>
+    <h2 class="text-lg my-6 font-bold dark:text-zinc-300">全部评论 {{ data.count }}</h2>
     <List class="comment-list" :data-list="data.list" item-class="mb-8">
       <template #default="{ item }">
         <Item :data="{...item, article: data?.article }" type="comment">
@@ -51,7 +51,7 @@ const loadMoreReply = (commentId) => {
             <div
               v-if="item.replyCount > item.replies?.length"
               @click="() => loadMoreReply(item.id)"
-              class="more mt-8 ml-3 rounded px-4 py-1 bg-gray-100 max-w-fit flex items-center text-sm font-bold cursor-pointer"
+              class="more mt-8 ml-3 rounded px-4 py-1 max-w-fit flex items-center text-sm font-bold cursor-pointer bg-gray-100 dark:bg-zinc-800"
             >
               <span>展开其他 {{ item.replyCount - 2 }} 条回复</span>
               <i class="iconfont icon-more-reply" />

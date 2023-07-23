@@ -30,4 +30,5 @@ module.exports = {
   corePlugins: {
     container: false,
   },
+  darkMode: 'class'
 };

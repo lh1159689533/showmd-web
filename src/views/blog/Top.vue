@@ -26,17 +26,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="top-article-list bg-white" style="max-height: 610px; height: 330px">
-    <h5 class="top-title text-sm py-2 pl-8 border-b">热门文章</h5>
+  <div class="top-article-list bg-white dark:bg-zinc-900" style="max-height: 610px; height: 330px">
+    <h5 class="top-title text-sm py-2 pl-8 border-b dark:text-zinc-300 dark:border-zinc-800">热门文章</h5>
     <List
-      v-if="topList?.length"
-      :data-list="topList"
-      @click="(item) => toDetail(item?.id)"
-      class="overflow-y-hidden h-full py-2"
-      item-class="py-2 px-6 cursor-pointer hover:bg-gray-50"
+      v-if="topList?.length" :data-list="topList" @click="(item) => toDetail(item?.id)"
+      class="overflow-y-hidden h-full py-2" item-class="py-2 px-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800"
     >
       <template #default="{ item, index }">
-        <el-tooltip effect="light" placement="left" :show-after="500">
+        <el-tooltip effect="customized" placement="left" :show-after="500">
           <template #content>
             <span class="overflow-clip inline-block" style="max-width: 350px">{{ item.summary ?? item.name }}</span>
           </template>
@@ -49,9 +46,9 @@ export default defineComponent({
               >
                 {{ index + 1 }}
               </span>
-              <span class="text-sm text-gray-800 truncate">{{ item.name }}</span>
+              <span class="text-sm text-gray-800 truncate dark:text-zinc-300">{{ item.name }}</span>
             </div>
-            <p class="text-xs text-gray-500 truncate pt-1">{{ item.summary }}</p>
+            <p class="text-xs text-gray-500 truncate pt-1 dark:text-zinc-500">{{ item.summary }}</p>
           </div>
         </el-tooltip>
       </template>
@@ -84,10 +81,11 @@ export default defineComponent({
   </div>-->
 </template>
 
-<style scoped>
-.top-title {
+<style>
+.top-article-list .top-title {
   @apply relative overflow-hidden;
 }
+
 .top-article-list .top-title::before {
   content: '推荐';
 }
@@ -107,19 +105,19 @@ export default defineComponent({
   @apply bg-indigo-500 text-xs text-white text-center leading-5;
 }
 
-.hotnum {
+.top-article-list .hotnum {
   background: #9ca3af;
 }
 
-.hotnum-1 {
+.top-article-list .hotnum-1 {
   background: linear-gradient(135deg, #ef4444, #f59e0b);
 }
 
-.hotnum-2 {
+.top-article-list .hotnum-2 {
   background: linear-gradient(135deg, #f87171, #fbbf24);
 }
 
-.hotnum-3 {
+.top-article-list .hotnum-3 {
   background: linear-gradient(135deg, #fca5a5, #fcd34d);
 }
 </style>

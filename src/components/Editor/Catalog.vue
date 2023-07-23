@@ -23,7 +23,7 @@ const activeId = ref('');
 let isCatalogClick = false; // 是否是点击目录，如果是则不触发onScroll
 
 // 根据body高度，计算出目录高度
-const bodyHeight = document.body.offsetHeight;
+const bodyHeight = window.screen.height;
 const height = ref(bodyHeight * 0.5);
 
 /**
@@ -103,13 +103,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="myPreviewEditorSider" v-if="data?.length" class="fixed bg-white" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']" style="transition: 300ms">
+  <div
+    id="myPreviewEditorSider" v-if="data?.length" class="fixed bg-white dark:bg-zinc-900"
+    :style="[isShowHeader ? 'top: 105px' : 'top: 32px']" style="transition: 300ms"
+  >
     <nav :style="{ height: `${height}px` }" class="relative">
-      <h4 class="title font-bold pl-4 py-2 border-b" style="height: 50px">目录</h4>
-      <div id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full" :style="{ maxHeight: `${height - 50}px` }">
-        <List :data-list="data" @click="handleCatalogClick" class="w-full" item-class="py-2 truncate cursor-pointer hover:bg-gray-100 relative text-sm">
+      <h4 class="title font-bold pl-4 py-2 border-b dark:border-zinc-800 dark:text-zinc-300" style="height: 50px">目录</h4>
+      <div
+        id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full"
+        :style="{ maxHeight: `${height - 50}px` }"
+      >
+        <List
+          :data-list="data" @click="handleCatalogClick" class="w-full"
+          item-class="py-2 truncate cursor-pointer relative text-sm hover:bg-gray-100 dark:hover:bg-zinc-800"
+        >
           <template #default="{ item }">
-            <el-tooltip effect="light" placement="left" :show-after="500">
+            <el-tooltip effect="customized" placement="left" :show-after="500">
               <template #content>
                 <span class="overflow-clip inline-block" style="max-width: 350px">{{ item.title }}</span>
               </template>
@@ -132,7 +141,7 @@ onBeforeUnmount(() => {
   z-index: 2000;
 }
 
-#myPreviewEditorOutlineList ul > li > span.active::before {
+#myPreviewEditorOutlineList ul>li>span.active::before {
   content: '';
   position: absolute;
   width: 4px;
@@ -140,12 +149,12 @@ onBeforeUnmount(() => {
   @apply bg-indigo-600 left-0 rounded-tr-lg rounded-br-lg;
 }
 
-#myPreviewEditorOutlineList ul > li > span.active {
-  @apply text-indigo-600;
+#myPreviewEditorOutlineList ul>li>span.active {
+  @apply text-indigo-600 dark:text-indigo-500;
 }
 
-#myPreviewEditorOutlineList ul > li > span {
-  @apply text-gray-600;
+#myPreviewEditorOutlineList ul>li>span {
+  @apply text-gray-600 dark:text-zinc-400;
 }
 
 .indent-H1,
@@ -176,5 +185,4 @@ onBeforeUnmount(() => {
 .indent-H6,
 .indent-header6 {
   padding-left: 90px;
-}
-</style>
+}</style>
