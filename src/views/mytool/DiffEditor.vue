@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 import 'monaco-editor/esm/vs/editor/editor.all';
+import storage from '@src/utils/storage';
 
 const diffDom = ref();
 
@@ -12,6 +13,7 @@ const initDiffEditor = () => {
   const diffEditor = editor.createDiffEditor(diffDom.value, {
     originalEditable: true,
     automaticLayout: true,
+    theme: storage.getItem('theme') === 'dark' ? 'vs-dark' : 'vs'
   });
 
   diffEditor.setModel({
