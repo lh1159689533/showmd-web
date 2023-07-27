@@ -145,7 +145,7 @@ init();
       </el-skeleton>
     </div>
     <!-- 左侧操作栏 -->
-    <ul class="action-box fixed -ml-24 top-40">
+    <ul v-show="!loading" class="action-box fixed -ml-24 top-40">
       <li @click="toComment">
         <el-badge :value="commentData?.count || ''" type="info" :max="999">
           <div class="action-comment w-10 h-10 flex justify-center items-center rounded-full cursor-pointer">
@@ -160,7 +160,7 @@ init();
       </li>
     </ul>
     <!-- 内容区 -->
-    <div class="article-preview">
+    <div v-show="!loading" class="article-preview">
       <div class="article-preview-header px-10 rounded-t-md">
         <h2 class="title font-bold pt-4 text-3xl">{{ article?.name }}</h2>
         <div class="flex mt-5 items-center">
@@ -249,7 +249,7 @@ init();
     </div>
     <!-- 评论 -->
     <div
-      v-if="!loading" ref="commentDom" class="comment px-10 py-2 pb-16 rounded-md mb-12 mt-4"
+      v-show="!loading" ref="commentDom" class="comment px-10 py-2 pb-16 rounded-md mb-12 mt-4"
       style="width: calc(100% - 260px)"
     >
       <Comment :data="commentData" />
