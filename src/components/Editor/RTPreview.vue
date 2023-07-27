@@ -34,7 +34,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="px-16 rounded-b-md bg-white dark:bg-zinc-900" style="width: calc(100% - 260px)">
+  <div class="richtext-preview px-16 rounded-b-md">
     <Editor @on-created="handleCreate" :default-config="editorConfig" />
   </div>
   <div class="rightSider absolute top-0 right-0" style="width: 260px; padding-left: 20px">
@@ -43,6 +43,11 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.richtext-preview {
+  width: calc(100% - 260px);
+  background-color: var(--showmd-bg-color-primary);
+}
+
 .outline-sider {
   box-shadow: 0px 0px 8px -6px #000;
   border-radius: 3px;

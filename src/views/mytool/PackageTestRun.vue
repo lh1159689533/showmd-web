@@ -146,20 +146,20 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div @click="() => inputDom.focus()" class="test flex flex-col h-full p-2 overflow-y-auto">
+  <div @click="() => inputDom.focus()" class="pkg-test flex flex-col h-full p-2 overflow-y-auto">
     <div v-show="result.length > 0" class="result-box w-full px-2 py-2">
-      <div v-for="item in result" :key="item" class="border-b py-1 dark:border-zinc-800">
-        <p><i class="iconfont icon-left text-xs text-gray-500 mr-1"></i>{{ item.text }}</p>
+      <div v-for="item in result" :key="item" class="pkg-test-result border-b py-1">
+        <p><i class="iconfont icon-left text-xs mr-1"></i>{{ item.text }}</p>
         <p class="px-1" v-html="item.value"></p>
       </div>
     </div>
-    <div class="input-box w-full items-start p-2 relative">
-      <div class="input-box flex items-center w-full border-b dark:border-zinc-800">
-        <i class="iconfont icon-left text-sm text-indigo-500"></i>
+    <div class="w-full items-start p-2 relative">
+      <div class="input-box flex items-center w-full border-b">
+        <i class="iconfont icon-left text-sm"></i>
         <input
           ref="inputDom"
           contenteditable
-          class="flex-1 py-2 px-1 outline-none caret-indigo-500 overflow-hidden dark:bg-zinc-900"
+          class="flex-1 py-2 px-1 outline-none overflow-hidden"
           :placeholder="inputPlaceholder"
           @keydown.enter="handleEnter"
           @keydown.up="handleUp"
@@ -180,7 +180,28 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
+.pkg-test .result-box .pkg-test-result {
+  border-color: var(--showmd-border-color);
+  color: var(--showmd-text-color-primary);
+}
+.pkg-test .pkg-test-result i {
+  color: var(--showmd-text-color-weak);
+}
+
+.pkg-test .input-box {
+  border-color: var(--showmd-border-color);
+}
+
+.pkg-test .input-box i {
+  color: var(--showmd-border-color-hover);
+}
+
+.pkg-test .input-box input {
+  caret-color: var(--showmd-border-color-hover);
+  background-color: var(--showmd-bg-color-primary);
+}
+
 .loading-span {
   animation: loading-ani 10s ease-out forwards;
 }

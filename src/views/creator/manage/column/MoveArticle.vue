@@ -60,10 +60,10 @@ findColumnList();
 <template>
   <el-dialog :model-value="true" :close-on-click-modal="false" :show-close="false" :width="800">
     <template #header>
-      <div class="flex px-3 items-center">
+      <div class="col-move-article flex px-3 items-center">
         <span>将文章移动至其他专栏</span>
-        <span class="px-2 text-gray-400">|</span>
-        <span class="flex-1 text-gray-500 text-sm">每次只能选择一个专栏</span>
+        <span class="px-2">|</span>
+        <span class="flex-1 text-sm">每次只能选择一个专栏</span>
         <div class="w-80"><el-input v-model="searchKey" @input="searchColumn" placeholder="请输入关键字搜索" clearable /></div>
       </div>
     </template>
@@ -78,4 +78,16 @@ findColumnList();
   </el-dialog>
 </template>
 
-<style></style>
+<style>
+.col-move-article {
+  color: var(--showmd-text-color-primary);
+}
+
+.col-move-article span:nth-child(2) {
+  color: var(--showmd-border-color);
+}
+
+.col-move-article span:nth-child(3) {
+  color: var(--showmd-text-color-weak);
+}
+</style>

@@ -121,7 +121,7 @@ const submitForm = async (formEl) => {
           >
             <div class="flex flex-col">
               <i class="iconfont icon-plus text-center"></i>
-              <span class="text-sm text-gray-400">上传封面</span>
+              <span class="text-sm" style="color: var(--showmd-text-color-weak);">上传封面</span>
             </div>
           </el-upload>
           <el-dialog v-model="isPreview">

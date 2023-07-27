@@ -96,7 +96,6 @@ const changeType = () => {
     align-center
   >
     <template #header>
-      <!-- <img src="/api/lanis-logo.webp" alt="" /> -->
       <div class="lanis-logo"></div>
     </template>
     <div class="flex justify-between gap-6">
@@ -136,5 +135,7 @@ const changeType = () => {
 
 .login-dialog .el-dialog__body {
   @apply pl-6 pt-8 pr-2 pb-6 border-t overflow-hidden !important;
+  border-color: var(--showmd-border-color);
+  color: var(--showmd-text-color-primary);
 }
 </style>

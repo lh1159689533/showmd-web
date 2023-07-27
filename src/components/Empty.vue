@@ -55,6 +55,6 @@
       <path d="M100.68,169.84s3-9.56,12.18-11.37c0,0,1.71,6.2-5.93,11.4Z" fill="#D1D5DB"></path>
       <polygon points="94.74 169.62 96.4 180.99 106.86 181.04 108.41 169.68 94.74 169.62" fill="#24285b"></polygon>
     </svg>
-    <span class="text-gray-500 text-sm"><slot></slot></span>
+    <span class="text-sm" style="color: var(--showmd-text-color-weak)"><slot></slot></span>
   </div>
 </template>

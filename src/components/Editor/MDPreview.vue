@@ -294,7 +294,7 @@ onMounted(() => {
 
 <template>
   <div v-bind="$attrs" class="w-full flex flex-row">
-    <div id="myPreviewEditorContainer" class="content rounded-b-md bg-white dark:bg-zinc-900" style="width: calc(100% - 260px)">
+    <div id="myPreviewEditorContainer" class="content rounded-b-md">
       <div id="myPreviewEditor" class="showmd px-12 pb-10 mt-2" style="min-height: 1140px" />
     </div>
     <div class="rightSider relative w-1/4" style="width: 260px; padding-left: 20px">
@@ -304,6 +304,11 @@ onMounted(() => {
 </template>
 
 <style>
+#myPreviewEditorContainer {
+  width: calc(100% - 260px);
+  background-color: var(--showmd-bg-color-primary);
+}
+
 #myPreviewEditor .vditor-toolbar--hide {
   display: none !important;
 }

@@ -34,6 +34,11 @@ const handleSelect = (path) => {
 </template>
 
 <style>
+.sider {
+  background-color: var(--showmd-bg-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
 .sider .el-menu .el-menu-item {
   padding-left: 54px !important;
 }

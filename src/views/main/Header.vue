@@ -126,17 +126,14 @@ init();
 </script>
 
 <template>
-  <div
-    class="h-12 w-full bg-white border-b fixed top-0 z-2000 dark:border-indigo-900 dark:bg-zinc-900"
-    :class="headerCls"
-  >
+  <div class="header h-12 w-full border-b fixed top-0 z-2000" :class="headerCls">
     <Holiday />
     <header class="container h-full flex items-center">
       <div @click="toHomePage" class="lanis-logo mr-6 text-2xl font-bold text-indigo-500 cursor-pointer"></div>
       <div class="flex-1 flex items-center h-full">
         <List
-          v-if="isShowMenu" :data-list="menuList" @click="changeNav" class="flex text-black mr-16 h-full flex-1"
-          item-class="nav-list text-gray-800 dark:text-zinc-200 min-w-max hover:text-black"
+          v-if="isShowMenu" :data-list="menuList" @click="changeNav" class="nav-list flex mr-16 h-full flex-1"
+          item-class="min-w-max"
         >
           <template #default="{ item }">
             <span :class="[item.key === activeKey ? 'text-indigo-500 font-bold' : '']">{{ item.title }}</span>
@@ -147,7 +144,7 @@ init();
       <div v-if="isShowSearch" class="flex items-center h-10 relative w-80">
         <el-input
           :prefix-icon="Search" placeholder="Search projects"
-          class="text-gray-400 caret-gray-400 w-full text-sm hover:border-gray-400"
+          class="search w-full text-sm"
         />
       </div>
       <div class="flex ml-16 items-center h-full">
@@ -155,7 +152,7 @@ init();
         <slot name="other"></slot>
       </div>
     </header>
-    <span @click="changeTheme" class="absolute top-4 right-6 text-gray-300 text-sm cursor-pointer">
+    <span @click="changeTheme" class="absolute top-4 right-6 text-sm cursor-pointer">
       <svg v-if="theme === 'dark'" viewBox="0 0 24 24" fill="none" class="w-6 h-6">
         <path
           fill-rule="evenodd" clip-rule="evenodd"
@@ -187,6 +184,20 @@ init();
 </template>
 
 <style>
+.header {
+  background-color: var(--showmd-bg-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
+.header .search {
+  color: var(--showmd-text-color-primary);
+  caret-color: var(--showmd-text-color-primary);
+}
+
+.header .search:hover {
+  border-color: var(--showmd-border-color-hover);
+}
+
 .lanis-logo {
   background-image: url('/api/lanis-logo.webp');
   background-size: 100% 100%;
@@ -194,11 +205,16 @@ init();
   height: 32px;
 }
 
-.nav-list {
+.nav-list li {
+  color: var(--showmd-text-color-primary);
   @apply h-full cursor-pointer flex items-center mr-6 relative text-sm;
 }
 
-.nav-list:hover::after {
+.nav-list li:hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.nav-list li:hover::after {
   content: '';
   position: absolute;
   height: 2px;
@@ -206,9 +222,5 @@ init();
   bottom: 0;
   left: -2px;
   @apply bg-indigo-500;
-}
-
-.input-icon {
-  @apply text-gray-400;
 }
 </style>

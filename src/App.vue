@@ -15,10 +15,16 @@
   --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
 
   --showmd-bg-color-primary: #fff;
-  --showmd-bg-color-hover: #27272a;
-  --showmd-text-color-primary: #4b5563; /*600*/
-  --showmd-text-color-weak: #9ca3af; /*400*/
-  --showmd-border-color: #e5e7eb; /*200*/
+  --showmd-bg-color-weak: #f3f4f6;
+  --showmd-bg-color-hover: #f9fafb;
+  --showmd-text-color-primary: #111827;
+  --showmd-text-color-danger: #ef4444;
+  --showmd-text-color-weak: #4b5563;
+  --showmd-text-color-disable: #9ca3af;
+  --showmd-border-color: #e5e7eb;
+
+  --showmd-text-color-hover: #6366f1;
+  --showmd-border-color-hover: #6366f1;
 }
 
 :root.dark {
@@ -31,15 +37,12 @@
   /* richtext暗黑样式 end */
 
   --showmd-bg-color-primary: #18181b;
-  /*900*/
+  --showmd-bg-color-weak: #3f3f46;
   --showmd-bg-color-hover: #27272a;
-  /*800*/
   --showmd-text-color-primary: #d4d4d8;
-  /*300*/
   --showmd-text-color-weak: #71717a;
-  /*500*/
+  --showmd-text-color-disable: #52525b;
   --showmd-border-color: #27272a;
-  /*800*/
 }
 
 html,
@@ -205,27 +208,17 @@ h3 {
   /* 滚动条上的滚动滑块 */
   outline: none;
   border-radius: 2px;
-  @apply bg-gray-200;
+  background-color: var(--showmd-bg-color-weak);
 }
 
 ::-webkit-scrollbar-track-piece {
   /* 滚动条没有滑块的轨道部分 */
-  @apply bg-gray-100;
+  background-color: var(--showmd-bg-color-primary);
 }
 
 ::-webkit-scrollbar-track {
   box-shadow: none;
   border-radius: 2px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  /* 滚动条上的滚动滑块 */
-  @apply bg-zinc-800;
-}
-
-.dark ::-webkit-scrollbar-track-piece {
-  /* 滚动条没有滑块的轨道部分 */
-  @apply bg-zinc-900;
 }
 
 ::view-transition-old(root),

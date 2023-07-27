@@ -17,11 +17,15 @@ beforeEach((to, from) => {
       <div class="w-52 h-full">
         <Sider />
       </div>
-      <div class="flex-1 overflow-hidden bg-white dark:bg-zinc-900">
+      <div class="flex-1 overflow-hidden">
         <router-view />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container div:nth-child(2) {
+  background-color: var(--showmd-bg-color-primary);
+}
+</style>

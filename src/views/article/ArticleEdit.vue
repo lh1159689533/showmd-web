@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, ref, reactive, computed } from 'vue';
+import { defineProps, ref, reactive, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { confirm } from '@utils/messageBox';
@@ -226,11 +226,15 @@ const editorScale = (type: number | string) => {
   }
 };
 
+onMounted(() => {
+  document.documentElement.classList.remove(document.documentElement.classList.item(0));
+});
+
 init();
 </script>
 
 <template>
-  <div v-if="editorType === 'markdown'" class="flex flex-col h-full">
+  <div v-if="editorType === 'markdown'" class="flex flex-col h-full min-h-screen">
     <div class="tool flex items-center p-3 px-8 bg-white">
       <input v-model="article.name" placeholder="请输入文章标题..." class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
       <div class="rightGroups flex py-1 relative items-center">
@@ -248,8 +252,8 @@ init();
       </template>
     </MDEditorIR>
   </div>
-  <div v-if="editorType === 'richtext'" class="h-full">
-    <div style="height: calc(100% - 58px)">
+  <div v-if="editorType === 'richtext'" class="h-screen">
+    <div style="height: calc(100vh - 58px)">
       <RTEditor ref="editorRef" v-if="isShowEditor" :data="article" @on-change="onChange">
         <template #default="{ catalogList }">
           <Catalog v-if="catalogList?.length" :data="catalogList" />

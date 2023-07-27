@@ -49,7 +49,7 @@
       <circle cx="109.61" cy="89.03" r="4.17" fill="#c9c9c9"></circle>
       <circle cx="124.95" cy="89.03" r="4.17" fill="#c9c9c9"></circle>
     </svg>
-    <span class="text-gray-500 text-sm mt-4">还没有评论，快来发表第一条评论吧</span>
+    <span class="text-sm mt-4" style="color: var(--showmd-text-color-weak)">还没有评论，快来发表第一条评论吧</span>
   </div>
 </template>
 

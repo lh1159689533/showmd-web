@@ -167,44 +167,37 @@ findColumnList();
     <el-skeleton v-if="!columnList" :rows="3" animated class="p-6" />
     <List v-else-if="columnList?.length" :data-list="columnList">
       <template #default="{ item: column }">
-        <div class="flex gap-8 px-6 py-4 border-t hover:bg-gray-50 dark:hover:bg-zinc-800 dark:border-zinc-800">
+        <div class="my-column-item flex gap-8 px-6 py-4 border-t">
           <img
             :src="`${column.cover}?t=${new Date(column.updateTime).getTime()}`" class="w-36 h-24 cursor-pointer"
             @error="(e) => (e.target as HTMLImageElement).src = '/img/column-default-cover.webp'"
             @click="() => toDetail(column?.id)"
           />
           <div class="detail flex-1 flex flex-col gap-2">
-            <div class="title flex items-center gap-2">
-              <span
-                class="attrs text-sm px-1 bg-indigo-100 text-indigo-500 dark:bg-zinc-800"
-                style="border-radius: 1px"
-              >{{ column.isPrivate ? '私有' : '公开' }}</span>
-              <span
-                v-if="column.isTop === 1"
-                class="flex items-center px-1 text-sm text-indigo-500 bg-indigo-100 dark:bg-zinc-800"
-                style="border-radius: 1px"
-              >
+            <div class="flex items-center gap-2">
+              <span class="attrs text-sm px-1">{{ column.isPrivate ? '私有' : '公开' }}</span>
+              <span v-if="column.isTop === 1" class="attrs flex items-center px-1 text-sm">
                 <i class="iconfont icon-top"></i>置顶
               </span>
               <span
                 @click="() => toDetail(column?.id)"
-                class="text-xl cursor-pointer flex-1 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-600"
-              >{{
-                column.name }}</span>
+                class="title text-xl cursor-pointer flex-1"
+              >
+                {{ column.name }}</span>
             </div>
-            <span class="desc text-sm text-gray-600 dark:text-zinc-500">{{ column.desc }}</span>
+            <span class="desc text-sm">{{ column.desc }}</span>
             <div class="footer flex text-sm">
-              <div class="flex delimiter flex-1 text-gray-500 dark:text-zinc-500">
+              <div class="cnt flex delimiter flex-1">
                 <span class="create-time">{{ column.createTime }}</span>
                 <span class="article-num">文章数 {{ column.articleCnt }}</span>
                 <span class="article-num">订阅数 {{ column.subscribeCnt }}</span>
               </div>
               <List
-                :data-list="oprateList" class="oprate flex gap-4 text-gray-600 dark:text-zinc-500"
-                item-class="hover:text-indigo-500 cursor-pointer" @click="(oprate) => oprate.handle?.(column)"
+                :data-list="oprateList" class="oprate flex gap-4"
+                item-class="cursor-pointer" @click="(oprate) => oprate.handle?.(column)"
               >
                 <template #default="{ item }">
-                  <span :class="[item.key === 'del' ? 'hover:text-red-500' : 'hover:text-indigo-500']">
+                  <span :class="[item.key === 'del' ? 'del' : '']">
                     {{ typeof item.title === 'function' ? item.title(column) : item.title }}
                   </span>
                 </template>
@@ -214,13 +207,10 @@ findColumnList();
         </div>
       </template>
     </List>
-    <Empty v-else class="border-t">
+    <Empty v-else class="border-t my-column-empty">
       <div v-if="searchKeyword">暂无搜索结果</div>
       <div v-else>
-        还没有专栏，<span
-          @click="handleShowEdit"
-          class="ml-2 text-indigo-500 cursor-pointer hover:underline"
-        >新建一个专栏吧</span>
+        还没有专栏，<span @click="handleShowEdit" class="add-column ml-2 cursor-pointer hover:underline">新建一个专栏吧</span>
       </div>
     </Empty>
     <Edit :visible="showEditDrawer" :id="currentColumn" @close="handleClose" @confirm="handleSuccess" />
@@ -228,4 +218,47 @@ findColumnList();
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.my-column-list .my-column-item {
+  background-color: var(--showmd-bg-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
+.my-column-list .my-column-item:hover {
+  background-color: var(--showmd-bg-color-hover);
+}
+
+.my-column-list .my-column-item .detail span.attrs {
+  border-radius: 1px;
+  background-color: var(--showmd-bg-color-weak);
+  color: var(--showmd-text-color-hover);
+}
+
+.my-column-list .my-column-item .title {
+  color: var(--showmd-text-color-primary);
+}
+
+.my-column-list .my-column-item .title:hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.my-column-list .my-column-item :is(.desc, .cnt, .oprate) {
+  color: var(--showmd-text-color-weak);
+}
+
+.my-column-list .my-column-item .oprate > li > span:hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.my-column-list .my-column-item .oprate > li > span.del:hover {
+  color: var(--showmd-text-color-danger);
+}
+
+.my-column-list .my-column-empty {
+  color: var(--showmd-text-color-primary);
+}
+
+.my-column-list .my-column-empty .add-column {
+  color: var(--showmd-text-color-hover);
+}
+</style>

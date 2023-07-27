@@ -351,7 +351,7 @@ defineExpose({
 
 <style>
 #myEditorIR {
-  height: calc(100% - 65px);
+  /* height: calc(100% - 65px); */
 }
 
 #myEditorIR .vditor-toolbar__item {
@@ -366,7 +366,8 @@ defineExpose({
 }
 
 #myEditorIR #myEditorContent {
-  height: 100% !important;
+  /* height: 100% !important; */
+  height: calc(100vh - 65px) !important;
   position: relative;
 }
 
@@ -424,6 +425,7 @@ defineExpose({
   margin: 0 auto !important;
   height: auto !important;
   overflow-x: hidden;
+  min-height: 100% !important;
 }
 
 @media screen and (max-width: 1439px) {

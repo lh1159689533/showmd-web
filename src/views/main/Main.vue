@@ -34,10 +34,10 @@ const handleNoticeClick = (e) => {
 <template>
   <Header is-show-menu>
     <template #other>
-      <div @click="handleNoticeClick" class="notice-list flex gap-4 text-sm text-gray-600 dark:text-zinc-300">
-        <el-badge is-dot class="cursor-pointer hover:text-indigo-500">消息</el-badge>
-        <span class="cursor-pointer hover:text-indigo-500">足迹</span>
-        <span data-link="/creator" class="cursor-pointer hover:text-indigo-500">创作中心</span>
+      <div @click="handleNoticeClick" class="notice-list flex gap-4 text-sm">
+        <el-badge is-dot>消息</el-badge>
+        <span>足迹</span>
+        <span data-link="/creator">创作中心</span>
       </div>
     </template>
   </Header>
@@ -46,4 +46,13 @@ const handleNoticeClick = (e) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.notice-list {
+  color: var(--showmd-text-color-primary);
+}
+
+.notice-list > *:hover {
+  cursor: pointer;
+  color: var(--showmd-text-color-hover);
+}
+</style>

@@ -21,19 +21,21 @@ const handleMenuChange = ({ key }) => {
 </script>
 
 <template>
-  <div class="column p-4">
+  <div class="column-list-box p-4">
     <div class="menu h-8 relative">
       <List
-        :data-list="menuList"
-        @click="handleMenuChange"
-        class="flex h-full mr-16 flex-1"
-        item-class="h-full cursor-pointer flex items-center justify-center mr-6 relative text-sm text-gray-800 dark:text-zinc-300"
+        :data-list="menuList" @click="handleMenuChange" class="column-list flex h-full mr-16 flex-1"
+        item-class="h-full cursor-pointer flex items-center justify-center mr-6 relative text-sm"
       >
         <template #default="{ item }">
-          <span :class="[item.key === activeKey ? 'menu-item__active' : '']" class="menu-item h-full hover:text-indigo-500">{{ item.title }}</span>
+          <span :class="[item.key === activeKey ? 'menu-item__active' : '']" class="menu-item h-full00">{{ item.title
+          }}</span>
         </template>
       </List>
-      <span :style="{ transform: `translateX(${menuList.findIndex((item) => item.key === activeKey) * 80}px)` }" class="active-tag"></span>
+      <span
+        :style="{ transform: `translateX(${menuList.findIndex((item) => item.key === activeKey) * 80}px)` }"
+        class="active-tag"
+      ></span>
     </div>
     <div class="content-box py-6 pl-2">
       <MyColumn v-show="activeKey === 'myColumn'" />
@@ -42,12 +44,13 @@ const handleMenuChange = ({ key }) => {
   </div>
 </template>
 
-<style scoped>
-.menu-item__active {
-  @apply text-indigo-500 font-bold;
+<style>
+.column-list-box .menu-item__active {
+  color: var(--showmd-text-color-hover);
+  @apply font-bold;
 }
 
-.active-tag {
+.column-list-box .active-tag {
   content: '';
   position: absolute;
   height: 2px;
@@ -55,6 +58,14 @@ const handleMenuChange = ({ key }) => {
   bottom: 0;
   left: 10px;
   transition: transform 200ms;
-  @apply bg-indigo-500;
+  background-color: var(--showmd-text-color-hover);
+}
+
+.column-list-box .column-list li {
+  color: var(--showmd-text-color-primary);
+}
+
+.column-list-box .column-list li>span:hover {
+  color: var(--showmd-text-color-hover);
 }
 </style>

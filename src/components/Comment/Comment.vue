@@ -34,24 +34,26 @@ const loadMoreReply = (commentId) => {
 </script>
 
 <template>
-  <div class="add-comment flex mt-10">
+  <div class="comment-container flex mt-10">
     <Avatar :src="currentUser?.avatar ?? '/api/avatars.png'" class="w-8 h-8 rounded-full" />
     <AddItem v-if="currentUser?.id" @confirm="addItem" ref="addItemDom" class="flex-1 ml-3" placeholder="想对作者说点什么..." />
-    <div v-else class="p-6 w-full rounded ml-3 border-gray-300 border">
-      <span class="text-sm">看完啦，<span @click="() => store.commit('showLogin')" class="text-indigo-500 font-bold mr-1 cursor-pointer">登录</span>分享一下感受吧</span>
+    <div v-else class="add p-6 w-full rounded ml-3 border">
+      <span class="text-sm">看完啦，<span
+        @click="() => store.commit('showLogin')"
+        class="text-indigo-500 font-bold mr-1 cursor-pointer"
+      >登录</span>分享一下感受吧</span>
     </div>
   </div>
   <div v-if="data?.count" class="comment-list-box">
-    <h2 class="text-lg my-6 font-bold dark:text-zinc-300">全部评论 {{ data.count }}</h2>
+    <h2 class="text-lg my-6 font-bold">全部评论 {{ data.count }}</h2>
     <List class="comment-list" :data-list="data.list" item-class="mb-8">
       <template #default="{ item }">
-        <Item :data="{...item, article: data?.article }" type="comment">
+        <Item :data="{ ...item, article: data?.article }" type="comment">
           <template #replies>
-            <Reply v-if="item.replies?.length" :data="{...item, article: data?.article }" />
+            <Reply v-if="item.replies?.length" :data="{ ...item, article: data?.article }" />
             <div
-              v-if="item.replyCount > item.replies?.length"
-              @click="() => loadMoreReply(item.id)"
-              class="more mt-8 ml-3 rounded px-4 py-1 max-w-fit flex items-center text-sm font-bold cursor-pointer bg-gray-100 dark:bg-zinc-800"
+              v-if="item.replyCount > item.replies?.length" @click="() => loadMoreReply(item.id)"
+              class="more mt-8 ml-3 rounded px-4 py-1 max-w-fit flex items-center text-sm font-bold cursor-pointer"
             >
               <span>展开其他 {{ item.replyCount - 2 }} 条回复</span>
               <i class="iconfont icon-more-reply" />
@@ -64,4 +66,17 @@ const loadMoreReply = (commentId) => {
   <CommentEmpty v-else />
 </template>
 
-<style scoped></style>
+<style scoped>
+.comment-container .add {
+  border-color: var(--showmd-border-color);
+}
+
+.comment-list-box h2 {
+  color: var(--showmd-text-color-primary);
+}
+
+.comment-list-box .comment-list .more {
+  background-color: var(--showmd-bg-color-weak);
+  color: var(--showmd-text-color-weak);
+}
+</style>

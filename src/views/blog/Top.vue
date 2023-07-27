@@ -26,8 +26,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="top-article-list bg-white dark:bg-zinc-900" style="max-height: 610px; height: 330px">
-    <h5 class="top-title text-sm py-2 pl-8 border-b dark:text-zinc-300 dark:border-zinc-800">热门文章</h5>
+  <div class="top-article-list" style="max-height: 610px; height: 330px">
+    <h5 class="top-title text-sm py-2 pl-8 border-b">热门文章</h5>
     <List
       v-if="topList?.length" :data-list="topList" @click="(item) => toDetail(item?.id)"
       class="overflow-y-hidden h-full py-2" item-class="py-2 px-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800"
@@ -46,9 +46,9 @@ export default defineComponent({
               >
                 {{ index + 1 }}
               </span>
-              <span class="text-sm text-gray-800 truncate dark:text-zinc-300">{{ item.name }}</span>
+              <span class="top-article-name text-sm truncate">{{ item.name }}</span>
             </div>
-            <p class="text-xs text-gray-500 truncate pt-1 dark:text-zinc-500">{{ item.summary }}</p>
+            <p class="top-article-desc text-xs truncate pt-1">{{ item.summary }}</p>
           </div>
         </el-tooltip>
       </template>
@@ -70,9 +70,9 @@ export default defineComponent({
                 class='px-1 tabular-nums text-white flex justify-center items-center h-5 mr-1'
                 style='border-bottom-right-radius: 50%'
               >{{ index + 1 }}</span>
-              <span class='text-sm text-gray-800'>{{ item.name }}</span>
+              <span class='text-sm text-gray-900'>{{ item.name }}</span>
             </div>
-            <p class='text-xs text-gray-500 truncate pt-1'>{{ item.summary }}</p>
+            <p class='text-xs text-gray-600 truncate pt-1'>{{ item.summary }}</p>
           </div>
         </el-tooltip>
       </template>
@@ -81,8 +81,14 @@ export default defineComponent({
   </div>-->
 </template>
 
-<style>
+<style scoped>
+.top-article-list {
+ background-color: var(--showmd-bg-color-primary);
+}
+
 .top-article-list .top-title {
+  color: var(--showmd-text-color-primary);
+  border-color: var(--showmd-border-color);
   @apply relative overflow-hidden;
 }
 
@@ -119,5 +125,14 @@ export default defineComponent({
 
 .top-article-list .hotnum-3 {
   background: linear-gradient(135deg, #fca5a5, #fcd34d);
+}
+
+.top-article-list .top-article-name {
+ color: var(--showmd-text-color-primary);
+  background-color: var(--showmd-bg-color-primary);
+}
+
+.top-article-list .top-article-desc {
+  color: var(--showmd-text-color-weak);
 }
 </style>

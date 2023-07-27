@@ -97,7 +97,7 @@ const downloadImg = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center h-full">
+  <div class="image-process flex flex-col items-center h-full">
     <!-- <header class="bg-white border-b px-6 py-4 w-full h-16 flex justify-between">
       <span class="font-bold text-lg">图片处理</span>
       <el-button v-show="imageMetadata?.url" type="primary" link @click="reset">重新上传</el-button>
@@ -105,23 +105,23 @@ const downloadImg = async () => {
     <div v-show="!imageMetadata?.url" class="w-4/5 mt-8 rounded p-6">
       <div
         @click="upload"
-        class="border border-dashed h-64 rounded bg-gray-50 dark:bg-zinc-900 hover:border-indigo-500 cursor-pointer flex flex-col items-center justify-around gap-4 py-52"
+        class="upload-box border border-dashed h-64 rounded cursor-pointer flex flex-col items-center justify-around gap-4 py-52"
       >
         <i class="iconfont icon-upload text-6xl text-gray-400"></i>
-        <span class="text-gray-600">拖拽图片到此或点击上传</span>
+        <span class="desc">拖拽图片到此或点击上传</span>
         <el-button type="primary">上传图片</el-button>
       </div>
       <input ref="inputRef" type="file" :webkitdirectory="false" accept="image/*" class="hidden" />
     </div>
     <div v-show="imageMetadata?.url" class="process flex gap-10 w-full flex-1" style="height: calc(100% - 64px);">
       <div class="img-box flex justify-center gap-10 flex-1 my-16 px-10">
-        <div class="source-img rounded p-3 w-1/2 bg-white dark:bg-zinc-900" style="box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);">
+        <div class="source-img rounded p-3 w-1/2" style="box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);">
           <div class="pb-2"><span class="">原图</span></div>
           <div style="height: calc(100% - 32px);" class="flex justify-center items-center">
             <img :src="imageMetadata?.url" alt="Preview Image" class="max-h-full w-auto h-auto" />
           </div>
         </div>
-        <div class="process-img rounded p-3 w-1/2 bg-white dark:bg-zinc-900" style="box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);">
+        <div class="process-img rounded p-3 w-1/2" style="box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);">
           <div class="pb-2"><span class="">效果图</span></div>
           <div style="height: calc(100% - 32px);" class="flex justify-center items-center">
             <img
@@ -131,8 +131,8 @@ const downloadImg = async () => {
           </div>
         </div>
       </div>
-      <div class="w-1/4 py-4 flex flex-col bg-white dark:bg-zinc-900" style="box-shadow: 5px 8px 8px 0px #000">
-        <div class="header px-6 pb-4 border-b dark:border-zinc-800">
+      <div class="attr-box w-1/4 py-4 flex flex-col">
+        <div class="header px-6 pb-4 border-b">
           <span>属性</span>
         </div>
         <div class="content flex-1 p-8">
@@ -167,4 +167,30 @@ const downloadImg = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.image-process .upload-box {
+  background-color: var(--showmd-bg-color-weak);
+  border-color: var(--showmd-border-color);
+}
+
+.image-process .upload-box:hover {
+  border-color: var(--showmd-border-color-hover);
+}
+
+.image-process .upload-box .desc {
+  color: var(--showmd-text-color-weak);
+}
+
+.image-process .img-box :is(.source-img, .process-img) {
+  background-color: var(--showmd-bg-color-primary);
+}
+
+.image-process .attr-box {
+  box-shadow: 5px 8px 8px 0px #000;
+  background-color: var(--showmd-bg-color-primary);
+}
+
+.image-process .attr-box .header {
+  border-color: var(--showmd-border-color);
+}
+</style>

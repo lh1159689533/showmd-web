@@ -104,7 +104,7 @@ init();
 
 <template>
   <div class="h-full z-1000 relative" @mouseleave="hideSubCategory" @mouseenter="cancleHideSubCategoryTimer">
-    <List :data-list="categoryList" class="category-list container h-full flex items-center text-sm text-gray-800 dark:text-zinc-200">
+    <List :data-list="categoryList" class="category-list container h-full flex items-center text-sm">
       <template #default="{ item }">
         <span
           @click="() => handleChangeCategory(item)" @mouseenter="() => hoverCategory(item)"
@@ -119,16 +119,16 @@ init();
   <div
     v-show="isShowSubCategory && subCategoryList" @mouseenter="cancleHideSubCategoryTimer"
     @mouseleave="hideSubCategory"
-    class="sub-category bg-white dark:bg-zinc-900 animate__animated animate__faster animate__fadeInDown z-900"
+    class="sub-category animate__animated animate__faster animate__fadeInDown z-900"
   >
     <List
       :data-list="subCategoryList" :class="$attrs['item-class']" style="font-size: 0.85rem"
-      class="sub-category-list container flex flex-wrap items-center bg-white dark:bg-zinc-900 text-gray-800 dark:text-zinc-200 py-2" item-class="mr-4"
+      class="sub-category-list container flex flex-wrap items-center py-2" item-class="mr-4"
     >
       <template #default="{ item }">
         <span
           @click="() => handleChangeSubCategory(item)" :class="[
-            item.key === activeSubCategory?.key && item.parent === activeSubCategory?.parent ? 'bg-indigo-500 text-white hover:text-white' : 'bg-gray-100 dark:bg-zinc-700 hover:text-indigo-500',
+            item.key === activeSubCategory?.key && item.parent === activeSubCategory?.parent ? 'bg-indigo-500 text-white hover:text-white' : 'unactive-item hover:text-indigo-500',
           ]" class="cursor-pointer px-2 py-1 rounded-full inline-block"
         >
           {{ item.title }}
@@ -139,8 +139,21 @@ init();
 </template>
 
 <style scoped>
+.category-list {
+  color: var(--showmd-text-color-primary);
+}
+
 .sub-category {
   box-shadow: #666 0px 8px 8px -12px;
-  /* background-color: white; */
+  background-color: var(--showmd-bg-color-primary);
+}
+
+.sub-category-list {
+  background-color: var(--showmd-bg-color-primary);
+  color: var(--showmd-text-color-primary);
+}
+
+.unactive-item {
+  background-color: var(--showmd-bg-color-weak);
 }
 </style>

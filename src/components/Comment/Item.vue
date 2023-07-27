@@ -170,70 +170,112 @@ const isDigg = computed(() => data.value.diggUsers?.split(',')?.includes(`${curr
 </script>
 
 <template>
-  <div class="common-item flex w-full text-sm">
-    <Avatar :src="data.user?.avatar" :class="type === 'comment' ? 'w-8 h-8' : 'w-6 h-6'" class="user-avatar rounded-full cursor-pointer" />
-    <div class="content-box ml-3 flex-1 text-gray-500">
-      <div @mouseenter="hoverItem = true" @mouseleave="hoverItem = false" class="content-section">
+  <div class="common-item-box flex w-full text-sm">
+    <Avatar
+      :src="data.user?.avatar" :class="type === 'comment' ? 'w-8 h-8' : 'w-6 h-6'"
+      class="user-avatar rounded-full cursor-pointer"
+    />
+    <div class="common-item ml-3 flex-1 min-w-0">
+      <div @mouseenter="hoverItem = true" @mouseleave="hoverItem = false">
         <div class="user-box flex items-center">
-          <div class="user flex-1">
-            <span class="cursor-pointer text-black dark:text-zinc-300" style="font-size: 15px">{{ data.user.name }}</span>
-            <span v-if="isAuthor" class="ml-1 text-indigo-500 bg-indigo-100 dark:bg-zinc-700 text-xs px-1">作者</span>
-            <span v-if="isMyself" class="ml-1 text-xs px-1 text-block bg-gray-100 dark:bg-zinc-700 dark:text-zinc-400">本人</span>
+          <div class="flex-1">
+            <span class="username cursor-pointer" style="font-size: 15px">{{ data.user.name }}</span>
+            <span v-if="isAuthor" class="isauthor ml-1 text-indigo-500 text-xs px-1">作者</span>
+            <span
+              v-if="isMyself"
+              class="ismyself ml-1 text-xs px-1 text-block"
+            >本人</span>
           </div>
           <span class="time">{{ formatDate(data.createTime) }}</span>
         </div>
-        <div class="content-box">
-          <div ref="contentDom" class="content pr-4 text-gray-700">
-            <span v-if="type === 'reply' && data.replyToUserId" class="reply-to-user text-indigo-500 mr-1">@{{ data.replyToUser.name }}</span>
+        <div>
+          <div ref="contentDom" class="content pr-4">
+            <span v-if="type === 'reply' && data.replyToUserId" class="reply-to-user text-indigo-500 mr-1">
+              @{{ data.replyToUser.name }}
+            </span>
             <span v-html="parse(data.content)"></span>
           </div>
-          <div v-if="isShowLimit" @click="handleExpand" class="limit text-indigo-500 cursor-pointer mt-2">{{ isExpand ? '收起' : '展开' }}</div>
+          <div v-if="isShowLimit" @click="handleExpand" class="limit text-indigo-500 cursor-pointer mt-2">
+            {{ isExpand ? '收起' : '展开' }}
+          </div>
         </div>
         <div class="footer flex mt-4">
           <div class="action-box text-sm" style="color: #8a8d90">
             <span
               @click="() => !isMyself && handleDigg()"
-              :class="[{ 'text-indigo-500': isDigg }, !isMyself ? 'cursor-pointer hover:text-indigo-500' : 'text-gray-400']"
+              :class="[{ 'text-indigo-500': isDigg }, !isMyself ? 'cursor-pointer' : 'ismyself']"
               class="digg"
             >
               <i class="iconfont icon-digg mr-1" />
               <span>{{ data.digg || '点赞' }}</span>
             </span>
-            <span v-show="!isShowAddReply" @click="showAddReply" class="reply mx-4 cursor-pointer hover:text-indigo-500">
+            <span v-show="!isShowAddReply" @click="showAddReply" class="reply mx-4 cursor-pointer">
               <i class="iconfont icon-reply mr-1" />
               <span>{{ data.replyCount || '回复' }}</span>
             </span>
-            <span v-show="isShowAddReply" @click="hideAddReply" class="reply mx-4 cursor-pointer text-indigo-500">
+            <span v-show="isShowAddReply" @click="hideAddReply" class="reply mx-4 cursor-pointer">
               <i class="iconfont icon-reply mr-1" />
               <span>取消回复</span>
             </span>
-            <span v-if="isMyself && hoverItem" @click="() => handleDelItem(data)" class="del cursor-pointer hover:text-red-500 flex-1">
+            <span
+              v-if="isMyself && hoverItem" @click="() => handleDelItem(data)"
+              class="del cursor-pointer flex-1"
+            >
               <i class="iconfont icon-comment-del mr-1" />
               <span>删除</span>
             </span>
           </div>
         </div>
       </div>
-      <AddItem v-if="isShowAddReply" @confirm="handleAddItem" @cancle="hideAddReply" ref="addItemDom" autofocus :placeholder="`回复${data.user.name}...`" class="add-reply mt-3" />
+      <AddItem
+        v-if="isShowAddReply" @confirm="handleAddItem" @cancle="hideAddReply" ref="addItemDom" autofocus
+        :placeholder="`回复${data.user.name}...`" class="add-reply mt-3"
+      />
       <slot name="replies" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.common-item .content-box .content {
+.common-item-box .common-item .content {
   display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   font-weight: 400;
-  color: #515767;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 3;
   margin-top: 1em;
   line-height: 22px;
+  word-break: break-all;
+  color: var(--showmd-text-color-weak);
 }
 
-.common-item .content-box .expand {
+.common-item-box .common-item .user-box .username {
+  color: var(--showmd-text-color-primary);
+}
+
+.common-item-box .common-item .user-box .isauthor {
+  background-color: var(--showmd-bg-color-weak);
+}
+
+.common-item-box .common-item .user-box .ismyself {
+  color: var(--showmd-text-color-weak);
+  background-color: var(--showmd-bg-color-weak);
+}
+
+.common-item-box .common-item .expand {
   -webkit-line-clamp: inherit;
+}
+
+.common-item-box .common-item .footer .digg.ismyself {
+  color: var(--showmd-text-color-disable);
+}
+
+.common-item-box .common-item .footer :is(.digg:not(.ismyself), .reply):hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.common-item-box .common-item .footer .del:hover {
+  color: var(--showmd-text-color-danger);
 }
 </style>

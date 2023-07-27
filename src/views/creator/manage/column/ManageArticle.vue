@@ -115,7 +115,7 @@ const onSortEnd = () => {
 <template>
   <h-drawer
     :min="500" :max="1200" :visible="visible" :title="column?.name" direction="rtl" :close-on-click-modal="false"
-    :before-close="onBeforeClose" destroy-on-close :size="600"
+    :before-close="onBeforeClose" destroy-on-close :size="600" class="col-manage-article"
   >
     <template #default>
       <div class="flex items-center justify-between pl-3 mb-2">
@@ -139,17 +139,17 @@ const onSortEnd = () => {
       >
         <template #item="{ element: article }">
           <div
-            class="article-list-item flex gap-8 items-center cursor-move text-sm px-3 py-2 border-b hover:bg-gray-50 text-gray-800 dark:hover:bg-zinc-800 dark:border-zinc-800"
+            class="article-list-item flex gap-8 items-center cursor-move text-sm px-3 py-2 border-b"
           >
             <el-checkbox :model-value="article?.isSel" @change="(isSel) => selectionChange(article?.id, isSel)" />
-            <div class="title text-sm flex-1 text-gray-500 dark:text-zinc-300">
+            <div class="title text-sm flex-1">
               {{ article.name }}
             </div>
             <el-button link size="small" type="danger" @click="() => remove([article])">移除</el-button>
           </div>
         </template>
       </vuedraggable>
-      <div v-else class="text-sm text-center pt-4 text-gray-500 dark:text-zinc-300">暂无收录文章</div>
+      <div v-else class="empty text-sm text-center pt-4">暂无收录文章</div>
     </template>
   </h-drawer>
   <AddArticle v-if="showDialog" :id="id" @close="showDialog = false" @callback="addSuccess" />
@@ -160,6 +160,22 @@ const onSortEnd = () => {
 </template>
 
 <style>
+.col-manage-article .article-list-item {
+  color: var(--showmd-text-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
+.col-manage-article .article-list-item:hover {
+  background-color: var(--showmd-bg-color-hover);
+}
+.col-manage-article .article-list-item .title {
+  color: var(--showmd-text-color-primary);
+}
+
+.col-manage-article .empty {
+  color: var(--showmd-text-color-weak);
+}
+
 .flip-list-move {
   transition: transform 0.5s;
 }

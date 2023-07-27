@@ -76,8 +76,8 @@ const handleSearch = async () => {
 </script>
 
 <template>
-  <div class="article-list h-full overflow-auto p-4">
-    <div class="search flex w-1/3 relative left-2/3 gap-8 p-4">
+  <div class="col-article-list h-full overflow-auto p-4">
+    <div class="col-search flex w-1/3 relative left-2/3 gap-8 p-4">
       <el-input v-model="searchKeyword" placeholder="请输入关键词" clearable />
       <el-button @click="handleSearch" type="primary">搜索</el-button>
     </div>
@@ -85,28 +85,29 @@ const handleSearch = async () => {
     <List v-else-if="articleList?.length" :data-list="articleList">
       <template #default="{ item: article }">
         <div
-          class="article-list-item flex justify-between text-sm px-6 py-4 border-t text-gray-800 hover:bg-gray-50 dark:text-zinc-300 dark:border-zinc-800 dark:hover:bg-zinc-800"
+          class="col-article-list flex justify-between text-sm px-6 py-4 border-t"
         >
-          <div class="article-list-item-content flex flex-col flex-1">
+          <div class="col-article-item flex flex-col flex-1">
             <div
               @click="() => toDetail(article?.id)"
-              class="title text-base mb-3 cursor-pointer text-gray-900 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-600"
+              class="title text-base mb-3 cursor-pointer"
             >
               {{ article.name }}
             </div>
-            <div class="truncate text-gray-600 dark:text-zinc-500">{{ article.summary }}</div>
+            <div class="desc truncate">{{ article.summary }}</div>
             <div class="flex mt-4 justify-between">
-              <div class="flex gap-4 delimiter text-gray-500 dark:text-zinc-500">
+              <div class="cnt flex gap-4 delimiter">
                 <span class="create-time">{{ article.updateTime }}</span>
                 <span>阅读 {{ article.readCount }}</span>
                 <span>评论 {{ article.commentCount }}</span>
               </div>
               <List
-                :data-list="oprateList" class="oprate flex gap-4 text-gray-600"
-                item-class="cursor-pointer hover:text-indigo-500 dark:text-zinc-500 dark:hover:text-indigo-500 " @click="(item) => item.handle?.(article?.id)"
+                :data-list="oprateList" class="oprate flex gap-4"
+                item-class="cursor-pointer "
+                @click="(item) => item.handle?.(article?.id)"
               >
                 <template #default="{ item }">
-                  <span :class="[item.key === 'del' ? 'hover:text-red-500' : 'hover:text-indigo-500']">{{ item.title
+                  <span :class="[item.key === 'del' ? 'del' : '']">{{ item.title
                   }}</span>
                 </template>
               </List>
@@ -122,4 +123,34 @@ const handleSearch = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.col-article-list .col-article-list {
+  color: var(--showmd-text-color-primary);
+  background-color: var(--showmd-bg-color-primary);
+  border-color: var(--showmd-border-color);
+}
+
+.col-article-list .col-article-list .col-article-item .title {
+  color: var(--showmd-text-color-primary);
+}
+
+.col-article-list .col-article-list .col-article-item .title:hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.col-article-list .col-article-list .col-article-item :is(.desc, .cnt) {
+  color: var(--showmd-text-color-weak);
+}
+
+.col-article-list .col-article-list .col-article-item .oprate {
+  color: var(--showmd-text-color-weak);
+}
+
+.col-article-list .col-article-list .col-article-item .oprate > li > span:hover {
+  color: var(--showmd-text-color-hover);
+}
+
+.col-article-list .col-article-list .col-article-item .oprate > li >span.del:hover {
+  color: var(--showmd-text-color-danger);
+}
+</style>

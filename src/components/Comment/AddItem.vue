@@ -177,10 +177,10 @@ export default defineComponent({
     <div
       ref="dom" id="textareaBox" contenteditable="true" :placeholder="placeholder" @input="handleValueChange"
       @focus="handleFoucs" @blur="handleBlur"
-      class="textarea w-full p-2 text-sm rounded border border-gray-300 focus:border-indigo-500 dark:border-zinc-800 dark:focus:border-indigo-500"
+      class="textarea w-full p-2 text-sm rounded border"
     >
     </div>
-    <div v-show="isShowAction" class="action-box text-sm mt-2 flex items-center gap-4 text-gray-500 dark:text-zinc-500">
+    <div v-show="isShowAction" class="action-box text-sm mt-2 flex items-center gap-4">
       <el-dropdown
         @visible-change="handleIsShowEmoji" trigger="click" placement="bottom-start"
         popper-class="emoji-dropdown"
@@ -208,7 +208,7 @@ export default defineComponent({
       <span>⌘ + Enter</span>
       <button
         @click="addItem" :disabled="!value || isPublish"
-        class="ml-2 py-2 px-5 rounded text-white bg-indigo-500 disabled:bg-indigo-300 dark:text-zinc-300 dark:disabled:bg-zinc-500"
+        class="ml-2 py-2 px-5 rounded"
       >
         {{ isPublish ? '发布中' : '发布' }}
       </button>
@@ -217,12 +217,12 @@ export default defineComponent({
 </template>
 
 <style>
-.emoji-dropdown {
+.add-item .emoji-dropdown {
   border: none !important;
   box-shadow: 0 8px 24px rgb(0 0 0 / 16%) !important;
 }
 
-.textarea {
+.add-item .textarea {
   min-width: 400px;
   min-height: 80px;
   margin-left: auto;
@@ -234,17 +234,39 @@ export default defineComponent({
   box-sizing: border-box;
 }
 
-.textarea:empty::before {
+.add-item .textarea {
+  border-color: var(--showmd-border-color);
+}
+
+.add-item .textarea:focus {
+  border-color: var(--showmd-text-color-hover);
+}
+
+.add-item .textarea:empty::before {
   content: attr(placeholder);
   color: #6b7280;
   cursor: text;
 }
 
-.textarea-emoji {
+.add-item .textarea-emoji {
   width: 20px;
   height: 20px;
   display: inline-block;
   cursor: default;
   margin: 0 2px;
+}
+
+.add-item .action-box {
+  color: var(--showmd-text-color-weak);
+}
+
+.add-item .action-box button {
+  background-color: var(--showmd-text-color-hover);
+  color: #fff;
+}
+
+.add-item .action-box button:disabled {
+  background-color: var(--showmd-text-color-disable);
+  cursor: not-allowed;
 }
 </style>
