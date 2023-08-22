@@ -160,7 +160,7 @@ function codeblockZoom() {
             }
           }),
         ),
-        createElement('div', { style: 'position: relative; overflow: auto; max-height: calc(100% -20px)' },
+        createElement('div', { style: 'position: relative; overflow: auto; max-height: calc(100% - 20px)' },
           createElement(pre.cloneNode(true), {
             onmouseover: function () {
               querySelector(this, '.vditor-copy').style.display = 'block';
