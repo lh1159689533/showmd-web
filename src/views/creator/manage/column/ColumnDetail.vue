@@ -93,7 +93,7 @@ watchEffect(() => {
         >
           <div class="article-list-item-content flex flex-col flex-1">
             <div class="title text-xl mb-3">
-              {{ article.name }}
+              <span class="text-underline">{{ article.name }}</span>
             </div>
             <div class="desc truncate">{{ article.summary }}</div>
             <div class="flex mt-4 justify-between">

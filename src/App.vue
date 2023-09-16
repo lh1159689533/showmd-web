@@ -233,4 +233,21 @@ h3 {
 
 ::view-transition-new(root) {
   z-index: 999;
-}</style>
+}
+
+
+/* 文字选中时的下划线动画 */
+.text-underline {
+  padding-bottom: 2px;
+  background: linear-gradient(to right, var(--showmd-border-color-hover), var(--showmd-border-color-hover));
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 0 1.5px;
+  transition: background-size .3s;
+}
+
+.text-underline:hover {
+  background-size: 100% 1.5px;
+  background-position-x: left;
+}
+</style>

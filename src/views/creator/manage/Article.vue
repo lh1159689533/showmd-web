@@ -92,7 +92,7 @@ const handleSearch = async () => {
               @click="() => toDetail(article?.id)"
               class="title text-base mb-3 cursor-pointer"
             >
-              {{ article.name }}
+              <span class="text-underline">{{ article.name }}</span>
             </div>
             <div class="desc truncate">{{ article.summary }}</div>
             <div class="flex mt-4 justify-between">
