@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, reactive, ref, watchEffect } from 'vue';
 import { useStore } from 'vuex';
+import { findListByUserId } from '@src/service/column';
 
 interface IPublishForm {
   category?: string;
@@ -73,27 +74,28 @@ watchEffect(() => {
   }
 });
 
-// watchEffect(() => {
-//   // if (props.userId) {
-//   findListByUserId()
-//     .then((data) => {
-//       cloumnList.value = data ?? [];
-//     })
-//     .catch((e) => {
-//       console.log('查询出错:', e);
-//     });
-//   // }
-// });
+watchEffect(() => {
+  findListByUserId()
+    .then((data) => {
+      cloumnList.value = data ?? [];
+    })
+    .catch(() => {
+      cloumnList.value = [];
+    });
+});
 </script>
 
 <template>
-  <div class="publish-article" :class="placement ?? 'top-right'" @click.stop="() => {}">
+  <div class="publish-article" :class="placement ?? 'top-right'" @click.stop="() => { }">
     <h3 class="w-full p-4 border-b">发布文章</h3>
     <div class="form py-4 pr-20">
       <el-form ref="ruleFormRef" :model="publishForm" :rules="publishRules" label-width="120px">
         <el-form-item label="分类" prop="category">
           <el-select v-model="publishForm.category" @change="onCategoryChang" clearable placeholder="请选择分类">
-            <el-option v-for="category in categoryList" :key="category.key" :label="category.title" :value="category.key" />
+            <el-option
+              v-for="category in categoryList" :key="category.key" :label="category.title"
+              :value="category.key"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="标签" prop="tags">
@@ -108,14 +110,8 @@ watchEffect(() => {
         </el-form-item>
         <el-form-item label="封面">
           <el-upload
-            :class="{ isUpload: publishForm.cover?.length }"
-            list-type="picture-card"
-            :on-change="handleChange"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :limit="1"
-            action="#"
-            :auto-upload="false"
+            :class="{ isUpload: publishForm.cover?.length }" list-type="picture-card" :on-change="handleChange"
+            :on-preview="handlePreview" :on-remove="handleRemove" :limit="1" action="#" :auto-upload="false"
             :file-list="publishForm.cover"
           >
             <div class="flex flex-col">
@@ -128,7 +124,10 @@ watchEffect(() => {
           </el-dialog>
         </el-form-item>
         <el-form-item label="摘要" prop="summary">
-          <el-input v-model="publishForm.summary" :rows="5" resize="none" maxlength="100" show-word-limit type="textarea" placeholder="请输入文章摘要..." />
+          <el-input
+            v-model="publishForm.summary" :rows="5" resize="none" maxlength="100" show-word-limit type="textarea"
+            placeholder="请输入文章摘要..."
+          />
         </el-form-item>
         <el-form-item>
           <el-button @click="() => $emit('close')">取消</el-button>
@@ -156,7 +155,7 @@ watchEffect(() => {
   @apply bottom-14 right-0;
 }
 
-.publish-article .el-form-item__content > div {
+.publish-article .el-form-item__content>div {
   width: 100%;
 }
 
