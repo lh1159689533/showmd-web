@@ -6,9 +6,9 @@ import {
   getElementById,
   addClass,
   removeClass,
-  getNodeByClassName,
+  findNodeByClassName,
   querySelectorAll,
-  getNodeByAttribute,
+  findNodeByAttribute,
   getBoundingClientRect,
   getComputedStyleOf,
 } from './domUtil';
@@ -54,7 +54,7 @@ const previewNodeTopList: { id: string; top: number }[] = []; // 预览区h1-6�
 let isOutlineClick = false; // 是否是点击目录，如果是则不触发onScroll
 
 const currentTheme = 'classic';
-const currentTontentTheme = ref(props.data?.contentTheme ?? 'Chinese-red');
+const currentContentTheme = ref(props.data?.contentTheme ?? 'Chinese-red');
 const currentCodeTheme = ref(props.data?.codeTheme ?? 'github');
 const catalogList = ref([]);
 
@@ -140,15 +140,15 @@ onMounted(() => {
       onScroll();
       !isOutlineInited && setTimeout(initOutline, 1000);
       onPreviewScroll();
-      const editorContent = querySelector(getElementById('myEditorContent'), '.vditor-ir');
+      const editorContent = querySelector('.vditor-ir', getElementById('myEditorContent'));
       addClass(editorContent, 'showmd');
-      const outlineTitle = querySelector(getElementById('myEditorContent'), '.vditor-content .vditor-outline .vditor-outline__title');
+      const outlineTitle = querySelector('.vditor-content .vditor-outline .vditor-outline__title', getElementById('myEditorContent'));
       if (outlineTitle) {
         outlineTitle.innerText = '目录';
       }
-      querySelector(getElementById('myEditorContent'), '.vditor-wysiwyg')?.remove();
-      querySelector(getElementById('myEditorContent'), '.vditor-sv')?.remove();
-      querySelector(getElementById('myEditorContent'), '.vditor-preview')?.remove();
+      querySelector('.vditor-wysiwyg', getElementById('myEditorContent'))?.remove();
+      querySelector('.vditor-sv', getElementById('myEditorContent'))?.remove();
+      querySelector('.vditor-preview', getElementById('myEditorContent'))?.remove();
       loadCatalog(); // 加载目录
     },
     input(value) {
@@ -186,7 +186,7 @@ onMounted(() => {
 
 const loadCatalog = () => {
   const editorNode = getElementById('myEditorContent');
-  const hList = querySelectorAll(editorNode, 'h1,h2,h3,h4,h5,h6');
+  const hList = querySelectorAll('h1,h2,h3,h4,h5,h6', editorNode);
   if (hList?.length) {
     catalogList.value = hList.map((h) => ({
       id: `catalog-${h.id}`,
@@ -198,21 +198,21 @@ const loadCatalog = () => {
 
 function setContentTheme(contentTheme, contentThemePath) {
   emit('change', { contentTheme });
-  currentTontentTheme.value = contentTheme;
+  currentContentTheme.value = contentTheme;
   editor.value.setTheme(currentTheme, contentTheme, currentCodeTheme.value, contentThemePath);
 }
 
 function setCodeTheme(codeTheme) {
   emit('change', { codeTheme });
   currentCodeTheme.value = codeTheme;
-  editor.value.setTheme(currentTheme, currentTontentTheme.value, codeTheme);
+  editor.value.setTheme(currentTheme, currentContentTheme.value, codeTheme);
 }
 
 /**
  * 根据编辑区滚动，联动目录区
  */
 function onScroll() {
-  const contentNode = querySelector(getElementById('myEditorContent'), '.vditor-sv.vditor-reset');
+  const contentNode = querySelector('.vditor-sv.vditor-reset', getElementById('myEditorContent'));
   contentNode?.addEventListener('scroll', function () {
     if (!isShowOutline) return;
     if (isOutlineClick) return (isOutlineClick = false);
@@ -224,7 +224,7 @@ function onScroll() {
 }
 
 function onPreviewScroll() {
-  const previewNode = querySelector(getElementById('myEditorContent'), '.vditor-preview');
+  const previewNode = querySelector('.vditor-preview', getElementById('myEditorContent'));
   previewNode?.addEventListener('scroll', function () {
     if (!isShowOutline) return;
     if (isOutlineClick) return (isOutlineClick = false);
@@ -237,8 +237,8 @@ function onPreviewScroll() {
 
 function activeOutlineMove(targetId) {
   // 根据当前最顶部的内容(h1-6)的id找到对应的目录节点，即当前选中目录节点
-  const newActiveNode = getNodeByAttribute(outlineNodeList, 'data-target-id', targetId);
-  const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+  const newActiveNode = findNodeByAttribute(outlineNodeList, 'data-target-id', targetId);
+  const currentActiveNode = findNodeByClassName(outlineNodeList, 'active');
   if (newActiveNode && currentActiveNode) {
     // 要选中的目录节点添加选中样式，当前选中目录节点去掉选中样式
     removeClass(currentActiveNode, 'active');
@@ -269,9 +269,9 @@ function findTargetIdNode(scrollTop, nodeTopList) {
  */
 function initOutline() {
   isOutlineInited = true;
-  const outline = querySelector(getElementById('myEditorContent'), '.vditor-outline__content');
+  const outline = querySelector('.vditor-outline__content', getElementById('myEditorContent'));
   // 获取目录节点列表
-  outlineNodeList = querySelectorAll(outline, 'span[data-target-id]');
+  outlineNodeList = querySelectorAll('span[data-target-id]', outline);
 
   // 默认第一个选中
   // addClass(outlineNodeList[0], 'active');
@@ -281,12 +281,12 @@ function initOutline() {
     node.addEventListener('click', function () {
       isOutlineClick = true;
       const { targetId } = this.dataset;
-      const contentNode = querySelector(getElementById('myEditorContent'), '.vditor-sv.vditor-reset');
+      const contentNode = querySelector('.vditor-sv.vditor-reset', getElementById('myEditorContent'));
       const content_tid = +targetId.replace('_', '') + 1;
-      const targetContentNode = querySelector(contentNode, `div[data-block]:nth-of-type(${content_tid})`);
+      const targetContentNode = querySelector(`div[data-block]:nth-of-type(${content_tid})`, contentNode);
       targetContentNode?.scrollIntoView({ block: 'start' });
       // 点击节点添加选中样式 active，其他节点去掉选中样式 active
-      const currentActiveNode = getNodeByClassName(outlineNodeList, 'active');
+      const currentActiveNode = findNodeByClassName(outlineNodeList, 'active');
       removeClass(currentActiveNode, 'active');
       addClass(this, 'active');
     })
@@ -294,11 +294,11 @@ function initOutline() {
 
   // 获取目录节点的top值
   const targetIdList = outlineNodeList.map((node) => node.getAttribute('data-target-id')).filter((id) => id !== '');
-  const contentNode = querySelector(getElementById('myEditorContent'), '.vditor-sv.vditor-reset');
+  const contentNode = querySelector('.vditor-sv.vditor-reset', getElementById('myEditorContent'));
 
   targetIdList?.map((id) => {
     const content_tid = +id.replace('_', '') + 1;
-    const targetContentNode = querySelector(contentNode, `div[data-block]:nth-of-type(${content_tid})`);
+    const targetContentNode = querySelector(`div[data-block]:nth-of-type(${content_tid})`, contentNode);
     let cntop = 0;
     if (targetContentNode) {
       cntop = getBoundingClientRect(targetContentNode)?.top - 36 - 76;

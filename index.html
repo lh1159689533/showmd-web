@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showmd</title>
+    <!-- 引入iconfont -->
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3441935_kdosmgf2umd.css" />
+    <link
+      id="tuiEditorHljsStyle"
+      rel="stylesheet"
+      href="https://cdn.bootcdn.net/ajax/libs/prism/1.28.0/themes/prism.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Showmd</title>
-  <!-- 引入iconfont -->
-  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3441935_kdosmgf2umd.css">
-</head>
-
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+  <body>
+    <svg
+      style="position: absolute; width: 0; height: 0; overflow: hidden"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <symbol id="code-block-copy" viewBox="0 0 32 32">
+          <path
+            d="M27.429 0h-19.143c-0.157 0-0.286 0.129-0.286 0.286v2c0 0.157 0.129 0.286 0.286 0.286h17.714v24.571c0 0.157 0.129 0.286 0.286 0.286h2c0.157 0 0.286-0.129 0.286-0.286v-26c0-0.632-0.511-1.143-1.143-1.143zM22.857 4.571h-18.286c-0.632 0-1.143 0.511-1.143 1.143v18.954c0 0.304 0.121 0.593 0.336 0.807l6.189 6.189c0.079 0.079 0.168 0.143 0.264 0.196v0.068h0.15c0.125 0.046 0.257 0.071 0.393 0.071h12.096c0.632 0 1.143-0.511 1.143-1.143v-25.143c0-0.632-0.511-1.143-1.143-1.143zM10.214 28.293l-3.075-3.079h3.075v3.079zM21.429 29.429h-8.929v-5.071c0-0.789-0.639-1.429-1.429-1.429h-5.071v-15.786h15.429v22.286z"
+          ></path>
+        </symbol>
+      </defs>
+    </svg>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://uicdn.toast.com/editor/latest/i18n/zh-cn.min.js" defer></script>
+    <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/gsap/3.9.1/gsap.min.js" defer></script>
+  </body>
 </html>

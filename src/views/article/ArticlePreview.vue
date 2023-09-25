@@ -7,7 +7,10 @@ import CanvasBG from '@components/CanvasBG/Index.vue';
 import message from '@utils/message';
 import { findById, findPrevColumnArticle, findNextColumnArticle } from '@service/article';
 import { findByArticleId } from '@service/column';
-import Catalog from '@src/components/Editor/Catalog.vue';
+import Catalog from '@components/Editor/Catalog.vue';
+import TUIPreview from '@components/Editor/TUIPreview.vue';
+import RTPreview from '@components/Editor/RTPreview.vue';
+import Comment from '@components/Comment/Comment.vue';
 
 const props = defineProps<{
   id: number;
@@ -194,14 +197,19 @@ init();
           </span>
         </div>
       </div>
-      <MDPreview v-if="!loading && article?.editorType === 1" :data="article">
+      <!-- <MDPreview v-if="!loading && article?.editorType === 1" :data="article">
         <template #default="{ catalogList }">
           <Catalog v-if="catalogList?.length" :data="catalogList" @on-loaded="() => (isShowCatalog = true)" />
         </template>
-      </MDPreview>
+      </MDPreview> -->
+      <TUIPreview v-if="!loading && article?.editorType === 1" :data="article">
+        <template #default="{ catalogList }">
+          <Catalog v-if="catalogList?.length" :data="catalogList" :threshold="110" @on-loaded="() => (isShowCatalog = true)" />
+        </template>
+      </TUIPreview>
       <RTPreview v-if="!loading && article?.editorType === 2" :data="article">
         <template #default="{ catalogList }">
-          <Catalog v-if="catalogList?.length" :data="catalogList" @on-loaded="() => (isShowCatalog = true)" />
+          <Catalog v-if="catalogList?.length" :data="catalogList" :threshold="60" @on-loaded="() => (isShowCatalog = true)" />
         </template>
       </RTPreview>
     </div>

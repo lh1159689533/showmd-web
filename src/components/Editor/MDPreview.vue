@@ -5,20 +5,20 @@ import gsap from 'gsap';
 // import 'vditor/dist/index.css';
 import { querySelectorAll, getElementById, getBoundingClientRect, querySelector, createElement } from './domUtil';
 
-interface User {
-  name: string;
-  avatar: string;
-}
+// interface User {
+//   name: string;
+//   avatar: string;
+// }
 
 interface Data {
   id: number;
   content?: string;
   codeTheme?: string;
   contentTheme?: string;
-  updateTime?: string;
-  createTime?: string;
-  readCount?: number;
-  user?: User;
+  // updateTime?: string;
+  // createTime?: string;
+  // readCount?: number;
+  // user?: User;
 }
 
 interface Props {
@@ -90,12 +90,12 @@ function initPreview() {
  */
 function codeblockZoom() {
   // 全屏及全屏后的操作
-  const fullscreenDom = querySelectorAll(getElementById('myPreviewEditor'), '.code-fullscreen-checkbox');
+  const fullscreenDom = querySelectorAll('.code-fullscreen-checkbox', getElementById('myPreviewEditor'));
   fullscreenDom.forEach(dom => dom.addEventListener('click', function (e) {
     const target = (e.target as HTMLInputElement);
     const codeBlock = target.closest('.code-block');
     const { top, left, width, height } = getBoundingClientRect(codeBlock);
-    const pre = querySelector(codeBlock, '.code-content pre');
+    const pre = querySelector('.code-content pre', codeBlock);
     const container = createElement('div', {
       class: 'showmd',
       style: `position: fixed; top: ${top}px; left: ${left}px; z-index: 10000; width: ${width}px; height: ${height}px; background-color: #fff`
@@ -163,10 +163,10 @@ function codeblockZoom() {
         createElement('div', { style: 'position: relative; overflow: auto; max-height: calc(100% - 20px)' },
           createElement(pre.cloneNode(true), {
             onmouseover: function () {
-              querySelector(this, '.vditor-copy').style.display = 'block';
+              querySelector('.vditor-copy', this).style.display = 'block';
             },
             onmouseout: function () {
-              querySelector(this, '.vditor-copy').style.display = 'none';
+              querySelector('.vditor-copy', this).style.display = 'none';
             },
           }))
       ));
@@ -184,7 +184,7 @@ function codeblockZoom() {
   }));
 
   // 收起/展开代码
-  const suofangDom = querySelectorAll(getElementById('myPreviewEditor'), '.code-suofang-checkbox');
+  const suofangDom = querySelectorAll('.code-suofang-checkbox', getElementById('myPreviewEditor'));
   suofangDom.forEach(dom => dom.addEventListener('click', function (e) {
     const target = (e.target as HTMLInputElement);
     const codeBlock = target.closest('.code-block');
@@ -204,7 +204,7 @@ function codeblockZoom() {
  */
 function previewImg() {
   const editorNode = getElementById('myPreviewEditor');
-  const imgList = querySelectorAll(editorNode, 'img');
+  const imgList = querySelectorAll('img', editorNode);
   imgList.map((img) => {
     // 遍历img添加click事件
     img.addEventListener('click', function () {
@@ -264,7 +264,7 @@ function previewImg() {
  */
 function codeCopy() {
   const editorNode = getElementById('myPreviewEditor');
-  const copyNodeList = querySelectorAll(editorNode, '.vditor-copy>span[aria-label="复制"]');
+  const copyNodeList = querySelectorAll('.vditor-copy>span[aria-label="复制"]', editorNode);
   copyNodeList.map((node) => {
     node?.addEventListener('click', function () {
       this.setAttribute('aria-label', '已复制');
@@ -278,7 +278,7 @@ function codeCopy() {
 function outlineRender() {
   document.documentElement.scrollTop = 0;
   const editorNode = getElementById('myPreviewEditor');
-  const hList = querySelectorAll(editorNode, 'h1,h2,h3,h4,h5,h6');
+  const hList = querySelectorAll('h1,h2,h3,h4,h5,h6', editorNode);
   if (hList?.length) {
     outlineNodeList.value = hList.map((h) => ({
       id: `catalog-${h.id}`,

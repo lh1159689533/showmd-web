@@ -9,7 +9,10 @@ import storage from '@utils/storage';
 import { findById, saveArticle, ICover } from '@service/article';
 import { listContentTheme, listCodeTheme } from '@service/theme';
 import { findByArticleId } from '@service/column';
-import Catalog from '@src/components/Editor/Catalog.vue';
+import Catalog from '@components/Editor/Catalog.vue';
+import CatalogNew from '@components/Editor/CatalogNew.vue';
+import TUIEditor from '@components/Editor/TUIEditor.vue';
+import RTEditor from '@components/Editor/RTEditor.vue';
 
 interface IArticle {
   id?: number;
@@ -30,7 +33,7 @@ const router = useRouter();
 const store = useStore();
 
 const props = defineProps<{
-  id?: number | null;
+  id?: string | null;
 }>();
 
 const currentUser = ref();
@@ -144,7 +147,6 @@ const showPublish = () => {
 
 // 文章内容变化
 const onChange = (value, textValue = '') => {
-  wordCount.value = textValue.replace(/\s+/g, '')?.length;
   if (editorType.value === 'markdown') {
     if (value.content) {
       article.value.summary = value.content
@@ -158,6 +160,8 @@ const onChange = (value, textValue = '') => {
       article.value.codeTheme = value.codeTheme;
     }
   } else {
+    wordCount.value = textValue.replace(/\s+/g, '')?.length;
+
     article.value.content = value.content;
     article.value.name = value.name;
     article.value.contentTheme = '';
@@ -234,29 +238,42 @@ init();
 </script>
 
 <template>
-  <div v-if="editorType === 'markdown'" class="flex flex-col h-full min-h-screen">
+  <div v-if="editorType === 'markdown'" class="h-screen">
     <div class="tool flex items-center p-3 px-8 bg-white">
-      <input v-model="article.name" placeholder="请输入文章标题..." class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none" />
+      <input
+        v-model="article.name" placeholder="请输入文章标题..."
+        class="flex-1 border-0 bg-transparent shadow-none font-bold text-2xl focus:outline-none"
+      />
       <div class="rightGroups flex py-1 relative items-center">
         <!-- <el-button>草稿箱</el-button> -->
         <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
-        <el-tooltip content="切换为富文本编辑器" effect="light">
-          <i @click="() => changeEditorType('richtext')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
+        <el-tooltip v-if="!props.id" content="切换为富文本编辑器" effect="light">
+          <i
+            @click="() => changeEditorType('richtext')"
+            class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600"
+          />
         </el-tooltip>
         <Avatar :src="currentUser?.avatar" class="w-7 h-7 rounded-full cursor-pointer ml-6" />
       </div>
     </div>
-    <MDEditorIR ref="editorRef" v-if="isShowEditor" :data="article" :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange">
+    <TUIEditor
+      ref="editorRef" v-if="isShowEditor"
+      :data="{ content: article?.content, contentTheme: article?.contentTheme, codeTheme: article?.codeTheme }"
+      :content-theme-list="contentThemeList" :code-theme-list="codeThemeList" @change="onChange"
+    >
       <template #default="{ catalogList }">
-        <Catalog v-if="catalogList?.length" :data="catalogList" />
+        <CatalogNew v-if="catalogList?.length" :data="catalogList" :threshold="110" />
       </template>
-    </MDEditorIR>
+    </TUIEditor>
   </div>
   <div v-if="editorType === 'richtext'" class="h-screen">
     <div style="height: calc(100vh - 58px)">
-      <RTEditor ref="editorRef" v-if="isShowEditor" :data="article" @on-change="onChange">
+      <RTEditor
+        ref="editorRef" v-if="isShowEditor" :data="{ name: article.name, content: article?.content }"
+        @on-change="onChange"
+      >
         <template #default="{ catalogList }">
-          <Catalog v-if="catalogList?.length" :data="catalogList" />
+          <Catalog v-if="catalogList?.length" :data="catalogList" :threshold="60" />
         </template>
       </RTEditor>
     </div>
@@ -268,20 +285,34 @@ init();
         <div class="right flex">
           <!-- <el-button>草稿箱</el-button> -->
           <div class="scale-editor flex items-center gap-2 text-sm mr-6">
-            <i @click="() => editorScale('-')" class="iconfont icon-jianhao text-sm" :class="[scale === 50 ? 'cursor-not-allowed' : 'cursor-pointer']"></i>
+            <i
+              @click="() => editorScale('-')" class="iconfont icon-jianhao text-sm"
+              :class="[scale === 50 ? 'cursor-not-allowed' : 'cursor-pointer']"
+            ></i>
             <el-dropdown trigger="click" @command="(command) => editorScale(command)">
               <span class="text-xs text-gray-500 w-8 text-center">{{ scale }}%</span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-for="item in [50, 75, 100, 125, 150]" :key="item" :command="item" :class="[scale === item ? 'scale-active' : '']">{{ item }}%</el-dropdown-item>
+                  <el-dropdown-item
+                    v-for="item in [50, 75, 100, 125, 150]" :key="item" :command="item"
+                    :class="[scale === item ? 'scale-active' : '']"
+                  >
+                    {{ item }}%
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <i @click="() => editorScale('+')" class="iconfont icon-jiahao text-sm" :class="[scale === 150 ? 'cursor-not-allowed' : 'cursor-pointer']"></i>
+            <i
+              @click="() => editorScale('+')" class="iconfont icon-jiahao text-sm"
+              :class="[scale === 150 ? 'cursor-not-allowed' : 'cursor-pointer']"
+            ></i>
           </div>
           <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
           <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
-            <i @click="() => changeEditorType('markdown')" class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600" />
+            <i
+              @click="() => changeEditorType('markdown')"
+              class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600"
+            />
           </el-tooltip>
           <Avatar :src="currentUser?.avatar" class="w-7 h-7 rounded-full cursor-pointer ml-6" />
         </div>
@@ -289,11 +320,8 @@ init();
     </div>
   </div>
   <PublishArticle
-    v-show="isShowPublish"
-    :init-value="initPublishForm"
-    :placement="editorType === 'markdown' ? 'top-right' : 'bottom-right'"
-    @publish="onPublish"
-    @close="hidePublish"
+    v-show="isShowPublish" :init-value="initPublishForm"
+    :placement="editorType === 'markdown' ? 'top-right' : 'bottom-right'" @publish="onPublish" @close="hidePublish"
   />
 </template>
 

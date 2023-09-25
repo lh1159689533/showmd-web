@@ -52,7 +52,7 @@ body {
 }
 
 body {
-  overflow-y: scroll;
+  overflow-y: auto;
   @apply bg-gray-100;
 }
 
@@ -234,7 +234,6 @@ h3 {
 ::view-transition-new(root) {
   z-index: 999;
 }
-
 
 /* 文字选中时的下划线动画 */
 .text-underline {

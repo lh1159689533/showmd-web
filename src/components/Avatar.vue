@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue';
 
-defineProps<{ src: string }>();
+defineProps<{ src?: string }>();
 
 const defaultSrc = '/api/avatars.png';
 </script>

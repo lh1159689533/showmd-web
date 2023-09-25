@@ -27,7 +27,7 @@ let isCatalogClick = false; // 是否是点击目录，如果是则不触发onSc
 
 // 根据body高度，计算出目录高度
 const bodyHeight = window.screen.height;
-const height = ref(bodyHeight * 0.5);
+const height = ref(bodyHeight * 1);
 
 /**
  * 选中的目录节点变化
@@ -107,15 +107,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    id="myPreviewEditorSider" v-if="data?.length" class="fixed" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']"
+    class="catalog-container" v-if="data?.length" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']"
     style="transition: 300ms"
   >
-    <nav :style="{ height: `${height}px` }" class="relative">
+    <nav class="relative h-full">
       <h4 class="title font-bold pl-4 py-2 border-b">目录</h4>
-      <div
-        id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full"
-        :style="{ maxHeight: `${height - 50}px` }"
-      >
+      <div class="catalog-list overflow-y-auto overflow-x-hidden absolute right-0 w-full">
         <List
           :data-list="data" @click="handleCatalogClick" class="w-full"
           item-class="py-2 truncate cursor-pointer relative text-sm"
@@ -137,25 +134,28 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-#myPreviewEditorSider {
-  box-shadow: 0px 0px 8px -6px #000;
-  border-radius: 3px;
+.catalog-container {
   width: 260px;
-  z-index: 2000;
+  height: 100%;
   background-color: var(--showmd-bg-color-primary);
+  border-left: 1px solid #dadde6;
 }
 
-#myPreviewEditorSider nav h4 {
+.catalog-container nav h4 {
   height: 50px;
   border-color: var(--showmd-border-color);
   color: var(--showmd-text-color-primary);
 }
 
-#myPreviewEditorOutlineList ul>li:hover {
+.catalog-list {
+  height: calc(100% - 50px);
+}
+
+.catalog-list ul>li:hover {
   background-color: var(--showmd-bg-color-weak);
 }
 
-#myPreviewEditorOutlineList ul>li>span.active::before {
+.catalog-list ul>li>span.active::before {
   content: '';
   position: absolute;
   width: 4px;
@@ -164,11 +164,11 @@ onBeforeUnmount(() => {
   background-color: var(--showmd-text-color-hover);
 }
 
-#myPreviewEditorOutlineList ul>li>span.active {
+.catalog-list ul>li>span.active {
   color: var(--showmd-text-color-hover);
 }
 
-#myPreviewEditorOutlineList ul>li>span {
+.catalog-list ul>li>span {
   color: var(--showmd-text-color-primary);
 }
 

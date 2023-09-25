@@ -62,7 +62,7 @@ const handleChange = (editor: IDomEditor) => {
   headerList.value = headers.map((header) => {
     const text = SlateNode.string(header);
     const { id, type } = header as any;
-    return { id: `catalog-${id}`, indent: type, title: text };
+    return { id: `catalog-${id}`, indent: type, title: text, contentKey: 'id', contentSelector: `#${id}` };
   });
 };
 
@@ -80,7 +80,7 @@ const scaleEditor = (scale: number) => {
     scale,
     translate,
   };
-  const editorDom = querySelector(editorRef.value.getEditableContainer(), '.w-e-scroll>div:first-child');
+  const editorDom = querySelector('.w-e-scroll>div:first-child', editorRef.value.getEditableContainer());
   if (editorDom) {
     editorDom.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${translate}, 0)`;
   }
