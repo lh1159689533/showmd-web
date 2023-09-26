@@ -77,13 +77,13 @@ const setCodeTheme = (codeTheme: string, cdn = Constants.CDN) => {
   if (!Constants.CODE_THEME.includes(codeTheme)) {
     return;
   }
-  const tuiEditorHljsStyle = getElementById('tuiEditorHljsStyle') as HTMLLinkElement;
+  const codeStyle = getElementById('tuiEditorCodeThemeStyle') as HTMLLinkElement;
   const href = `${cdn}/prism-${codeTheme}.css`;
-  if (!tuiEditorHljsStyle) {
-    addStyle('tuiEditorHljsStyle', href);
-  } else if (tuiEditorHljsStyle.href !== href) {
-    tuiEditorHljsStyle.remove();
-    addStyle('tuiEditorHljsStyle', href);
+  if (!codeStyle) {
+    addStyle('tuiEditorCodeThemeStyle', href);
+  } else if (codeStyle.href !== href) {
+    codeStyle.remove();
+    addStyle('tuiEditorCodeThemeStyle', href);
   }
 };
 
@@ -96,13 +96,13 @@ const setContentTheme = (contentTheme: string, path: string) => {
   if (!contentTheme || !path) {
     return;
   }
-  const tuiEditorContentTheme = getElementById('tuiEditorContentTheme') as HTMLLinkElement;
+  const contentStyle= getElementById('tuiEditorContentThemeStyle') as HTMLLinkElement;
   const cssPath = `${path}/${contentTheme}.css`;
-  if (!tuiEditorContentTheme) {
-    addStyle('tuiEditorContentTheme', cssPath);
-  } else if (tuiEditorContentTheme.getAttribute('href') !== cssPath) {
-    tuiEditorContentTheme.remove();
-    addStyle('tuiEditorContentTheme', cssPath);
+  if (!contentStyle) {
+    addStyle('tuiEditorContentThemeStyle', cssPath);
+  } else if (contentStyle.getAttribute('href') !== cssPath) {
+    contentStyle.remove();
+    addStyle('tuiEditorContentThemeStyle', cssPath);
   }
 };
 

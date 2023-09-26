@@ -129,7 +129,6 @@ onMounted(() => {
   </div>
 </template>
 <style>
-@import url("https://uicdn.toast.com/editor/latest/toastui-editor.min.css");
 @import url("./TUIEditor/index.less");
 
 .tui-editor-container {
