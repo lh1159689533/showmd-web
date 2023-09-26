@@ -499,13 +499,23 @@ const codeblockCopy = (previewEl: HTMLElement) => {
   copyDoms.forEach((dom) => {
     const copyValue = querySelector('.copy-value', dom);
     const copyBtn = querySelector('.copy-btn', dom);
-    copyBtn.addEventListener('click', () => {
-      copyBtn.setAttribute('aria-label', '已复制');
-      copy(copyValue.innerHTML);
-    });
-    copyBtn.addEventListener('mouseover', () => {
-      copyBtn.setAttribute('aria-label', '复制');
-    });
+    addEventListener(
+      'click',
+      (e: Event) => {
+        e.stopPropagation();
+        copyBtn.setAttribute('aria-label', '已复制');
+        copy(copyValue.innerHTML);
+      },
+      copyBtn
+    );
+    addEventListener(
+      'mouseover',
+      (e: Event) => {
+        e.stopPropagation();
+        copyBtn.setAttribute('aria-label', '复制');
+      },
+      copyBtn
+    );
   });
 };
 
@@ -514,13 +524,12 @@ const codeblockCopy = (previewEl: HTMLElement) => {
  * @param copytext 内容
  */
 const copy = (copytext: string) => {
-  const input = document.createElement('input');
-  document.body.appendChild(input);
-  input.value = decodeURIComponent(copytext);
-  input.focus();
-  input.select();
+  const textarea = document.createElement('textarea');
+  document.body.appendChild(textarea);
+  textarea.value = decodeURIComponent(copytext);
+  textarea.select();
   document.execCommand('copy');
-  document.body.removeChild(input);
+  document.body.removeChild(textarea);
 };
 
 /**
