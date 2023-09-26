@@ -60,17 +60,14 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div v-bind="$attrs" class="w-full flex flex-row">
-    <div class="tui-preview-container">
-      <div ref="tuiPreviewRef" class="tui-preview px-12 pb-10 mt-2"></div>
-    </div>
+  <div v-bind="$attrs" class="tui-preview-container w-full flex flex-row">
+    <div ref="tuiPreviewRef" class="tui-preview px-12 pb-10 pt-2"></div>
     <div class="catalog relative w-1/4">
       <slot :catalog-list="catalogList"></slot>
     </div>
   </div>
 </template>
 <style>
-@import url("https://uicdn.toast.com/editor/latest/toastui-editor.min.css");
 @import url("./TUIEditor/index.less");
 
 .tui-preview-container {
@@ -78,6 +75,9 @@ onMounted(() => {
 
   height: 100%;
   position: relative;
+}
+
+.tui-preview-container .tui-preview {
   width: calc(100% - 260px);
   background-color: var(--showmd-bg-color-primary);
 }
@@ -86,7 +86,7 @@ onMounted(() => {
   cursor: zoom-in;
 }
 
-.catalog {
+.tui-preview-container .catalog {
   width: var(--tui-preview-catalog-width);
   padding-left: 20px;
 }

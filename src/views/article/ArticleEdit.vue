@@ -59,8 +59,8 @@ const article = ref<IArticle>({
   tags: '',
   summary: '',
   cover: [],
-  contentTheme: 'Chinese-red',
-  codeTheme: 'github',
+  contentTheme: '',
+  codeTheme: '',
   columnId: null,
 });
 
@@ -136,7 +136,6 @@ const showPublish = () => {
   } else {
     if (!props.id) {
       const text = editorRef.value.getText();
-      console.log('text:', text);
       initPublishForm.summary = text?.replace(/\s+/g, ' ').substr(0, 100);
     }
     isShowPublish.value = true;
@@ -308,7 +307,7 @@ init();
             ></i>
           </div>
           <el-button type="primary" @click.stop="showPublish">{{ id ? '更新' : '发布' }}</el-button>
-          <el-tooltip content="切换为Markdown编辑器" effect="light" placement="top">
+          <el-tooltip v-if="!props.id" content="切换为Markdown编辑器" effect="light" placement="top">
             <i
               @click="() => changeEditorType('markdown')"
               class="iconfont icon-qiehuan ml-4 text-xl cursor-pointer hover:text-indigo-600"

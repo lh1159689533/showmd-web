@@ -80,7 +80,7 @@ onMounted(() => {
     value: data.value.content ?? '',
     preview: {
       theme: {
-        current: data.value.contentTheme ?? 'awesome-green',
+        current: data.value.contentTheme,
         list: contentThemeList.value ?? []
       },
       hljs: data.value.codeTheme ?? 'vs'
@@ -141,14 +141,12 @@ onMounted(() => {
 
 .tui-editor-container .tui-editor {
   height: calc(100% - var(--tui-editor-footer-height));
-  /* width: calc(100% - var(--tui-editor-catalog-width)); */
 }
 
 .tui-editor-container .catalog {
   width: var(--tui-editor-catalog-width);
   height: calc(100% - var(--tui-editor-footer-height) - 46px);
   overflow: hidden;
-  /* padding-left: 20px; */
   right: 0;
   top: 47px;
 }
