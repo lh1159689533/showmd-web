@@ -169,7 +169,7 @@ const addStyle = (id: string, url: string) => {
 
 /**
  * 隐藏元素
- * @param ele
+ * @param ele 元素标签名/元素
  */
 const hidden = (ele: HTMLElement | string) => {
   const el = getElement(ele);
@@ -178,7 +178,7 @@ const hidden = (ele: HTMLElement | string) => {
 
 /**
  * 显示元素
- * @param ele
+ * @param ele 元素标签名/元素
  */
 const visible = (ele: HTMLElement | string) => {
   const el = getElement(ele);
@@ -187,13 +187,20 @@ const visible = (ele: HTMLElement | string) => {
 
 /**
  * 是否隐藏的元素
- * @param ele
+ * @param ele 元素标签名/元素
  */
 const isHidden = (ele: HTMLElement | string) => {
   const el = getElement(ele);
   return !el || el.style.display === 'none' || el.style.visibility === 'hidden';
 };
 
+/**
+ * 添加监听事件
+ * @param eventName 事件名
+ * @param cb 回调
+ * @param target 目标元素
+ * @param once 是否一次性
+ */
 const addEventListener = (
   eventName: string,
   cb: (e: Event) => void,
@@ -215,13 +222,18 @@ const addEventListener = (
   dom.addEventListener(eventName, listener);
 
   if (!once) {
-    return function() {
+    return function () {
       dom.removeEventListener(eventName, listener);
-    }
+    };
   }
   return null;
 };
 
+/**
+ * 移除子元素
+ * @param ele 元素标签名/元素
+ * @param parent 父元素
+ */
 const removeChild = (ele: Element | string, parent: Element = document.body) => {
   const dom = getElement(ele);
   if (dom && parent) {
@@ -229,10 +241,28 @@ const removeChild = (ele: Element | string, parent: Element = document.body) => 
   }
 };
 
+/**
+ * 添加子元素
+ * @param ele 元素标签名/元素
+ * @param parent 父元素
+ */
 const appendChild = (ele: Element | string, parent: Element = document.body) => {
   const dom = getElement(ele);
   if (dom && parent) {
     parent.appendChild(dom);
+  }
+};
+
+/**
+ * 给元素添加css
+ * @param ele 元素标签名/元素
+ * @param cssStyles css属性
+ */
+const css = (ele: Element | string, cssStyles: Partial<CSSStyleDeclaration>) => {
+  const dom = getElement(ele);
+  const cssKeys = Object.keys(cssStyles);
+  if (dom && cssKeys.length) {
+    cssKeys.forEach(key => (dom.style[key] = cssStyles[key]));
   }
 };
 
@@ -256,4 +286,5 @@ export {
   addEventListener,
   removeChild,
   appendChild,
+  css,
 };

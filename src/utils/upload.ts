@@ -139,6 +139,21 @@ async function upload(file: File, onProgress?) {
   return await mergeFile(fileChunkList, uploadId, file.type, file.name);
 }
 
+/**
+ * markdown附件上传
+ * @param file File
+ */
+async function uploadAttachFile(file: File) {
+  const formData = new FormData();
+  formData.append('attachfile', file);
+
+  return await http.request({
+    apiurl: 'article/attachfileUpload',
+    data: formData
+  });
+}
+
 export {
-  upload
+  upload,
+  uploadAttachFile
 };

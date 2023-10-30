@@ -29,7 +29,7 @@ export type Mode = 'all' | 'preview' | 'editor';
 export type Handler = (...args: any[]) => any;
 
 // 监听事件类型：change 内容变化事件、caretChange 光标变化事件
-export type EmitterType = 'change' | 'caretChange';
+export type EmitterType = 'change' | 'caretChange' | 'error';
 
 // 选择编辑区内容的坐标
 export interface Selection {
@@ -38,4 +38,43 @@ export interface Selection {
   endLine: number; // 结束行
   endColumn: number; // 结束列
   text?: string; // 选中的文本
+}
+
+interface TagToken {
+  tagName: string;
+  outerNewLine?: boolean;
+  innerNewLine?: boolean;
+}
+
+interface OpenTagToken extends TagToken {
+  type: 'openTag';
+  classNames?: string[];
+  attributes?: Record<string, any>;
+  selfClose?: boolean;
+}
+
+interface CloseTagToken extends TagToken {
+  type: 'closeTag';
+}
+
+interface TextToken {
+  type: 'text';
+  content: string;
+}
+
+interface RawHTMLToken {
+  type: 'html';
+  content: string;
+  outerNewLine?: boolean;
+}
+
+export type HTMLToken = OpenTagToken | CloseTagToken | TextToken | RawHTMLToken;
+
+// 编辑器附件
+export interface FileInfo {
+  name?: string; // 名称
+  size?: string; // 大小
+  type?: string; // 类型
+  path?: string; // 下载/预览地址
+  mode?: 'r' | 'rw'; // 读写模式：r 只读、rw 读写
 }

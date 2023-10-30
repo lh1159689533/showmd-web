@@ -15,6 +15,7 @@ import {
   addEventListener,
   removeChild,
   appendChild,
+  css,
 } from '../domUtil';
 import Constants from '@src/constants';
 import gsap from 'gsap';
@@ -26,6 +27,28 @@ interface IPopupItem {
   value: string;
   path?: string;
 }
+
+const createTooltip = (content: string, className = '') => {
+  const useTooltip = (top: number, left: number) =>
+    createElement(
+      'div',
+      { class: `toastui-editor-tooltip ${className}`, style: `top: ${top}px; left: ${left}px` },
+      createElement('div', { class: 'toastui-editor-tooltip-body' }, createElement('span', { text: content }))
+    );
+
+  return createElement('span', {
+    text: content,
+    style: 'max-width:16ch;display:inline-block',
+    class: 'truncate',
+    onmouseover: (e: MouseEvent) => {
+      const tooltip = useTooltip(e.clientY, e.clientX);
+      appendChild(tooltip);
+    },
+    onmouseleave: () => {
+      removeChild('toastui-editor-tooltip');
+    },
+  });
+};
 
 /**
  * 创建主题下拉列表
@@ -96,7 +119,7 @@ const setContentTheme = (contentTheme: string, path: string) => {
   if (!contentTheme || !path) {
     return;
   }
-  const contentStyle= getElementById('tuiEditorContentThemeStyle') as HTMLLinkElement;
+  const contentStyle = getElementById('tuiEditorContentThemeStyle') as HTMLLinkElement;
   const cssPath = `${path}/${contentTheme}.css`;
   if (!contentStyle) {
     addStyle('tuiEditorContentThemeStyle', cssPath);
@@ -288,6 +311,30 @@ const createCatalogBtn = (cb?: () => void) => {
 };
 
 /**
+ * 自定义toolbar--附件
+ * @param cb 回调
+ */
+const createFileBtn = (cb?: (file: File) => void) => {
+  const button = createElement('button', {
+    class: 'tui-editor-toolbar-file toastui-editor-toolbar-icons',
+    onclick: (e: Event) => {
+      e.stopPropagation();
+      // .pdf,.xlsx,.docx,.doc,.csv,.json,.txt
+      const input = createElement('input', { type: 'file', style: 'display: none', accept: '.html' });
+      appendChild(input);
+      input.click();
+      input.onchange = function(e) {
+        const target = e.target as HTMLInputElement;
+        cb?.(target.files[0]);
+        removeChild(input);
+      }
+    },
+  });
+
+  return button;
+};
+
+/**
  * 自定义渲染
  * https://github.com/nhn/tui.editor/blob/master/docs/en/custom-html-renderer.md
  */
@@ -342,6 +389,17 @@ const customHTMLRenderer = {
       { type: 'closeTag', tagName: 'div' },
       { type: 'closeTag', tagName: 'div' },
     ];
+  },
+  /**
+   * 自定义链接渲染，新增浏览器标签页打开
+   */
+  link(_, context) {
+    const { origin, entering } = context;
+    const result = origin();
+    if (entering) {
+      result.attributes.target = '_blank';
+    }
+    return result;
   },
 };
 
@@ -469,8 +527,9 @@ const codeblockZoom = (previewEl: HTMLElement) => {
   });
 
   // 收起/展开代码
-  const suofangDom = querySelectorAll('.code-suofang-checkbox', previewEl);
-  suofangDom.forEach((dom) =>
+  const suofangDom = querySelectorAll('.code-suofang-checkbox:not(.has-listener)', previewEl);
+  suofangDom.forEach((dom) => {
+    addClass(dom, 'has-listener');
     addEventListener(
       'click',
       function (e) {
@@ -486,8 +545,8 @@ const codeblockZoom = (previewEl: HTMLElement) => {
         });
       },
       dom
-    )
-  );
+    );
+  });
 };
 
 /**
@@ -495,8 +554,9 @@ const codeblockZoom = (previewEl: HTMLElement) => {
  * @param previewEl 编辑器预览区dom
  */
 const codeblockCopy = (previewEl: HTMLElement) => {
-  const copyDoms = querySelectorAll('.code-block-copy', previewEl);
+  const copyDoms = querySelectorAll('.code-block-copy:not(.has-listener)', previewEl);
   copyDoms.forEach((dom) => {
+    addClass(dom, 'has-listener');
     const copyValue = querySelector('.copy-value', dom);
     const copyBtn = querySelector('.copy-btn', dom);
     addEventListener(
@@ -536,8 +596,10 @@ const copy = (copytext: string) => {
  * 预览图片(图片点击放大)
  */
 function imagePreview(previewEl: HTMLElement) {
-  const imgList = querySelectorAll('img', previewEl);
+  const imgList = querySelectorAll('img:not(.has-listener)', previewEl);
   imgList.map((img) => {
+    addClass(img, 'has-listener');
+
     function onPreview() {
       const { width, height, top, left } = getBoundingClientRect(img) ?? {};
       const scrollTop = document.documentElement.scrollTop;
@@ -563,24 +625,26 @@ function imagePreview(previewEl: HTMLElement) {
       appendChild(imgPreview);
 
       setTimeout(() => {
-        img.style.visibility = 'hidden';
-        imgWrapper.style.opacity = '1';
-        imgPreview.style.transform = `scale(${scale}) translate(${((innerWidth - width) / 2 - left) / scale}px, ${
-          ((innerHeight - height) / 2 - top) / scale
-        }px)`;
+        css(img, { visibility: 'hidden' });
+        css(imgWrapper, { opacity: '1' });
+        css(imgPreview, {
+          transform: `scale(${scale}) translate(${((innerWidth - width) / 2 - left) / scale}px, ${
+            ((innerHeight - height) / 2 - top) / scale
+          }px)`,
+        });
       }, 0);
 
       // 关闭
       function close() {
-        imgWrapper.style.opacity = '0';
-        imgPreview.style.transform = `scale(1) translate(0,0)`;
-        imgWrapper.removeEventListener('click', close);
+        css(imgWrapper, { opacity: '0' });
+        css(imgPreview, { transform: 'scale(1) translate(0,0)' });
+        imgPreview.removeEventListener('click', close);
         imgPreview.removeEventListener('click', close);
         document.removeEventListener('scroll', close);
         setTimeout(() => {
-          img.style.visibility = 'visible';
-          document.body.removeChild(imgWrapper);
-          document.body.removeChild(imgPreview);
+          css(img, { visibility: 'visible' });
+          removeChild(imgWrapper);
+          removeChild(imgPreview);
         }, duration);
       }
       addEventListener('click', close, imgWrapper);
@@ -598,10 +662,12 @@ export {
   createOnlyEditorBtn,
   createOnlyPreviewBtn,
   createCatalogBtn,
+  createFileBtn,
   customHTMLRenderer,
   codeblockZoom,
   codeblockCopy,
   imagePreview,
   setCodeTheme,
   setContentTheme,
+  createTooltip,
 };

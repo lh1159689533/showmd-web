@@ -11,4 +11,5 @@ export default {
   nextColumnArticle: 'post showmd/article/next',
   prevColumnArticle: 'post showmd/article/prev',
   deleteById: 'delete showmd/article/delete/:id',
+  attachfileUpload: 'post showmd/attachfile/upload',
 };

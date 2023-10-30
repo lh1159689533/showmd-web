@@ -1,10 +1,11 @@
-import { upload } from '@src/utils/upload';
+import { upload, uploadAttachFile } from '@src/utils/upload';
 import { addClass, querySelector, hidden, visible } from '../domUtil';
 import {
   createCodeThemeBtn,
   createContentThemeBtn,
   createOnlyEditorBtn,
   createOnlyPreviewBtn,
+  createFileBtn,
   customHTMLRenderer,
   codeblockZoom,
   codeblockCopy,
@@ -12,6 +13,7 @@ import {
   setCodeTheme,
   setContentTheme,
 } from './util';
+import { attachFilePlugin } from './plugins';
 import Constants from '@src/constants';
 import { TUIEditorProps, Mode, Handler, EmitterType, Selection } from './types';
 
@@ -68,6 +70,11 @@ class TUIEditor {
         ['code', 'codeblock'],
         [
           {
+            name: 'file',
+            el: createFileBtn(this.updateFile.bind(this)),
+            tooltip: '附件',
+          },
+          {
             name: 'codeTheme',
             el: createCodeThemeBtn(preview?.hljs, (codeTheme: string) => this.emit('change', { codeTheme })),
             tooltip: '代码主题',
@@ -94,7 +101,7 @@ class TUIEditor {
           : [],
         toolbarItems,
       ],
-      // plugins: [[toastui.Editor.plugin.codeSyntaxHighlight, customPlugin]],
+      plugins: [attachFilePlugin],
       customHTMLRenderer,
       events: {
         load: (editor: Editor) => {
@@ -147,6 +154,7 @@ class TUIEditor {
       language: 'zh-CN',
       height: typeof height === 'number' ? `${height}px` : height,
       customHTMLRenderer,
+      plugins: [attachFilePlugin],
       events: {
         load: (editor: Editor) => {
           this.previewEl = editor.preview.previewContent;
@@ -178,8 +186,28 @@ class TUIEditor {
             .replace('/\\s/g', '')
         );
         this.tuiEditor.insertText('\n\n');
+      } else {
+        this.emit('error', new Error(res.message));
       }
     });
+  }
+
+  /**
+   * 附件上传
+   * @param file 附件
+   * @todo 实现上传附件的逻辑
+   * @todo 实现预览的逻辑
+   * @todo 实现下载的逻辑
+   */
+  private async updateFile(file: File) {
+    const [err, res] = await uploadAttachFile(file);
+    if (!err && res.code === 0) {
+      this.tuiEditor.insertText(
+        `\n$$file\ntype: html\nname: ${res.data.name}\nsize: ${res.data.size}\npath: ${res.data.path}\nmode: r\n$$\n`
+      );
+    } else {
+      this.emit('error', new Error(res.message));
+    }
   }
 
   /**

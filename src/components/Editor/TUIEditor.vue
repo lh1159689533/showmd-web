@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { ref, onMounted, defineProps, defineEmits, toRefs } from 'vue';
+import { ref, onMounted, defineProps, defineEmits, toRefs, defineExpose } from 'vue';
 import Editor from './TUIEditor';
 import { querySelectorAll, getBoundingClientRect } from './domUtil';
 import { Selection } from './TUIEditor/types';
 import { createCatalogBtn } from './TUIEditor/util';
+import message from '@utils/message';
 
 interface IContentTheme {
   label: string;
@@ -104,7 +105,14 @@ onMounted(() => {
   tuiEditor.value.on('caretChange', (sel) => {
     selection.value = sel;
   });
+  tuiEditor.value.on('error', (err: Error) => {
+    message.error(err.message);
+  });
   loadCatalog();
+});
+
+defineExpose({
+  getText: () => tuiEditor.value.getText(),
 });
 </script>
 <template>

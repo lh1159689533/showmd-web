@@ -249,4 +249,11 @@ h3 {
   background-size: 100% 1.5px;
   background-position-x: left;
 }
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  overflow: hidden;
+}
 </style>

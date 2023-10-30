@@ -94,6 +94,19 @@
   }
 }
 
+.tui-editor-toolbar-file {
+  background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M472.806 860.387c5.807 27.58 18.871 50.807 34.84 72.58H250.71c-47.904 0-87.097-39.193-87.097-87.096V149.097c0-47.903 39.193-87.097 87.097-87.097h522.58c47.904 0 87.097 39.194 87.097 87.097v522.58-174.193h-72.58V178.129c0-24.677-18.872-43.548-43.549-43.548H279.742c-24.677 0-43.548 18.87-43.548 43.548v638.71c0 24.677 18.87 43.548 43.548 43.548h193.064zM323.29 207.161h377.42c15.967 0 29.032 13.065 29.032 29.033v43.548H294.258v-43.548c0-15.968 13.065-29.033 29.032-29.033zm-29.032 130.645h203.226v72.581H294.258v-72.58z' fill='%23333'/%3E%3Cpath d='M758.774 526.516v275.807c0 40.645-31.935 72.58-72.58 72.58s-72.581-31.935-72.581-72.58V571.516h58.064v230.807c0 8.71 5.807 14.516 14.517 14.516s14.516-5.807 14.516-14.516v-304.84c0-31.935-26.13-58.064-58.065-58.064s-58.064 26.13-58.064 58.065V809.58c0 52.258 42.096 94.354 94.354 94.354h14.517c52.258 0 94.354-42.096 94.354-94.354V571.516h58.065v238.065c0 84.193-68.226 152.419-152.42 152.419h-14.516c-84.193 0-152.419-68.226-152.419-152.42V497.485c0-63.871 52.258-116.13 116.13-116.13s116.128 52.259 116.128 116.13v304.839c0 40.645-31.935 72.58-72.58 72.58s-72.581-31.935-72.581-72.58V571.516h58.064v230.807c0 8.71 5.807 14.516 14.517 14.516s14.516-5.807 14.516-14.516V543.935l58.064-17.419z' fill='%23333'/%3E%3C/svg%3E") !important;
+  background-size: 20px !important;
+  background-position: center;
+  margin: 0 !important;
+  background-position-y: 5px !important;
+  background-repeat: no-repeat;
+
+  &.active {
+    background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M472.806 860.387c5.807 27.58 18.871 50.807 34.84 72.58H250.71c-47.904 0-87.097-39.193-87.097-87.096V149.097c0-47.903 39.193-87.097 87.097-87.097h522.58c47.904 0 87.097 39.194 87.097 87.097v522.58-174.193h-72.58V178.129c0-24.677-18.872-43.548-43.549-43.548H279.742c-24.677 0-43.548 18.87-43.548 43.548v638.71c0 24.677 18.87 43.548 43.548 43.548h193.064zM323.29 207.161h377.42c15.967 0 29.032 13.065 29.032 29.033v43.548H294.258v-43.548c0-15.968 13.065-29.033 29.032-29.033zm-29.032 130.645h203.226v72.581H294.258v-72.58z' fill='%234f46e5'/%3E%3Cpath d='M758.774 526.516v275.807c0 40.645-31.935 72.58-72.58 72.58s-72.581-31.935-72.581-72.58V571.516h58.064v230.807c0 8.71 5.807 14.516 14.517 14.516s14.516-5.807 14.516-14.516v-304.84c0-31.935-26.13-58.064-58.065-58.064s-58.064 26.13-58.064 58.065V809.58c0 52.258 42.096 94.354 94.354 94.354h14.517c52.258 0 94.354-42.096 94.354-94.354V571.516h58.065v238.065c0 84.193-68.226 152.419-152.42 152.419h-14.516c-84.193 0-152.419-68.226-152.419-152.42V497.485c0-63.871 52.258-116.13 116.13-116.13s116.128 52.259 116.128 116.13v304.839c0 40.645-31.935 72.58-72.58 72.58s-72.581-31.935-72.581-72.58V571.516h58.064v230.807c0 8.71 5.807 14.516 14.517 14.516s14.516-5.807 14.516-14.516V543.935l58.064-17.419z' fill='%234f46e5'/%3E%3C/svg%3E") !important;
+  }
+}
+
 .toastui-editor-defaultUI-toolbar button:not(:disabled):hover {
   background-color: var(--el-color-primary-light-9) !important;
   border: 1px solid #e4e7ee;
@@ -253,6 +266,50 @@
   overflow-x: auto;
   background: linear-gradient(180deg, rgba(66, 185, 131, 0.1), transparent) !important;
   max-height: fit-content !important;
+}
+
+.showmd .file-container {
+  margin-bottom: 5px;
+
+  .file-actions {
+    .file-icon:hover {
+      color: var(--showmd-text-color-hover);
+    }
+  }
+}
+
+.tooltip {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  &:not(.tooltip-notext):before {
+    content: attr(data-tooltip);
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 100%;
+  }
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background: #444;
+    padding: 4px 7px;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 12px;
+    z-index: 140;
+    display: none;
+    white-space: nowrap;
+    transform: translate(0%, -130%);
+  }
+
+  &:hover::after {
+    display: block;
+  }
 }
 
 .ProseMirror {

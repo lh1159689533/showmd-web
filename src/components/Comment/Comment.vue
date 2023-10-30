@@ -35,7 +35,7 @@ const loadMoreReply = (commentId) => {
 
 <template>
   <div class="comment-container flex mt-10">
-    <Avatar :src="currentUser?.avatar ?? '/api/avatars.png'" class="w-8 h-8 rounded-full" />
+    <Avatar :src="currentUser?.avatar" class="w-8 h-8 rounded-full" />
     <AddItem v-if="currentUser?.id" @confirm="addItem" ref="addItemDom" class="flex-1 ml-3 min-w-0" placeholder="想对作者说点什么..." />
     <div v-else class="add p-6 w-full rounded ml-3 border">
       <span class="text-sm">看完啦，<span

@@ -30,25 +30,31 @@ const onImgError = (item, e: Event) => {
     <el-skeleton v-if="!data" :rows="3" animated class="p-6" />
     <List v-else-if="data?.length" :data-list="data" @click="(item) => toDetail(item?.id)" item-class="">
       <template #default="{ item }">
-        <div class="article-list-item flex text-sm px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50 dark:hover:bg-zinc-800">
-          <div class="flex flex-col flex-1" :style="`max-width: ${!item?.hasCover ? '100%' : '80%'};`">
-            <div class="article-list-item-header flex">
-              <a @click="toUserDetail" class="username pr-3 cursor-pointer hover:text-indigo-500 dark:hover:text-indigo-500">{{ item.user.name }}</a>
-              <span class="modify-time relative px-3 flex items-center">{{ item.updateTime }}</span>
-              <span class="tag-list pl-3 flex items-center">
+        <div
+          class="article-list-item flex text-sm px-6 pt-4 pb-4 cursor-pointer border-t hover:bg-gray-50 dark:hover:bg-zinc-800"
+        >
+          <div class="flex flex-col flex-1 pr-4" :style="`max-width: ${!item?.hasCover ? '100%' : '80%'};`">
+            <div class="article-list-item-content flex flex-col">
+              <div class="title text-lg mb-3">{{ item.name }}</div>
+              <div class="desc truncate">{{ item.summary }}</div>
+            </div>
+            <div class="article-list-item-header flex gap-4 text-sm mt-4">
+              <a
+                @click="toUserDetail"
+                class="username flex gap-2 cursor-pointer hover:text-indigo-500 dark:hover:text-indigo-500"
+              >
+                <!-- <Avatar :src="item.user?.avatar" class="user-avatar rounded-full cursor-pointer w-5 h-5" /> -->
+                <span>{{ item.user.name }}</span>
+              </a>
+              <span class="modify-time relative flex items-center pl-3">{{ item.updateTime }}</span>
+              <span class="tag-list flex gap-2 items-center ml-auto">
                 <a
                   v-for="(tag, index) in item.tags?.map(tag => categorys?.find(c => c.key === tag)?.title)"
-                  :key="`${tag}-${index}`"
-                  class="cursor-pointer hover:text-indigo-500 px-2 flex items-center"
-                  :class="[index !== item.tags.length - 1 ? 'delimiter relative' : '']"
+                  :key="`${tag}-${index}`" class="cursor-pointer hover:text-indigo-500 px-1 flex items-center rounded-sm"
                 >
                   {{ tag }}
                 </a>
               </span>
-            </div>
-            <div class="article-list-item-content flex flex-col mt-3">
-              <div class="title text-lg mb-3">{{ item.name }}</div>
-              <div class="desc truncate">{{ item.summary }}</div>
             </div>
           </div>
           <img :src="item.cover" @error="(e) => onImgError(item, e)" style="width: 120px; height: 80px" />
@@ -63,8 +69,8 @@ const onImgError = (item, e: Event) => {
 </template>
 
 <style scoped>
-.article-list .article-list-item .article-list-item-header .modify-time::before,
-.article-list .article-list-item .article-list-item-header .modify-time::after {
+/* .article-list .article-list-item .article-list-item-header .modify-time::after, */
+.article-list .article-list-item .article-list-item-header .modify-time::before {
   content: '';
   position: absolute;
   width: 1px;
@@ -76,11 +82,15 @@ const onImgError = (item, e: Event) => {
   left: 0;
 }
 
-.article-list .article-list-item .article-list-item-header .modify-time::after {
+/* .article-list .article-list-item .article-list-item-header .modify-time::after {
   right: 0;
+} */
+
+.article-list .article-list-item .article-list-item-header .tag-list>a {
+  background-color: var(--showmd-bg-color-weak);
 }
 
-.article-list .article-list-item .article-list-item-header .tag-list > a.delimiter::after {
+.article-list .article-list-item .article-list-item-header .tag-list>a.delimiter::after {
   content: ' ';
   position: absolute;
   display: block;
@@ -97,7 +107,7 @@ const onImgError = (item, e: Event) => {
 }
 
 .article-list-item-header .username {
-  color: var(--showmd-text-color-primary);
+  color: var(--showmd-text-color-weak);
 }
 
 .article-list-item-content .title {
