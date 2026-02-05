@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>双缓冲代码编辑器</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+        color: #e0e0e0;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .editor-container {
+        width: 90%;
+        max-width: 1000px;
+        background: rgba(30, 30, 46, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(40, 42, 72, 0.8);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .header-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-title h1 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .header-controls {
+        display: flex;
+        gap: 15px;
+      }
+
+      .control-btn {
+        background: #4e54c8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(78, 84, 200, 0.3);
+      }
+
+      .control-btn:hover {
+        background: #6a71e6;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(78, 84, 200, 0.5);
+      }
+
+      .control-btn.secondary {
+        background: #605e5c;
+      }
+
+      .control-btn.secondary:hover {
+        background: #4b4947;
+      }
+
+      .code-editor {
+        position: relative;
+        min-height: 400px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      #codeDisplay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        overflow: auto;
+        white-space: pre;
+        font-family: 'Fira Code', monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        caret-color: #ff79c6;
+        color: transparent; /* 文本透明，只显示高亮 */
+        background: transparent;
+        z-index: 10;
+      }
+
+      #sourceCode {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        background: #1e1e2e;
+        color: #f8f8f2;
+        border: none;
+        font-family: 'Fira Code', monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        resize: none;
+        z-index: 5;
+        overflow: hidden;
+        opacity: 0; /* 完全透明 */
+      }
+
+      #highlightedCode {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        overflow: hidden;
+        background: #1e1e2e;
+        color: #f8f8f2;
+        z-index: 1;
+      }
+
+      .editor-status {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(40, 42, 72, 0.8);
+        font-size: 14px;
+      }
+
+      .language-selector {
+        background: rgba(100, 100, 150, 0.3);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      .info-panel {
+        padding: 20px;
+        background: rgba(40, 42, 72, 0.7);
+        margin-top: 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .info-panel h3 {
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #9a86fd;
+      }
+
+      .info-points {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .info-point {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .info-point i {
+        color: #4e54c8;
+        font-size: 18px;
+        margin-top: 3px;
+      }
+
+      .code-line-numbers {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 100%;
+        background: rgba(30, 30, 40, 0.9);
+        color: #6272a4;
+        text-align: right;
+        padding: 20px 5px;
+        font-family: 'Fira Code', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        z-index: 2;
+      }
+
+      .hljs {
+        background: transparent !important;
+        padding: 0 !important;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(30, 30, 40, 0.6);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(100, 100, 150, 0.6);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(120, 120, 180, 0.8);
+      }
+
+      .cursor-position {
+        background: rgba(120, 120, 180, 0.6);
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
+
+      @media (max-width: 768px) {
+        .editor-container {
+          width: 95%;
+        }
+
+        .info-points {
+          grid-template-columns: 1fr;
+        }
+
+        .editor-header {
+          flex-direction: column;
+          gap: 15px;
+          align-items: flex-start;
+        }
+
+        .header-controls {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="editor-container">
+      <div class="editor-header">
+        <div class="header-title">
+          <h1><i class="fas fa-code"></i> 双缓冲代码编辑器</h1>
+        </div>
+        <div class="header-controls">
+          <button class="control-btn" id="copyBtn"><i class="fas fa-copy"></i> 复制代码</button>
+          <button class="control-btn secondary" id="resetBtn"><i class="fas fa-redo"></i> 重置</button>
+        </div>
+      </div>
+
+      <div class="code-editor">
+        <div class="code-line-numbers" id="lineNumbers">
+          1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10
+        </div>
+        <div id="highlightedCode"></div>
+        <textarea id="sourceCode" spellcheck="false">
+// JavaScript代码示例
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log("斐波那契数列前10项:");
+for (let i = 0; i <= 10; i++) {
+    console.log(`fibonacci(${i}) = ${fibonacci(i)}`);
+}</textarea
+        >
+        <div id="codeDisplay" contenteditable="true"></div>
+      </div>
+
+      <div class="editor-status">
+        <div>
+          <span>当前语言: </span>
+          <select class="language-selector" id="languageSelector">
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="csharp">C#</option>
+          </select>
+        </div>
+        <div>
+          <span>光标位置: </span>
+          <span class="cursor-position" id="cursorPosition">1:1</span>
+        </div>
+        <div>
+          <span>代码行数: </span>
+          <span class="cursor-position" id="lineCount">10</span>
+        </div>
+      </div>
+
+      <div class="info-panel">
+        <h3>双缓冲代码编辑器原理</h3>
+        <div class="info-points">
+          <div class="info-point">
+            <i class="fas fa-layer-group"></i>
+            <div>
+              <strong>编辑层（div.contenteditable）</strong>
+              <p>用户在此层输入内容，但实际显示的是透明文本。</p>
+            </div>
+          </div>
+          <div class="info-point">
+            <i class="fas fa-database"></i>
+            <div>
+              <strong>数据层（textarea）</strong>
+              <p>存储原始代码，用户不可见但保存真实内容。</p>
+            </div>
+          </div>
+          <div class="info-point">
+            <i class="fas fa-paint-brush"></i>
+            <div>
+              <strong>高亮层（highlightedCode）</strong>
+              <p>使用highlight.js对原始代码进行语法高亮显示。</p>
+            </div>
+          </div>
+          <div class="info-point">
+            <i class="fas fa-sync-alt"></i>
+            <div>
+              <strong>实时同步</strong>
+              <p>编辑时，三个层内容同步更新，确保高亮效果不影响原始代码。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const sourceCode = document.getElementById('sourceCode');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const highlightedCode = document.getElementById('highlightedCode');
+        const lineNumbers = document.getElementById('lineNumbers');
+        const languageSelector = document.getElementById('languageSelector');
+        const cursorPosition = document.getElementById('cursorPosition');
+        const lineCountEl = document.getElementById('lineCount');
+        const copyBtn = document.getElementById('copyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 设置初始内容
+        let currentCode = sourceCode.value;
+        codeDisplay.textContent = currentCode;
+
+        // 初始高亮
+        highlightCode();
+        updateLineNumbers();
+
+        // 语言选择事件
+        languageSelector.addEventListener('change', () => {
+          highlightCode();
+        });
+
+        // 代码编辑事件
+        codeDisplay.addEventListener('input', () => {
+          // 同步原始代码
+          currentCode = codeDisplay.textContent;
+          sourceCode.value = currentCode;
+
+          // 更新高亮
+          highlightCode();
+
+          // 更新行号
+          updateLineNumbers();
+        });
+
+        // 光标位置追踪
+        codeDisplay.addEventListener('click', updateCursorPosition);
+        codeDisplay.addEventListener('keyup', updateCursorPosition);
+
+        // 滚动同步
+        codeDisplay.addEventListener('scroll', () => {
+          highlightedCode.scrollTop = codeDisplay.scrollTop;
+          highlightedCode.scrollLeft = codeDisplay.scrollLeft;
+        });
+
+        // 复制按钮
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard
+            .writeText(sourceCode.value)
+            .then(() => {
+              const originalText = copyBtn.innerHTML;
+              copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+              setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error('复制失败:', err);
+              copyBtn.innerHTML = '<i class="fas fa-times"></i> 复制失败';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> 复制代码';
+              }, 2000);
+            });
+        });
+
+        // 重置按钮
+        resetBtn.addEventListener('click', () => {
+          sourceCode.value = `// JavaScript代码示例
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log("斐波那契数列前10项:");
+for (let i = 0; i <= 10; i++) {
+    console.log(\`fibonacci(\${i}) = \${fibonacci(i)}\`);
+}`;
+
+          currentCode = sourceCode.value;
+          codeDisplay.textContent = currentCode;
+          highlightCode();
+          updateLineNumbers();
+          updateCursorPosition();
+
+          resetBtn.innerHTML = '<i class="fas fa-check"></i> 已重置';
+          setTimeout(() => {
+            resetBtn.innerHTML = '<i class="fas fa-redo"></i> 重置';
+          }, 2000);
+        });
+
+        // 高亮代码函数
+        function highlightCode() {
+          // 转义特殊字符
+          const escapedCode = sourceCode.value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+          // 设置语言
+          const lang = languageSelector.value;
+
+          // 高亮代码
+          highlightedCode.innerHTML = `<pre><code class="language-${lang}">${escapedCode}</code></pre>`;
+
+          // 应用高亮
+          hljs.highlightAll();
+        }
+
+        // 更新行号
+        function updateLineNumbers() {
+          const lines = sourceCode.value.split('\n').length;
+          lineCountEl.textContent = lines;
+
+          let lineNumbersHTML = '';
+          for (let i = 1; i <= lines; i++) {
+            lineNumbersHTML += `${i}<br>`;
+          }
+          lineNumbers.innerHTML = lineNumbersHTML;
+        }
+
+        // 更新光标位置
+        function updateCursorPosition() {
+          const selection = window.getSelection();
+          if (selection.rangeCount === 0) return;
+
+          const range = selection.getRangeAt(0);
+          const preSelectionRange = range.cloneRange();
+
+          preSelectionRange.selectNodeContents(codeDisplay);
+          preSelectionRange.setEnd(range.startContainer, range.startOffset);
+
+          const content = preSelectionRange.toString();
+          const line = (content.match(/\n/g) || []).length + 1;
+          const lineContent = content.split('\n').pop() || '';
+          const col = lineContent.length + 1;
+
+          cursorPosition.textContent = `${line}:${col}`;
+        }
+
+        // 初始光标位置
+        updateCursorPosition();
+
+        // 行号滚动同步
+        codeDisplay.addEventListener('scroll', () => {
+          lineNumbers.scrollTop = codeDisplay.scrollTop;
+        });
+      });
+    </script>
+  </body>
+</html>

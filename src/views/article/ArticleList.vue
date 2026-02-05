@@ -23,6 +23,10 @@ const onImgError = (item, e: Event) => {
   item.hasCover = false;
   (e?.target as HTMLElement)?.classList?.add?.('hidden');
 };
+
+const defaultArticleBg = (article) => {
+  
+};
 </script>
 
 <template>

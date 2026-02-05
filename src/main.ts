@@ -3,14 +3,15 @@ import router from './router';
 import App from './App.vue';
 import { store } from './store'
 import Components from '@plugins/Components';
-import 'virtual:windi.css';
-// import 'element-plus/theme-chalk/index.css';
-import 'element-plus/theme-chalk/dark/css-vars.css'
-import 'animate.css';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/zh-cn';
+
+import 'virtual:windi.css';
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import 'animate.css';
+import './theme/index.css';
 
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');

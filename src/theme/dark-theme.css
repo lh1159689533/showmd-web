@@ -1,0 +1,129 @@
+:root.dark {
+  --shadow-searchbox: 0px 0px 0px 2px #1a2c4d;
+  --shadow-small: 0px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  --shadow-medium: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.12),
+    0px 3px 14px 2px rgba(0, 0, 0, 0.06);
+  --shadow-large: 0px 12px 20px 2px rgba(0, 0, 0, 0.12), 0px 16px 24px 0px rgba(0, 0, 0, 0.08),
+    0px 4px 12px 4px rgba(0, 0, 0, 0.08); /* 下拉菜单 / 气泡确认框 / 选择器 /全局提示 / 消息通知 等   建议与卡片描边同时使用 */
+  --border-color-label-orange: var(--orange-dark-5);
+  --text-color-label-orange: var(--orange-dark-9);
+  --bg-color-label-orange: var(--orange-dark-4);
+  --border-color-label-red: var(--red-dark-5);
+  --text-color-label-red: var(--red-dark-9);
+  --bg-color-label-red: var(--red-dark-4);
+  --border-color-label-green: var(--green-dark-5);
+  --text-color-label-green: var(--green-dark-10);
+  --bg-color-label-green: var(--green-dark-4);
+  --border-color-label-blue: var(--blue-dark-5);
+  --text-color-label-blue: var(--blue-dark-9);
+  --bg-color-label-blue: var(--blue-dark-4);
+  --bg-color-scroll-bar-hover: var(--white-5);
+  --bg-color-scroll-bar: var(--white-6);
+  --bg-color-dialog: var(--gray-dark-1);
+  --bg-color-popover: var(--gray-dark-5);
+  --bg-color-secondarybutton-hover: var(--gray-dark-5); /* 次要按钮背景 - Hover */
+  --bg-color-secondarybutton: var(--gray-dark-3); /* 次要按钮背景 */
+  --text-color-navigation-primary-active: var(--white-1);
+  --text-color-navigation-secondary-active: var(--white-2);
+  --bg-color-navigation-secondary-active: var(--gray-dark-6);
+  --bg-color-navigation-primary-active: var(--blue-dark-3); /* 导航选项 - Active */
+  --bg-color-navigation-hover: var(--gray-dark-5); /* 导航选项 - Hover */
+  --text-color-dropdown-warning: var(--red-dark-6); /* 下拉菜单警示文字 */
+  --bg-color-dropdown-hover: var(--gray-dark-5); /* 下拉菜单选项背景 - Hover */
+  --bg-color-dropdown-active: var(--blue-dark-3); /* 下拉菜单选项背景 - Active */
+  --bg-color-dropdown: var(--gray-dark-3); /* 下拉菜单背景 */
+  --border-color-radio: var(--gray-dark-6); /* Radio 边框 */
+  --bg-color-radio: var(--gray-dark-4); /* Radio 背景 */
+  --bg-color-radio-active: var(--gray-dark-6); /* Radio 选项 - Active */
+  --bg-color-radio-hover: var(--gray-dark-5); /* Radio 选项 - Hover */
+  --bg-color-tabs-active: var(--gray-dark-4); /* 导航选项 - Active */
+  --bg-color-tabs-hover: var(--gray-dark-3); /* 导航选项 - Hover */
+  --text-color-search-result-active: var(--blue-dark-8);
+  --bg-color-search-result-active: var(--blue-dark-3);
+  --bg-color-search-box-text-selected: var(--blue-dark-3);
+  --shadow-color-search-box-active: var(--blue-dark-2);
+  --border-color-search-box-active: var(--blue-dark-6);
+  --bg-color-search-box-normal: var(--gray-dark-4);
+  --bg-color-search-box-active: var(--gray-dark-2);
+  --bg-color-search-box-hover: var(--gray-dark-5);
+  --bg-color-sheet-3: var(--gray-dark-4);
+  --bg-color-sheet-hover: var(--gray-dark-5); /* 斑马纹背景 - Hover */
+  --bg-color-sheet-head: var(--gray-dark-3); /* 表头背景 */
+  --bg-color-sheet-2: var(--gray-dark-2); /* 斑马纹背景 2 */
+  --bg-color-sheet-1: var(--gray-dark-1); /* 斑马纹背景 1 */
+  --bg-color-code-overview-active: var(--gray-dark-4);
+  --bg-color-code-overview: var(--gray-dark-2);
+  --bg-color-page: var(--gray-dark-1); /* 页面默认背景 */
+  --border-color: var(--gray-dark-6); /* 边框 */
+  --stroke-color-secondary: var(--gray-dark-4); /* 次要结构分割线 */
+  --stroke-color-primary: var(--gray-dark-5); /* 主要结构分割线 */
+  --bg-color-container: var(--gray-dark-4); /* 上层容器背景 */
+  --bg-color-tool-bar: var(--gray-dark-4); /* 工具栏背景 */
+  --bg-color-tab-bar: var(--gray-dark-1); /* 页签栏背景 */
+  --bg-color-side-navigation-bar: var(--gray-dark-3); /* 侧导航背景 */
+  --bg-color-top-navigation-bar: var(--gray-dark-4); /* 顶导航背景 */
+  --bg-color-debugging-area: var(--gray-dark-1); /* 调试区背景 */
+  --bg-color-edit-area: var(--gray-dark-1); /* 编辑区背景 */
+  --text-color-anti: var(--white-3);
+  --text-color-link-disabled: var(--blue-dark-2); /* 链接文字&图标 - Disabled */
+  --text-color-link-hover: var(--blue-dark-5); /* 链接文字&图标 - Hover */
+  --text-color-link: var(--blue-dark-6); /* 链接文字 */
+  --text-color-disabled: var(--white-5); /* 不可用文字&图标 */
+  --text-color-placeholder: var(--white-4); /* 占位说明文字&图标 */
+  --text-color-secondary: var(--white-3); /* 次要文字&图标 */
+  --text-color-primary: var(--white-2); /* 主要文字&图标 */
+  --warning-color-10: var(--orange-dark-10);
+  --warning-color-9: var(--orange-dark-9);
+  --warning-color-8: var(--orange-dark-8);
+  --warning-color-7-click: var(--orange-dark-7);
+  --warning-color-6-normal: var(--orange-dark-6);
+  --warning-color-5-hover: var(--orange-dark-5);
+  --warning-color-4: var(--orange-dark-4);
+  --warning-color-3: var(--orange-dark-3);
+  --warning-color-2-disabled: var(--orange-dark-2);
+  --warning-color-1: var(--orange-dark-1);
+  --error-color-10: var(--red-dark-10);
+  --error-color-9: var(--red-dark-9);
+  --error-color-8: var(--red-dark-8);
+  --error-color-7-click: var(--red-dark-7);
+  --error-color-6-normal: var(--red-dark-6);
+  --error-color-5-hover: var(--red-dark-5);
+  --error-color-4: var(--red-dark-4);
+  --error-color-3: var(--red-dark-3);
+  --error-color-2-disabled: var(--red-dark-2);
+  --error-color-1: var(--red-dark-1);
+  --success-color-10: var(--green-dark-10);
+  --success-color-9: var(--green-dark-9);
+  --success-color-8: var(--green-dark-8);
+  --success-color-7-click: var(--green-dark-7);
+  --success-color-6-normal: var(--green-dark-6);
+  --success-color-5-hover: var(--green-dark-5);
+  --success-color-4: var(--green-dark-4);
+  --success-color-3: var(--green-dark-3);
+  --success-color-2-disabled: var(--green-dark-2);
+  --success-color-1: var(--green-dark-1);
+  --brand-color-10: var(--blue-dark-10);
+  --brand-color-9: var(--blue-dark-9);
+  --brand-color-8: var(--blue-dark-8);
+  --brand-color-7-click: var(--blue-dark-7);
+  --brand-color-6-normal: var(--blue-dark-6);
+  --brand-color-5-hover: var(--blue-dark-5);
+  --brand-color-4: var(--blue-dark-4);
+  --brand-color-3: var(--blue-dark-3);
+  --brand-color-2-disabled: var(--blue-dark-2);
+  --brand-color-1: var(--blue-dark-1);
+  --text-color-secondarybutton: var(--text-color-primary); /* 次要按钮文字 */
+  --border-color-secondarybutton: var(--border-color); /* 次要按钮边框 */
+  --text-color-mainbutton-disabled: var(--text-color-disabled); /* 主要按钮文字 - Disabled */
+  --text-color-mainbutton: var(--text-color-anti); /* 主要按钮文字 */
+  --text-color-secondarybutton-disabled: var(--text-color-disabled); /* 次要按钮文字 - Disabled */
+  --bg-color-mainbutton-disabled: var(--brand-color-2-disabled); /* 主要按钮背景 - Disabled */
+  --bg-color-mainbutton-hover: var(--brand-color-5-hover); /* 主要按钮背景 - Hover */
+  --bg-color-mainbutton: var(--brand-color-6-normal); /* 主要按钮背景 */
+  --text-color-dropdown-active: var(--text-color-primary); /* 下拉菜单文字 - Active */
+  --text-color-dropdown: var(--text-color-secondary); /* 下拉菜单文字 */
+  --bg-color-sheet-active: var(--brand-color-2-disabled); /* 斑马纹背景 - Active */
+  /** 蒙版渐变 */
+  --mark-linear-gradient-1: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+  --mark-linear-gradient-2: linear-gradient(270deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%);
+}

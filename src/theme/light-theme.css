@@ -1,0 +1,136 @@
+:root,
+:root.light {
+  --shadow-searchbox: 0px 0px 0px 2px #d5e7ff;
+  --shadow-small: 0px 1px 2px 0px rgba(54, 58, 80, 0.1);
+  --shadow-medium: 0px 5px 6px -3px rgba(0, 0, 0, 0.06), 0px 5px 8px 1px rgba(0, 0, 0, 0.05),
+    0px 3px 12px 1px rgba(0, 0, 0, 0.02);
+  --shadow-large: 0px 8px 8px -4px rgba(0, 0, 0, 0.05), 0px 16px 24px 2px rgba(0, 0, 0, 0.04),
+    0px 6px 32px 4px rgba(0, 0, 0, 0.03);
+  --shadow-color-search-box-active: var(--blue-light-1);
+  
+  --border-color-label-orange: var(--orange-light-3);
+  --border-color-label-red: var(--red-light-3);
+  --border-color-label-green: var(--green-light-4);
+  --border-color-label-blue: var(--blue-light-3);
+  --border-color-radio: var(--gray-light-3); /* Radio 边框 */
+  --border-color-search-box-active: var(--blue-light-6);
+  --border-color: var(--gray-light-4); /* 边框 */
+  --border-color-secondarybutton: var(--border-color); /* 次要按钮边框 */
+
+  --text-color-label-orange: var(--orange-light-8);
+  --text-color-label-red: var(--red-light-8);
+  --text-color-label-green: var(--green-light-9);
+  --text-color-label-blue: var(--blue-light-8);
+  --text-color-navigation-primary-active: var(--blue-light-7);
+  --text-color-navigation-secondary-active: var(--black-2);
+  --text-color-dropdown-warning: var(--red-light-6); /* 下拉菜单警示文字 */
+  --text-color-search-result-active: var(--blue-light-7);
+  --text-color-anti: var(--white-1);
+  --text-color-link-disabled: var(--blue-light-2); /* 链接文字&图标 - Disabled */
+  --text-color-link-hover: var(--blue-light-5); /* 链接文字&图标 - Hover */
+  --text-color-link: var(--blue-light-6); /* 链接文字 */
+  --text-color-disabled: var(--black-5); /* 不可用文字&图标 */
+  --text-color-placeholder: var(--black-4); /* 占位说明文字&图标 */
+  --text-color-secondary: var(--black-3); /* 次要文字&图标 */
+  --text-color-primary: var(--black-2); /* 主要文字&图标 */
+  --text-color-mainbutton-disabled: var(--text-color-anti); /* 主要按钮文字 - Disabled */
+  --text-color-mainbutton: var(--text-color-anti); /* 主要按钮文字 */
+  --text-color-secondarybutton-disabled: var(--text-color-link-disabled); /* 次要按钮文字 - Disabled */
+  --text-color-dropdown-active: var(--brand-color-7-click); /* 下拉菜单文字 - Active */
+  --text-color-dropdown: var(--text-color-primary); /* 下拉菜单文字 */
+  --text-color-secondarybutton: var(--text-color-link); /* 次要按钮文字 */
+
+  --bg-color-label-orange: var(--orange-light-1);
+  --bg-color-label-red: var(--red-light-1);
+  --bg-color-label-green: var(--green-light-1);
+  --bg-color-label-blue: var(--blue-light-1);
+  --bg-color-scroll-bar-hover: var(--gray-light-6);
+  --bg-color-scroll-bar: var(--gray-light-4);
+  --bg-color-dialog: var(--white-1);
+  --bg-color-popover: var(--white-1);
+  --bg-color-secondarybutton-hover: var(--gray-light-1); /* 次要按钮背景 - Hover */
+  --bg-color-secondarybutton: var(--white-1); /* 次要按钮背景 */
+  --bg-color-navigation-secondary-active: var(--gray-light-2);
+  --bg-color-navigation-primary-active: var(--blue-light-1); /* 导航选项 - Active */
+  --bg-color-navigation-hover: var(--gray-light-1); /* 导航选项 - Hover */
+  --bg-color-dropdown-hover: var(--gray-light-1); /* 下拉菜单选项背景 - Hover */
+  --bg-color-dropdown-active: var(--blue-light-1); /* 下拉菜单选项背景 - Active */
+  --bg-color-dropdown: var(--white-1); /* 下拉菜单背景 */
+  --bg-color-radio: var(--gray-light-1); /* Radio 背景 */
+  --bg-color-radio-active: var(--white-1); /* Radio 选项 - Active */
+  --bg-color-radio-hover: var(--gray-light-2); /* Radio 选项 - Hover */
+  --bg-color-tabs-active: var(--white-1); /* 导航选项 - Active */
+  --bg-color-tabs-hover: var(--gray-light-4); /* 导航选项 - Hover */
+  --bg-color-search-result-active: var(--blue-light-1);
+  --bg-color-search-box-text-selected: var(--blue-light-1);
+  --bg-color-search-box-normal: var(--gray-light-1);
+  --bg-color-search-box-active: var(--white-1);
+  --bg-color-search-box-hover: var(--gray-light-2);
+  --bg-color-sheet-3: var(--gray-light-2);
+  --bg-color-sheet-active: var(--blue-light-1); /* 斑马纹背景 - Active */
+  --bg-color-sheet-hover: var(--gray-light-3); /* 斑马纹背景 - Hover */
+  --bg-color-sheet-head: var(--gray-light-1); /* 表头背景 */
+  --bg-color-sheet-2: var(--gray-light-1); /* 斑马纹背景 2 */
+  --bg-color-sheet-1: var(--white-1); /* 斑马纹背景 1 */
+  --bg-color-code-overview-active: var(--gray-light-3);
+  --bg-color-code-overview: var(--gray-light-1);
+  --bg-color-page: var(--white-1); /* 页面默认背景 */
+  --bg-color-container: var(--white-1); /* 上层容器背景 */
+  --bg-color-tool-bar: var(--white-1); /* 工具栏背景 */
+  --bg-color-tab-bar: var(--gray-light-2); /* 页签栏背景 */
+  --bg-color-side-navigation-bar: var(--white-1); /* 侧导航背景 */
+  --bg-color-top-navigation-bar: var(--white-1); /* 顶导航背景 */
+  --bg-color-debugging-area: var(--white-1); /* 调试区背景 */
+  --bg-color-edit-area: var(--white-1); /* 编辑区背景 */
+  --bg-color-mainbutton-disabled: var(--brand-color-2-disabled); /* 主要按钮背景 - Disabled */
+  --bg-color-mainbutton-hover: var(--brand-color-5-hover); /* 主要按钮背景 - Hover */
+  --bg-color-mainbutton: var(--brand-color-6-normal); /* 主要按钮背景 */
+
+  --stroke-color-secondary: var(--gray-light-2); /* 次要结构分割线 */
+  --stroke-color-primary: var(--gray-light-3); /* 主要结构分割线 */
+
+  --warning-color-10: var(--orange-light-10);
+  --warning-color-9: var(--orange-light-9);
+  --warning-color-8: var(--orange-light-8);
+  --warning-color-7-click: var(--orange-light-7);
+  --warning-color-6-normal: var(--orange-light-6);
+  --warning-color-5-hover: var(--orange-light-5);
+  --warning-color-4: var(--orange-light-4);
+  --warning-color-3: var(--orange-light-3);
+  --warning-color-2-disabled: var(--orange-light-2);
+  --warning-color-1: var(--orange-light-1);
+  --error-color-10: var(--red-light-10);
+  --error-color-9: var(--red-light-9);
+  --error-color-8: var(--red-light-8);
+  --error-color-7-click: var(--red-light-7);
+  --error-color-6-normal: var(--red-light-6);
+  --error-color-5-hover: var(--red-light-5);
+  --error-color-4: var(--red-light-4);
+  --error-color-3: var(--red-light-3);
+  --error-color-2-disabled: var(--red-light-2);
+  --error-color-1: var(--red-light-1);
+  --success-color-10: var(--green-light-10);
+  --success-color-9: var(--green-light-9);
+  --success-color-8: var(--green-light-8);
+  --success-color-7-click: var(--green-light-7);
+  --success-color-6-normal: var(--green-light-6);
+  --success-color-5-hover: var(--green-light-5);
+  --success-color-4: var(--green-light-4);
+  --success-color-3: var(--green-light-3);
+  --success-color-2-disabled: var(--green-light-2);
+  --success-color-1: var(--green-light-1);
+  --brand-color-10: var(--blue-light-10);
+  --brand-color-9: var(--blue-light-9);
+  --brand-color-8: var(--blue-light-8);
+  --brand-color-7-click: var(--blue-light-7);
+  --brand-color-6-normal: var(--blue-light-6);
+  --brand-color-5-hover: var(--blue-light-5);
+  --brand-color-4: var(--blue-light-4);
+  --brand-color-3: var(--blue-light-3);
+  --brand-color-2-disabled: var(--blue-light-2);
+  --brand-color-1: var(--blue-light-1);
+
+  /** 蒙版渐变 */
+  --mark-linear-gradient-1: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
+  --mark-linear-gradient-2: linear-gradient(270deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
+}

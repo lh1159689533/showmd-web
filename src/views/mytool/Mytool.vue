@@ -5,6 +5,7 @@ const ImageProcess = defineAsyncComponent(() => import('@src/views/mytool/ImageP
 const DiffEditor = defineAsyncComponent(() => import('@src/views/mytool/DiffEditor.vue'));
 const SourceEventTest = defineAsyncComponent(() => import('@src/views/mytool/SourceEventTest.vue'));
 const PackageTestRun = defineAsyncComponent(() => import('@src/views/mytool/PackageTestRun.vue'));
+const JSPkgTestRun = defineAsyncComponent(() => import('@src/views/mytool/JSPkgTestRun.vue'));
 
 interface ITool {
   name: string;
@@ -22,6 +23,11 @@ const tools: ITool[] = [
     name: 'js包测试运行',
     description: '实时引入js的CDN包，即可测试运行该包的方法。',
     component: PackageTestRun,
+  },
+  {
+    name: 'js包测试运行',
+    description: '实时引入js的CDN包，即可测试运行该包的方法。',
+    component: JSPkgTestRun,
   },
   {
     name: '代码对比',
@@ -47,11 +53,9 @@ const show = (tool: ITool) => {
 
 <template>
   <div class="mytool flex flex-col items-center h-full">
-    <List
-      :data-list="tools" @click="(item) => show(item)"
+    <List :data-list="tools" @click="(item) => show(item)"
       class="mt-4 tool-list py-8 w-full flex flex-row flex-wrap gap-4 pl-4"
-      item-class="tool-item-box cursor-pointer text-base rounded-sm"
-    >
+      item-class="tool-item-box cursor-pointer text-base rounded-sm">
       <template #default="{ item }">
         <div class="tool-item flex flex-col">
           <div class="tool-item-body flex-1 box-border p-4">

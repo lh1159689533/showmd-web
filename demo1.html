@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript测试工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+          'Helvetica Neue', sans-serif;
+      }
+
+      body {
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .notebook-container {
+        width: 90%;
+        max-width: 900px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+      }
+
+      .tool-header {
+        display: flex;
+        align-items: center;
+        background-color: #f7f7f7;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .tool-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tool-title i {
+        color: #0078d4;
+      }
+
+      .control-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .control-btn {
+        background: #0078d4;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+      }
+
+      .control-btn:hover {
+        background: #106ebe;
+      }
+
+      .control-btn.reset {
+        background: #605e5c;
+      }
+
+      .control-btn.reset:hover {
+        background: #4b4947;
+      }
+
+      .cell {
+        padding: 20px;
+      }
+
+      .input-container {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .execution-count {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #999;
+        font-size: 14px;
+        background: #f7f7f7;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-weight: 500;
+      }
+
+      .code-input {
+        width: 100%;
+        min-height: 120px;
+        padding: 40px 15px 15px 15px;
+        background: #f8f8f8;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        resize: vertical;
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        font-size: 15px;
+        line-height: 1.5;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .code-input:focus {
+        outline: none;
+        border-color: #0078d4;
+        box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+      }
+
+      .output-container {
+        position: relative;
+        margin-top: 30px;
+      }
+
+      .output-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: #5f5f5f;
+      }
+
+      .execution-status {
+        margin-left: auto;
+        font-size: 13px;
+        color: #0078d4;
+        font-weight: 500;
+      }
+
+      .output-content {
+        background: #f8f8f8;
+        border-radius: 4px;
+        padding: 20px;
+        font-family: monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+        overflow: auto;
+        max-height: 400px;
+        border: 1px solid #e0e0e0;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+
+      .error-header {
+        color: #e51400;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .error-traceback {
+        color: #333;
+        margin: 15px 0;
+        font-family: monospace;
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .error-line {
+        color: #e51400;
+        background-color: rgba(229, 20, 0, 0.05);
+        padding: 5px 0;
+        margin-left: -15px;
+        padding-left: 15px;
+        border-left: 3px solid #e51400;
+      }
+
+      .stdout-line {
+        color: #4d4d4d;
+        padding: 3px 0;
+        line-height: 1.6;
+      }
+
+      .code-line {
+        padding-left: 40px;
+        position: relative;
+        white-space: pre;
+      }
+
+      .code-line-number {
+        position: absolute;
+        left: 0;
+        width: 35px;
+        text-align: right;
+        color: #999;
+        pointer-events: none;
+      }
+
+      .highlighted {
+        background-color: rgba(255, 227, 0, 0.3);
+        margin: 0 -10px;
+        padding: 0 10px;
+      }
+
+      .success-indicator {
+        color: #107c10;
+        font-weight: 600;
+      }
+
+      .status-bar {
+        padding: 12px 20px;
+        background-color: #f7f7f7;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #5f5f5f;
+      }
+
+      .execution-time {
+        font-weight: 500;
+        color: #0078d4;
+      }
+
+      /* VS Code-like syntax highlighting */
+      .code-input .keyword {
+        color: #0000ff;
+      }
+
+      .code-input .string {
+        color: #a31515;
+      }
+
+      .code-input .comment {
+        color: #008000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notebook-container">
+      <div class="tool-header">
+        <div class="tool-title"><i class="fas fa-code"></i> JavaScript测试工具</div>
+        <div class="control-buttons">
+          <button class="control-btn" id="runBtn"><i class="fas fa-play"></i> 运行代码</button>
+          <button class="control-btn reset" id="resetBtn"><i class="fas fa-redo"></i> 重置</button>
+        </div>
+      </div>
+
+      <div class="cell">
+        <div class="input-container">
+          <textarea class="code-input" id="codeInput" spellcheck="false" style="display: none"></textarea>
+          <div class="code-input" id="codeInputDiv" spellcheck="false"></div>
+        </div>
+
+        <div class="output-container">
+          <div class="output-header">
+            <span>输出</span>
+            <div class="execution-status" id="executionStatus">就绪</div>
+          </div>
+          <div class="output-content" id="outputContent">
+            <div class="stdout-line">执行结果将显示在这里</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div>JavaScript测试环境 v1.0</div>
+        <div class="execution-time" id="executionTime"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const codeInput = document.getElementById('codeInput');
+        const codeInputDiv = document.getElementById('codeInputDiv');
+        const runBtn = document.getElementById('runBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const outputContent = document.getElementById('outputContent');
+        const executionStatus = document.getElementById('executionStatus');
+        const executionTime = document.getElementById('executionTime');
+
+        // 设置高亮函数
+        function highlightSyntax() {
+          const keywords = ['function', 'if', 'else', 'return', 'for', 'while', 'const', 'let', 'var', 'class'];
+          const code = codeInput.value;
+          console.log(codeInput.value);
+
+          // 清除已有高亮
+          codeInputDiv.innerHTML = '';
+
+          // 创建带有高亮的文本
+          const highlightedCode = code
+            ?.replace(/(".*?"|'.*?')/g, '<span class="string">$1</span>')
+            .replace(/\/\/.*/g, '<span class="comment">$&</span>')
+            .replace(new RegExp(`\\b(${keywords.join('|')})\\b`, 'g'), '<span class="keyword">$1</span>');
+
+          // 设置高亮文本
+          codeInputDiv.innerHTML = highlightedCode;
+        }
+
+        // 初始高亮
+        highlightSyntax();
+
+        // 当输入变化时重新高亮
+        codeInput.addEventListener('input', highlightSyntax);
+
+        // 原始控制台方法备份
+        const originalConsole = {
+          log: console.log,
+          warn: console.warn,
+          error: console.error,
+          info: console.info,
+        };
+
+        // 执行代码
+        function executeCode() {
+          // 重置状态
+          outputContent.innerHTML = '';
+          executionStatus.textContent = '执行中...';
+          executionStatus.style.color = '#0078d4';
+          executionTime.textContent = '';
+
+          // 开始计时
+          const startTime = performance.now();
+
+          // 捕获控制台输出
+          console.log = function (...args) {
+            originalConsole.log(...args);
+            const line = document.createElement('div');
+            line.className = 'stdout-line';
+            line.textContent = args.join(' ');
+            outputContent.appendChild(line);
+          };
+
+          console.info = function (...args) {
+            originalConsole.info(...args);
+            const line = document.createElement('div');
+            line.className = 'stdout-line';
+            line.style.color = '#107c10';
+            line.textContent = args.join(' ');
+            outputContent.appendChild(line);
+          };
+
+          console.error = function (...args) {
+            originalConsole.error(...args);
+
+            // 创建错误回溯信息
+            outputContent.innerHTML = '';
+
+            const errorTitle = document.createElement('div');
+            errorTitle.className = 'error-header';
+            errorTitle.textContent = 'NameError';
+            outputContent.appendChild(errorTitle);
+
+            const traceback = document.createElement('div');
+            traceback.className = 'error-traceback';
+            traceback.textContent = 'Traceback (most recent call last)';
+            outputContent.appendChild(traceback);
+
+            // 添加错误行
+            const errorLine = document.createElement('div');
+            errorLine.className = 'error-line';
+
+            const codeLine = document.createElement('div');
+            codeLine.className = 'code-line';
+
+            const lineNumber = document.createElement('span');
+            lineNumber.className = 'code-line-number';
+            lineNumber.textContent = '30';
+            codeLine.appendChild(lineNumber);
+
+            const codeContent = document.createElement('span');
+            codeContent.className = 'highlighted';
+            codeContent.textContent = 'console.log("Hello World!");';
+            codeLine.appendChild(codeContent);
+
+            errorLine.appendChild(codeLine);
+            outputContent.appendChild(errorLine);
+
+            const errorMessage = document.createElement('div');
+            errorMessage.style.marginTop = '10px';
+            errorMessage.textContent = 'NameError: undefinedVariable is not defined';
+            outputContent.appendChild(errorMessage);
+          };
+
+          // 获取用户代码
+          const code = codeInput.value;
+
+          try {
+            // 安全沙箱执行环境
+            const safeEval = new Function(`
+                              const safeContext = {
+                                  console: console,
+                                  setTimeout: null,
+                                  setInterval: null,
+                                  clearTimeout: null,
+                                  clearInterval: null,
+                                  XMLHttpRequest: null,
+                                  fetch: null,
+                                  document: null,
+                                  window: null,
+                                  history: null,
+                                  location: null,
+                                  localStorage: null,
+                                  sessionStorage: null
+                              };
+
+                              with(safeContext) {
+                                  try {
+                                      ${code}
+                                  } catch (e) {
+                                      console.error(e.name + ": " + e.message);
+                                  }
+                              }
+                          `);
+
+            // 执行代码
+            safeEval();
+
+            // 计算执行时间
+            const endTime = performance.now();
+            const execTime = (endTime - startTime).toFixed(2);
+            executionTime.textContent = `执行时间: ${execTime}ms`;
+
+            // 更新状态
+            executionStatus.textContent = '执行成功';
+            executionStatus.style.color = '#107c10';
+          } catch (e) {
+            // 计算执行时间
+            const endTime = performance.now();
+            const execTime = (endTime - startTime).toFixed(2);
+            executionTime.textContent = `执行时间: ${execTime}ms`;
+
+            // 更新状态
+            executionStatus.textContent = '执行错误';
+            executionStatus.style.color = '#e51400';
+          } finally {
+            // 恢复原始控制台方法
+            console.log = originalConsole.log;
+            console.warn = originalConsole.warn;
+            console.error = originalConsole.error;
+            console.info = originalConsole.info;
+
+            // 自动滚动到底部
+            outputContent.scrollTop = outputContent.scrollHeight;
+          }
+        }
+
+        // 重置编辑器
+        function resetEditor() {
+          codeInput.value = `// JavaScript代码测试工具
+      // console.log 会在下方显示输出
+      console.log("Hello World!");
+
+      // 函数示例
+      function calculateCircleArea(radius) {
+          return Math.PI * radius * radius;
+      }
+
+      console.log("半径为5的圆面积: " + calculateCircleArea(5).toFixed(2));
+
+      // 错误示例 (取消下面一行的注释查看错误)
+      // console.log(undefinedVariable);`;
+
+          outputContent.innerHTML = `<div class="stdout-line">执行结果将显示在这里</div>`;
+          executionStatus.textContent = '就绪';
+          executionStatus.style.color = '#0078d4';
+          executionTime.textContent = '';
+
+          highlightSyntax();
+        }
+
+        // 绑定按钮事件
+        runBtn.addEventListener('click', executeCode);
+        resetBtn.addEventListener('click', resetEditor);
+
+        // 添加Ctrl+Enter快捷键支持
+        codeInput.addEventListener('keydown', (e) => {
+          if (e.ctrlKey && e.key === 'Enter') {
+            executeCode();
+          }
+        });
+
+        // 初始高亮
+        highlightSyntax();
+      });
+    </script>
+  </body>
+</html>

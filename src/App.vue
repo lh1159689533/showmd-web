@@ -1,6 +1,33 @@
 <template>
+  <Loading ref="loadingRef" @checkLoaded="checkLoaded" />
   <router-view />
 </template>
+<script lang="ts" setup>
+// import { onMounted, ref } from 'vue';
+// import { useRouter } from 'vue-router';
+// import Loading from '@components/Loading.vue';
+
+// const loadingRef = ref();
+
+// const router = useRouter();
+
+// const checkLoaded = () => {
+//   let timer = setInterval(() => {
+//     console.log('checking loaded:', document.readyState);
+//     if (document.readyState === 'complete') {
+//       clearInterval(timer);
+//       loadingRef.value.out();
+//     }
+//   }, 300);
+// };
+
+// onMounted(() => {
+//   checkLoaded();
+//   router.beforeEach((to, from, next) => {
+//     loadingRef.value.enter(next);
+//   });
+// });
+</script>
 <style>
 :root {
   --el-color-primary: rgb(79 70 229) !important;
@@ -14,12 +41,12 @@
   --el-color-primary-light-8: rgba(79, 70, 229, 0.2) !important;
   --el-color-primary-light-9: rgba(79, 70, 229, 0.1) !important;
 
-  --showmd-bg-color-primary: #fff;
+  --showmd-bg-color-primary: var(--bg-color-page);
   --showmd-bg-color-weak: #f3f4f6;
-  --showmd-bg-color-hover: #f9fafb;
-  --showmd-text-color-primary: #111827;
+  --showmd-bg-color-hover: var(--bg-color-dropdown-hover);
+  --showmd-text-color-primary: var(--text-color-primary);
   --showmd-text-color-danger: #ef4444;
-  --showmd-text-color-weak: #4b5563;
+  --showmd-text-color-weak: var(--text-color-secondary);
   --showmd-text-color-disable: #9ca3af;
   --showmd-border-color: #e5e7eb;
 

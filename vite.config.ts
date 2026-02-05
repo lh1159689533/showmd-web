@@ -1,13 +1,13 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import Icons from 'unplugin-icons/vite'
-import IconsResolver from 'unplugin-icons/resolver'
-import WindiCSS from 'vite-plugin-windicss'
-import { visualizer } from "rollup-plugin-visualizer";
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
+import WindiCSS from 'vite-plugin-windicss';
+import { visualizer } from 'rollup-plugin-visualizer';
 import importToCDN from 'vite-plugin-cdn-import';
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 
@@ -46,7 +46,7 @@ export default defineConfig({
           name: '@wangeditor/editor',
           var: 'wangEditor',
           path: 'wangeditor5/5.1.23/index.min.js',
-          css: 'wangeditor5/5.1.23/css/style.min.css'
+          css: 'wangeditor5/5.1.23/css/style.min.css',
         },
         // {
         //   name: 'vditor',
@@ -54,8 +54,8 @@ export default defineConfig({
         //   path: 'vditor/3.9.0/index.min.js',
         //   css: 'vditor/3.9.0/index.min.css',
         // },
-      ]
-    })
+      ],
+    }),
   ],
   resolve: {
     alias: {
@@ -65,7 +65,7 @@ export default defineConfig({
       '@plugins': resolve('src/plugins'),
       '@utils': resolve('src/utils'),
       '@service': resolve('src/service'),
-    }
+    },
   },
   server: {
     proxy: {
@@ -73,14 +73,14 @@ export default defineConfig({
         target: 'http://localhost:1229',
         // target: 'http://82.156.140.163:1229',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/showmd/img': {
-        // target: 'http://localhost:1229',
-        target: 'http://82.156.140.163:1229',
+        target: 'http://localhost:1229',
+        // target: 'http://82.156.140.163:1229',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/showmd/, '')
+        rewrite: (path) => path.replace(/^\/showmd/, ''),
       },
-    }
-  }
-})
+    },
+  },
+});
