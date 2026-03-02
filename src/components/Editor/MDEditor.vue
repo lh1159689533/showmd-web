@@ -92,7 +92,7 @@ export default defineComponent({
               className: `${currentCodeTheme.value}`,
               click: () => setCodeTheme(t.value),
             })),
-            click: () => {},
+            click: () => { },
           },
           {
             name: 'contentTheme',
@@ -105,7 +105,7 @@ export default defineComponent({
               name: t.value,
               click: () => setContentTheme(t.value, t.path),
             })),
-            click: () => {},
+            click: () => { },
           },
           '|',
           {
@@ -412,10 +412,10 @@ export default defineComponent({
   padding-right: 10px;
 }
 
-#myEditor .vditor-toolbar__item > button[data-type='record'],
-#myEditor .vditor-toolbar__item > button[data-type='undo'],
-#myEditor .vditor-toolbar__item > button[data-type='edit-mode'],
-#myEditor .vditor-toolbar__item > button[data-type='redo'] {
+#myEditor .vditor-toolbar__item>button[data-type='record'],
+#myEditor .vditor-toolbar__item>button[data-type='undo'],
+#myEditor .vditor-toolbar__item>button[data-type='edit-mode'],
+#myEditor .vditor-toolbar__item>button[data-type='redo'] {
   display: none;
 }
 
@@ -467,12 +467,13 @@ export default defineComponent({
   flex: 1;
   border-left: none;
 }
+
 #myEditor .vditor-messageElementtip,
 #myEditor .vditor-tip {
   display: none;
 }
 
-#myEditor .toolbar__item > div {
+#myEditor .toolbar__item>div {
   max-height: 600px;
   overflow-y: auto;
 }

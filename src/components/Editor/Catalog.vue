@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
-import { getElementById, querySelector } from './domUtil';
+import { getElementById, querySelector, getBoundingClientRect } from './domUtil';
 
 interface ICatalog {
   id: string; // 目录节点ID
@@ -22,12 +22,14 @@ const store = useStore();
 
 const isShowHeader = computed(() => store.getters.isShowHeader);
 
+const willHideContent = ref(false);
+const currentTop = ref(0);
 const activeId = ref('');
 let isCatalogClick = false; // 是否是点击目录，如果是则不触发onScroll
 
 // 根据body高度，计算出目录高度
 const bodyHeight = window.screen.height;
-const height = ref(bodyHeight * 0.5);
+const height = ref(bodyHeight * 0.4);
 
 /**
  * 选中的目录节点变化
@@ -86,40 +88,45 @@ const handleCatalogClick = (catalog: ICatalog) => {
 };
 
 const onScroll = () => {
-  const scrollTop = document.documentElement.scrollTop;
+  const scrollTop = document.body.scrollTop;
+  currentTop.value = scrollTop;
+  const { height: offsetHeight, top } = getBoundingClientRect('.article-preview .content-preview');
+  const headerHeight = isShowHeader.value ? 60 : 0;
+
   if (scrollTop <= 0) {
     catalogActiveChanged(props.data[0].id);
+  }
+
+  if (offsetHeight + top - headerHeight <= height.value) {
+    currentTop.value = offsetHeight + top - height.value;
+    willHideContent.value = true;
+  } else {
+    willHideContent.value = false;
   }
 };
 
 onMounted(() => {
   catalogActiveChanged(props.data[0].id);
   contentLinkCatalog(props.data);
-  document.addEventListener('scroll', onScroll);
+  document.body.addEventListener('scroll', onScroll);
   emit('onLoaded');
   store.commit('catalogHeight', height.value);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener('scroll', onScroll);
+  document.body.removeEventListener('scroll', onScroll);
 });
 </script>
 
 <template>
-  <div
-    id="myPreviewEditorSider" v-if="data?.length" class="fixed" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']"
-    style="transition: 300ms"
-  >
+  <div id="myPreviewEditorSider" v-if="data?.length"
+    :style="{ top: `${willHideContent ? currentTop : Math.max(262 - currentTop, isShowHeader ? 80 : 20)}px` }">
     <nav :style="{ height: `${height}px` }" class="relative">
       <h4 class="title font-bold pl-4 py-2 border-b">目录</h4>
-      <div
-        id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full"
-        :style="{ maxHeight: `${height - 50}px` }"
-      >
-        <List
-          :data-list="data" @click="handleCatalogClick" class="w-full"
-          item-class="py-2 truncate cursor-pointer relative text-sm"
-        >
+      <div id="myPreviewEditorOutlineList" class="overflow-y-auto overflow-x-hidden absolute right-0 w-full"
+        :style="{ maxHeight: `${height - 50}px` }">
+        <List :data-list="data" @click="handleCatalogClick" class="w-full"
+          item-class="py-2 truncate cursor-pointer relative text-sm">
           <template #default="{ item }">
             <el-tooltip effect="customized" placement="left" :show-after="500">
               <template #content>
@@ -143,6 +150,8 @@ onBeforeUnmount(() => {
   width: 260px;
   z-index: 2000;
   background-color: var(--showmd-bg-color-primary);
+  position: fixed;
+  top: 120px;
 }
 
 #myPreviewEditorSider nav h4 {

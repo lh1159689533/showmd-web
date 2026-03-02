@@ -4,3 +4,4 @@ export { default as theme } from './theme.api';
 export { default as category } from './category.api';
 export { default as comment } from './comment.api';
 export { default as column } from './column.api';
+export { default as babyGrowth } from './babyGrowth.api';

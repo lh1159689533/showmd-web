@@ -1,60 +1,278 @@
+<script lang="ts" setup>
+import { defineProps } from 'vue';
+
+const props = defineProps<{
+  icon?: string;
+  title?: string;
+  description?: string;
+  showAction?: boolean;
+  actionText?: string;
+}>();
+</script>
+
 <template>
-  <div class="empty flex flex-col justify-center items-center pb-6">
-    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="406" height="306" class="illustration styles_illustrationTablet__1DWOa">
-      <path d="M275.29,110s40-12.29,45.52,14.26-5.74,56.15-5.74,56.15H249.93Z" fill="#ffd200"></path>
-      <path d="M222.12,97.6s-21.19-1-25.36,20.06S199.7,168,199.7,168l-31.95,8.59,1.61,3.81h45.58l14-32.8Z" fill="#D1D5DB"></path>
-      <path d="M222.12,97.6s-21.19-1-25.36,20.06S199.7,168,199.7,168l-31.95,8.59,1.61,3.81h45.58l14-32.8Z" fill="#fff" opacity="0.46"></path>
-      <path
-        d="M236.2,69.62s-.31,6.74,1,11.16a3.39,3.39,0,0,0,4.23,2.27c2.22-.69,5-2.27,5.62-5.86l1.77-6a6.06,6.06,0,0,0-2.93-6.36C242,62.28,236.18,65.51,236.2,69.62Z"
-        fill="#f4a28c"
-      ></path>
-      <polygon points="248.36 74.27 250.87 96.23 238.66 96.74 241.74 80.56 248.36 74.27" fill="#f4a28c"></polygon>
-      <path
-        d="M237.89,69.83a26.51,26.51,0,0,0,6.19-.73,5.62,5.62,0,0,0,.25,6.17,4.59,4.59,0,0,0,5.6,1.6l-.46-8.66a6.91,6.91,0,0,0-3.73-6,25.28,25.28,0,0,0-3-1.29c-2.53-.9-6.12.92-8.42-.67a1.62,1.62,0,0,0-2.53,1.17c-.29,2.65.35,6.77,4,8.06A6,6,0,0,0,237.89,69.83Z"
-        fill="#24285b"
-      ></path>
-      <path d="M243.6,75.1s0-2.6,1.9-2.48,2.06,3.87-.57,4.33Z" fill="#f4a28c"></path>
-      <path d="M236.23,73.88l-1.77,2.67a1.08,1.08,0,0,0,.74,1.67l2.6.38Z" fill="#f4a28c"></path>
-      <path d="M241.91,81.08a8,8,0,0,0,4.41-1.31s-.18,4.08-5.46,6.86Z" fill="#ce8172" opacity="0.31"></path>
-      <path d="M222.12,97.6s47.53-9.11,63.77,0-17.83,93.86-17.83,93.86L218,189.88S174.2,106.31,222.12,97.6Z" fill="#D1D5DB"></path>
-      <rect x="76.04" y="186.29" width="253.8" height="60.13" fill="#c9c9c9"></rect>
-      <rect x="76.04" y="180.36" width="253.8" height="10.85" fill="#e6e6e6"></rect>
-      <rect x="54.61" y="51.81" width="100.38" height="79.29" fill="#24285b"></rect>
-      <rect x="83.95" y="95.86" width="32.24" height="3.61" fill="#D1D5DB"></rect>
-      <rect x="93.2" y="85.81" width="28.83" height="3.61" fill="#ffd200"></rect>
-      <rect x="105.48" y="113.75" width="15.04" height="3.61" fill="#ffd200"></rect>
-      <rect x="93.2" y="104.58" width="38.42" height="3.61" fill="#D1D5DB"></rect>
-      <rect x="71.99" y="104.58" width="14.45" height="3.61" fill="#fff"></rect>
-      <rect x="86.38" y="114.06" width="14.45" height="3.61" fill="#fff"></rect>
-      <rect x="62.74" y="95.86" width="14.45" height="3.61" fill="#fff"></rect>
-      <circle cx="61.18" cy="57.89" r="1.7" fill="#fff"></circle>
-      <circle cx="66.24" cy="57.89" r="1.7" fill="#D1D5DB"></circle>
-      <circle cx="71.01" cy="57.89" r="1.7" fill="#ffd200"></circle>
-      <rect x="62.74" y="68.42" width="14.45" height="3.61" fill="#fff"></rect>
-      <rect x="71.99" y="77.44" width="14.45" height="3.61" fill="#fff"></rect>
-      <rect x="93.2" y="77.44" width="28.83" height="3.61" fill="#ffd200"></rect>
-      <rect x="71.99" y="85.81" width="14.45" height="3.61" fill="#fff"></rect>
-      <rect x="82.97" y="68.42" width="29.77" height="3.61" fill="#D1D5DB"></rect>
-      <rect x="118.96" y="68.42" width="21.13" height="3.61" fill="#D1D5DB"></rect>
-      <path d="M236,174.35s-21.83-6.32-19.21,6H236Z" fill="#f4a28c"></path>
-      <rect x="188.81" y="176.97" width="41.29" height="3.39" fill="#e6e6e6"></rect>
-      <rect x="125.82" y="94.09" width="86.86" height="65.76" fill="#e6e6e6"></rect>
-      <path d="M264.8,101.92s-17.05,12.43-9.3,35.31c11.55,34.09-46.42,32.39-46.42,32.39L213.8,181l66.53-5.71,5.79-23Z" opacity="0.08"></path>
-      <polygon points="161.28 135.11 151.94 180.36 198.15 180.36 198.15 174.35 175.05 172.87 173.08 135.11 161.28 135.11" fill="#c9c9c9"></polygon>
-      <path
-        d="M264.14,104.62a12,12,0,0,1,14.78-10.18c9.26,2.3,20.89,9.58,22.63,31.4,2.95,37-7.54,54.52-7.54,54.52H236V173l40.27-4.92S261,130.13,264.14,104.62Z"
-        fill="#D1D5DB"
-      ></path>
-      <path
-        d="M264.14,104.62a12,12,0,0,1,14.78-10.18c9.26,2.3,20.89,9.58,22.63,31.4,2.95,37-7.54,54.52-7.54,54.52H236V173l40.27-4.92S261,130.13,264.14,104.62Z"
-        fill="#fff"
-        opacity="0.46"
-      ></path>
-      <path d="M98.2,170.65s-8.19-2.24-10-9.87c0,0,12.7-2.57,13.06,10.54Z" fill="#D1D5DB" opacity="0.58"></path>
-      <path d="M99.21,169.83s-5.73-9.05-.69-17.52c0,0,9.66,6.14,5.37,17.54Z" fill="#D1D5DB" opacity="0.73"></path>
-      <path d="M100.68,169.84s3-9.56,12.18-11.37c0,0,1.71,6.2-5.93,11.4Z" fill="#D1D5DB"></path>
-      <polygon points="94.74 169.62 96.4 180.99 106.86 181.04 108.41 169.68 94.74 169.62" fill="#24285b"></polygon>
-    </svg>
-    <span class="text-sm" style="color: var(--showmd-text-color-weak)"><slot></slot></span>
+  <div class="modern-empty">
+    <!-- 🎨 装饰背景 -->
+    <div class="empty-decoration">
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
+      <div class="decoration-circle"></div>
+    </div>
+
+    <!-- 🎨 主要内容 -->
+    <div class="empty-content">
+      <!-- 图标或插图 -->
+      <div class="empty-icon">
+        <span class="icon-main">{{ icon || '📭' }}</span>
+        <div class="icon-glow"></div>
+      </div>
+
+      <!-- 标题 -->
+      <h3 v-if="title" class="empty-title">{{ title }}</h3>
+
+      <!-- 描述文字 -->
+      <p class="empty-description">
+        <slot>{{ description || '暂无数据' }}</slot>
+      </p>
+
+      <!-- 操作按钮 -->
+      <div v-if="showAction || $slots.action" class="empty-action">
+        <slot name="action">
+          <button class="action-btn">
+            <span>{{ actionText || '去看看' }}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </slot>
+      </div>
+    </div>
+
+    <!-- 🎨 底部装饰插图 -->
+    <div class="empty-illustration">
+      <svg viewBox="0 0 200 60" class="wave-svg">
+        <defs>
+          <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.3" />
+            <stop offset="50%" style="stop-color:#764ba2;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#f093fb;stop-opacity:0.3" />
+          </linearGradient>
+        </defs>
+        <path 
+          d="M0,30 Q25,10 50,30 T100,30 T150,30 T200,30 V60 H0 Z" 
+          fill="url(#waveGradient)"
+        />
+      </svg>
+    </div>
   </div>
 </template>
+
+<style scoped>
+/* 🎨 现代化空状态组件 */
+.modern-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+}
+
+/* 🎨 装饰背景 */
+.empty-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  opacity: 0.05;
+  animation: floatCircle 8s ease-in-out infinite;
+}
+
+.decoration-circle:nth-child(1) {
+  width: 100px;
+  height: 100px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.decoration-circle:nth-child(2) {
+  width: 60px;
+  height: 60px;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.decoration-circle:nth-child(3) {
+  width: 40px;
+  height: 40px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+@keyframes floatCircle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(180deg); }
+}
+
+/* 🎨 主要内容 */
+.empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* 🎨 图标 */
+.empty-icon {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.icon-main {
+  font-size: 64px;
+  display: block;
+  animation: bounceIcon 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes bounceIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.icon-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(20px);
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.25; }
+}
+
+/* 🎨 标题 */
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--showmd-text-color-primary);
+  margin: 0 0 8px 0;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 🎨 描述文字 */
+.empty-description {
+  font-size: 14px;
+  color: var(--showmd-text-color-weak);
+  margin: 0 0 24px 0;
+  max-width: 280px;
+  line-height: 1.6;
+}
+
+/* 🎨 操作按钮 */
+.empty-action {
+  margin-top: 8px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  box-shadow: var(--shadow-float);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.action-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.action-btn:hover svg {
+  transform: translateX(4px);
+}
+
+/* 🎨 底部波浪装饰 */
+.empty-illustration {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.wave-svg {
+  width: 100%;
+  height: 60px;
+  animation: waveMove 4s ease-in-out infinite;
+}
+
+@keyframes waveMove {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-10px); }
+}
+
+/* 🎨 响应式设计 */
+@media (max-width: 480px) {
+  .modern-empty {
+    padding: 32px 16px;
+    min-height: 220px;
+  }
+  
+  .icon-main {
+    font-size: 48px;
+  }
+  
+  .empty-description {
+    font-size: 13px;
+  }
+}
+
+/* 🎨 暗色主题适配 */
+.dark .decoration-circle {
+  opacity: 0.08;
+}
+
+.dark .icon-glow {
+  opacity: 0.2;
+}
+</style>

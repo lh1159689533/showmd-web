@@ -86,7 +86,7 @@ const handleCatalogClick = (catalog: ICatalog) => {
 };
 
 const onScroll = () => {
-  const scrollTop = document.documentElement.scrollTop;
+  const scrollTop = document.body.scrollTop;
   if (scrollTop <= 0) {
     catalogActiveChanged(props.data[0].id);
   }
@@ -95,28 +95,24 @@ const onScroll = () => {
 onMounted(() => {
   catalogActiveChanged(props.data[0].id);
   contentLinkCatalog(props.data);
-  document.addEventListener('scroll', onScroll);
+  document.body.addEventListener('scroll', onScroll);
   emit('onLoaded');
   store.commit('catalogHeight', height.value);
 });
 
 onBeforeUnmount(() => {
-  document.removeEventListener('scroll', onScroll);
+  document.body.removeEventListener('scroll', onScroll);
 });
 </script>
 
 <template>
-  <div
-    class="catalog-container" v-if="data?.length" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']"
-    style="transition: 300ms"
-  >
+  <div class="catalog-container" v-if="data?.length" :style="[isShowHeader ? 'top: 105px' : 'top: 32px']"
+    style="transition: 300ms">
     <nav class="relative h-full">
       <h4 class="title font-bold pl-4 py-2 border-b">目录</h4>
       <div class="catalog-list overflow-y-auto overflow-x-hidden absolute right-0 w-full">
-        <List
-          :data-list="data" @click="handleCatalogClick" class="w-full"
-          item-class="py-2 truncate cursor-pointer relative text-sm"
-        >
+        <List :data-list="data" @click="handleCatalogClick" class="w-full"
+          item-class="py-2 truncate cursor-pointer relative text-sm">
           <template #default="{ item }">
             <el-tooltip effect="customized" placement="left" :show-after="500">
               <template #content>

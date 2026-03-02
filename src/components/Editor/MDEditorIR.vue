@@ -93,7 +93,7 @@ onMounted(() => {
           className: `${currentCodeTheme.value}`,
           click: () => setCodeTheme(t.value),
         })),
-        click: () => {},
+        click: () => { },
       },
       {
         name: 'contentTheme',
@@ -106,7 +106,7 @@ onMounted(() => {
           name: t.value,
           click: () => setContentTheme(t.value, t.path),
         })),
-        click: () => {},
+        click: () => { },
       },
     ],
     outline: {
@@ -358,10 +358,10 @@ defineExpose({
   padding-right: 10px;
 }
 
-#myEditorIR .vditor-toolbar__item > button[data-type='record'],
-#myEditorIR .vditor-toolbar__item > button[data-type='undo'],
-#myEditorIR .vditor-toolbar__item > button[data-type='edit-mode'],
-#myEditorIR .vditor-toolbar__item > button[data-type='redo'] {
+#myEditorIR .vditor-toolbar__item>button[data-type='record'],
+#myEditorIR .vditor-toolbar__item>button[data-type='undo'],
+#myEditorIR .vditor-toolbar__item>button[data-type='edit-mode'],
+#myEditorIR .vditor-toolbar__item>button[data-type='redo'] {
   display: none;
 }
 
@@ -415,7 +415,7 @@ defineExpose({
   display: none;
 }
 
-#myEditorIR .toolbar__item > div {
+#myEditorIR .toolbar__item>div {
   max-height: 600px;
   overflow-y: auto;
 }

@@ -204,7 +204,7 @@ const isHidden = (ele: HTMLElement | string) => {
 const addEventListener = (
   eventName: string,
   cb: (e: Event) => void,
-  target: Element | Document | string = document,
+  target: Element | Document | string = document.body,
   once = false
 ) => {
   let dom: Element | Document;
@@ -262,7 +262,7 @@ const css = (ele: Element | string, cssStyles: Partial<CSSStyleDeclaration>) => 
   const dom = getElement(ele);
   const cssKeys = Object.keys(cssStyles);
   if (dom && cssKeys.length) {
-    cssKeys.forEach(key => (dom.style[key] = cssStyles[key]));
+    cssKeys.forEach((key) => (dom.style[key] = cssStyles[key]));
   }
 };
 

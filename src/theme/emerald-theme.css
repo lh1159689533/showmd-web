@@ -1,0 +1,448 @@
+/**
+ * 🌸 珊瑚红主题配色系统
+ * 基于 #f87171 主色调，参考 Adobe Color 配色理论
+ * 支持浅色和深色模式的完整主题方案
+ */
+
+:root {
+  /* 🎨 珊瑚红色彩系统 - 基于 #f87171 */
+  
+  /* 主色调 #f87171 的完整色阶 */
+  --coral-50: #fef2f2;    /* 最浅 - 背景色 */
+  --coral-100: #fee2e2;   /* 浅色背景 */
+  --coral-200: #fecaca;   /* 悬停背景 */
+  --coral-300: #fca5a5;   /* 浅色主调 */
+  --coral-400: #f87171;   /* 主色调 ⭐ */
+  --coral-500: #ef4444;   /* 标准红 */
+  --coral-600: #dc2626;   /* 深色主色 */
+  --coral-700: #b91c1c;   /* 深色 */
+  --coral-800: #991b1b;   /* 更深 */
+  --coral-900: #7f1d1d;   /* 最深 */
+  --coral-950: #450a0a;   /* 极深 */
+
+  /* 🎯 互补色系统 - 基于色轮理论 */
+  --cyan-50: #ecfeff;
+  --cyan-100: #cffafe;
+  --cyan-200: #a5f3fc;
+  --cyan-300: #67e8f9;
+  --cyan-400: #22d3ee;   /* 互补青色 */
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
+  --cyan-700: #0e7490;
+  --cyan-800: #155e75;
+  --cyan-900: #164e63;
+
+  /* 🌊 类似色系统 - 橙色 */
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;   /* 类似色1 */
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  --orange-900: #7c2d12;
+
+  /* 🌅 类似色系统 - 粉色 */
+  --pink-50: #fdf2f8;
+  --pink-100: #fce7f3;
+  --pink-200: #fbcfe8;
+  --pink-300: #f9a8d4;
+  --pink-400: #f472b6;   /* 类似色2 */
+  --pink-500: #ec4899;
+  --pink-600: #db2777;
+  --pink-700: #be185d;
+  --pink-800: #9d174d;
+  --pink-900: #831843;
+
+  /* 🎨 中性色系统 - 基于珊瑚红调色 */
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-200: #e5e5e5;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #a3a3a3;
+  --neutral-500: #737373;
+  --neutral-600: #525252;
+  --neutral-700: #404040;
+  --neutral-800: #262626;
+  --neutral-900: #171717;
+  --neutral-950: #0a0a0a;
+
+  /* 🌸 带红色调的中性色 */
+  --rose-50: #fff1f2;
+  --rose-100: #ffe4e6;
+  --rose-200: #fecdd3;
+  --rose-300: #fda4af;
+  --rose-400: #fb7185;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --rose-800: #9f1239;
+  --rose-900: #881337;
+  --rose-950: #4c0519;
+}
+
+/* 🌞 浅色主题 */
+:root,
+:root.light {
+  /* 🎨 主要品牌色 */
+  --primary-50: var(--coral-50);
+  --primary-100: var(--coral-100);
+  --primary-200: var(--coral-200);
+  --primary-300: var(--coral-300);
+  --primary-400: var(--coral-400);
+  --primary-500: var(--coral-500);
+  --primary-600: var(--coral-600);
+  --primary-700: var(--coral-700);
+  --primary-800: var(--coral-800);
+  --primary-900: var(--coral-900);
+
+  /* 🎯 功能色彩 */
+  --success-color: var(--cyan-500);
+  --success-bg: var(--cyan-50);
+  --success-border: var(--cyan-200);
+  --success-hover: var(--cyan-600);
+
+  --error-color: var(--coral-500);
+  --error-bg: var(--coral-50);
+  --error-border: var(--coral-200);
+  --error-hover: var(--coral-600);
+
+  --warning-color: var(--orange-500);
+  --warning-bg: var(--orange-50);
+  --warning-border: var(--orange-200);
+  --warning-hover: var(--orange-600);
+
+  --info-color: var(--cyan-500);
+  --info-bg: var(--cyan-50);
+  --info-border: var(--cyan-200);
+  --info-hover: var(--cyan-600);
+
+  /* 🎨 发光效果变量 */
+  --primary-glow: rgba(248, 113, 113, 0.3);
+  --coral-glow: rgba(248, 113, 113, 0.3);
+  --orange-glow: rgba(255, 165, 0, 0.3);
+  --cyan-glow: rgba(0, 212, 170, 0.3);
+  --warning-glow: rgba(251, 191, 36, 0.3);
+  --warning-glow-soft: rgba(251, 191, 36, 0.3);
+  --warning-glow-intense: rgba(251, 191, 36, 0.6);
+  --warning-glow-bright: rgba(251, 191, 36, 1);
+  --moon-glow: rgba(156, 163, 175, 0.4);
+  --moon-glow-soft: rgba(156, 163, 175, 0.5);
+  --moon-glow-medium: rgba(156, 163, 175, 0.6);
+  --moon-glow-bright: rgba(156, 163, 175, 0.8);
+  --primary-ripple: rgba(248, 113, 113, 0.3);
+
+  /* 📝 文本色彩 */
+  --text-primary: var(--rose-900);
+  --text-secondary: var(--rose-700);
+  --text-tertiary: var(--rose-500);
+  --text-disabled: var(--rose-400);
+  --text-inverse: var(--neutral-50);
+  --text-link: var(--coral-600);
+  --text-link-hover: var(--coral-700);
+
+  /* 🎨 背景色彩 */
+  --bg-primary: var(--neutral-50);
+  --bg-secondary: var(--coral-50);
+  --bg-tertiary: var(--coral-100);
+  --bg-elevated: var(--neutral-50);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --bg-hover: var(--coral-50);
+  --bg-active: var(--coral-100);
+  --bg-selected: var(--coral-100);
+
+  /* 🖼️ 边框色彩 */
+  --border-primary: var(--rose-200);
+  --border-secondary: var(--rose-100);
+  --border-focus: var(--coral-400);
+  --border-error: var(--coral-300);
+  --border-success: var(--cyan-300);
+
+  /* 🌊 阴影系统 */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-lime: 0 4px 14px 0 rgba(248, 113, 113, 0.3);
+
+  /* 🎪 渐变系统 */
+  --gradient-primary: linear-gradient(135deg, var(--coral-400) 0%, var(--coral-500) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--orange-400) 0%, var(--coral-400) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--pink-400) 0%, var(--coral-400) 100%);
+  --gradient-warm: linear-gradient(135deg, var(--coral-300) 0%, var(--orange-400) 100%);
+  --gradient-cool: linear-gradient(135deg, var(--coral-400) 0%, var(--cyan-400) 100%);
+
+  /* 🌿 毛玻璃效果 */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(248, 113, 113, 0.2);
+  --glass-shadow: 0 8px 32px rgba(248, 113, 113, 0.15);
+  --glass-backdrop: blur(12px);
+
+  /* 🎯 交互状态 */
+  --hover-opacity: 0.8;
+  --active-opacity: 0.9;
+  --disabled-opacity: 0.5;
+  --focus-ring: 0 0 0 3px rgba(248, 113, 113, 0.2);
+
+  /* 🎨 组件特定颜色 */
+  --button-primary-bg: var(--gradient-primary);
+  --button-primary-text: var(--rose-900);
+  --button-primary-border: transparent;
+  --button-primary-hover: var(--coral-600);
+
+  --button-secondary-bg: transparent;
+  --button-secondary-text: var(--coral-600);
+  --button-secondary-border: var(--coral-400);
+  --button-secondary-hover: var(--coral-50);
+
+  --input-bg: var(--bg-primary);
+  --input-border: var(--border-primary);
+  --input-focus-border: var(--border-focus);
+  --input-placeholder: var(--text-tertiary);
+
+  --card-bg: var(--bg-elevated);
+  --card-border: var(--border-secondary);
+  --card-shadow: var(--shadow-sm);
+
+  /* 📊 数据可视化色彩 */
+  --chart-color-1: var(--coral-500);
+  --chart-color-2: var(--cyan-500);
+  --chart-color-3: var(--orange-500);
+  --chart-color-4: var(--pink-400);
+  --chart-color-5: var(--neutral-500);
+}
+
+/* 🌙 深色主题 */
+:root.dark {
+  /* 🎨 主要品牌色 - 深色模式调整 */
+  --primary-50: var(--coral-950);
+  --primary-100: var(--coral-900);
+  --primary-200: var(--coral-800);
+  --primary-300: var(--coral-700);
+  --primary-400: var(--coral-500);  /* 深色模式下主色调稍微调暗 */
+  --primary-500: var(--coral-400);  /* 在深色背景上更亮 */
+  --primary-600: var(--coral-300);
+  --primary-700: var(--coral-200);
+  --primary-800: var(--coral-100);
+  --primary-900: var(--coral-50);
+
+  /* 🎯 功能色彩 - 深色模式 */
+  --success-color: var(--cyan-400);
+  --success-bg: rgba(34, 211, 238, 0.1);
+  --success-border: rgba(34, 211, 238, 0.2);
+  --success-hover: var(--cyan-300);
+  --success-color-dark: var(--cyan-300);
+
+  --error-color: var(--coral-400);
+  --error-bg: rgba(248, 113, 113, 0.1);
+  --error-border: rgba(248, 113, 113, 0.2);
+  --error-hover: var(--coral-300);
+  --error-color-dark: var(--coral-400);
+  --error-hover-dark: var(--coral-300);
+
+  --warning-color: var(--orange-400);
+  --warning-bg: rgba(251, 146, 60, 0.1);
+  --warning-border: rgba(251, 146, 60, 0.2);
+  --warning-hover: var(--orange-300);
+
+  --info-color: var(--cyan-400);
+  --info-bg: rgba(34, 211, 238, 0.1);
+  --info-border: rgba(34, 211, 238, 0.2);
+  --info-hover: var(--cyan-300);
+
+  /* 🎨 发光效果变量 - 深色模式 */
+  --primary-glow: rgba(248, 113, 113, 0.4);
+  --coral-glow: rgba(248, 113, 113, 0.4);
+  --orange-glow: rgba(255, 165, 0, 0.4);
+  --cyan-glow: rgba(0, 212, 170, 0.4);
+  --warning-glow: rgba(251, 191, 36, 0.4);
+  --warning-glow-soft: rgba(251, 191, 36, 0.3);
+  --warning-glow-intense: rgba(251, 191, 36, 0.6);
+  --warning-glow-bright: rgba(251, 191, 36, 1);
+  --moon-glow: rgba(156, 163, 175, 0.5);
+  --moon-glow-soft: rgba(156, 163, 175, 0.6);
+  --moon-glow-medium: rgba(156, 163, 175, 0.7);
+  --moon-glow-bright: rgba(156, 163, 175, 0.9);
+  --primary-ripple: rgba(248, 113, 113, 0.4);
+  --text-tertiary-dark: var(--rose-400);
+
+  /* 📝 文本色彩 - 深色模式 */
+  --text-primary: var(--rose-50);
+  --text-secondary: var(--rose-200);
+  --text-tertiary: var(--rose-400);
+  --text-disabled: var(--rose-600);
+  --text-inverse: var(--rose-900);
+  --text-link: var(--coral-400);
+  --text-link-hover: var(--coral-300);
+
+  /* 🎨 背景色彩 - 深色模式 */
+  --bg-primary: var(--rose-950);
+  --bg-secondary: var(--rose-900);
+  --bg-tertiary: var(--rose-800);
+  --bg-elevated: var(--rose-900);
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+  --bg-hover: rgba(248, 113, 113, 0.1);
+  --bg-active: rgba(248, 113, 113, 0.15);
+  --bg-selected: rgba(248, 113, 113, 0.2);
+
+  /* 🖼️ 边框色彩 - 深色模式 */
+  --border-primary: var(--rose-700);
+  --border-secondary: var(--rose-800);
+  --border-focus: var(--coral-400);
+  --border-error: var(--coral-600);
+  --border-success: var(--cyan-600);
+
+  /* 🌊 阴影系统 - 深色模式 */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --shadow-lime: 0 4px 14px 0 rgba(248, 113, 113, 0.4);
+
+  /* 🎪 渐变系统 - 深色模式 */
+  --gradient-primary: linear-gradient(135deg, var(--coral-500) 0%, var(--coral-400) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--orange-400) 0%, var(--coral-400) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--pink-400) 0%, var(--coral-500) 100%);
+  --gradient-warm: linear-gradient(135deg, var(--coral-400) 0%, var(--orange-400) 100%);
+  --gradient-cool: linear-gradient(135deg, var(--coral-500) 0%, var(--cyan-300) 100%);
+
+  /* 🌿 毛玻璃效果 - 深色模式 */
+  --glass-bg: rgba(76, 5, 25, 0.8);
+  --glass-border: rgba(248, 113, 113, 0.3);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --glass-backdrop: blur(16px);
+
+  /* 🎯 交互状态 - 深色模式 */
+  --hover-opacity: 0.9;
+  --active-opacity: 0.8;
+  --disabled-opacity: 0.4;
+  --focus-ring: 0 0 0 3px rgba(248, 113, 113, 0.3);
+
+  /* 🎨 组件特定颜色 - 深色模式 */
+  --button-primary-bg: var(--gradient-primary);
+  --button-primary-text: var(--rose-950);
+  --button-primary-border: transparent;
+  --button-primary-hover: var(--coral-300);
+
+  --button-secondary-bg: transparent;
+  --button-secondary-text: var(--coral-400);
+  --button-secondary-border: var(--coral-600);
+  --button-secondary-hover: rgba(248, 113, 113, 0.1);
+
+  --input-bg: var(--bg-secondary);
+  --input-border: var(--border-primary);
+  --input-focus-border: var(--border-focus);
+  --input-placeholder: var(--text-tertiary);
+
+  --card-bg: var(--bg-elevated);
+  --card-border: var(--border-secondary);
+  --card-shadow: var(--shadow-lg);
+
+  /* 📊 数据可视化色彩 - 深色模式 */
+  --chart-color-1: var(--coral-400);
+  --chart-color-2: var(--cyan-400);
+  --chart-color-3: var(--orange-400);
+  --chart-color-4: var(--pink-400);
+  --chart-color-5: var(--neutral-400);
+}
+
+/* 🎨 动画和过渡 */
+:root {
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🎯 实用工具类 */
+.coral-theme {
+  /* 快速应用珊瑚红主题 */
+  --primary: var(--coral-400);
+  --primary-foreground: var(--rose-900);
+}
+
+.glass-effect {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 🌊 波纹效果 */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(248, 113, 113, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* 🎨 主题切换动画 */
+* {
+  transition: 
+    background-color var(--transition-normal),
+    border-color var(--transition-normal),
+    color var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+/* 🌸 特殊效果 */
+.coral-glow {
+  box-shadow: 0 0 20px rgba(248, 113, 113, 0.4);
+}
+
+.coral-glow:hover {
+  box-shadow: 0 0 30px rgba(248, 113, 113, 0.6);
+}
+
+/* 📱 响应式断点 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 🎨 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  :root {
+    --border-primary: var(--neutral-800);
+    --text-primary: var(--neutral-900);
+  }
+  
+  :root.dark {
+    --border-primary: var(--neutral-200);
+    --text-primary: var(--neutral-50);
+  }
+}

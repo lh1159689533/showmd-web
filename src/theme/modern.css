@@ -1,0 +1,571 @@
+/**
+ * 🎨 ShowMD 现代化样式库
+ * 提取可复用的毛玻璃、渐变、动画样式类
+ */
+
+/* ========================================
+   🌟 毛玻璃效果系统
+   ======================================== */
+
+/* 基础毛玻璃卡片 */
+.modern-glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* 毛玻璃卡片 - 带悬浮效果 */
+.modern-glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-float);
+  border-radius: 16px;
+  transition: var(--transition-smooth);
+}
+
+/* .modern-glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+} */
+
+/* 毛玻璃导航栏 */
+.modern-glass-nav {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 毛玻璃侧边栏 */
+.modern-glass-sidebar {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border-right: 1px solid var(--glass-border);
+}
+
+/* ========================================
+   🌈 渐变效果系统
+   ======================================== */
+
+/* 渐变文字 */
+.modern-gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modern-gradient-text-secondary {
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modern-gradient-text-accent {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 渐变边框 */
+.modern-gradient-border {
+  position: relative;
+  background: transparent;
+  border-radius: 16px;
+}
+
+.modern-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: var(--gradient-primary);
+  border-radius: inherit;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 渐变背景按钮 */
+.modern-btn-gradient {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-float);
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.modern-btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+  filter: brightness(1.1);
+}
+
+.modern-btn-gradient:hover::before {
+  left: 100%;
+}
+
+.modern-btn-gradient:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-press);
+}
+
+/* 渐变背景容器 */
+.modern-gradient-bg {
+  background: var(--gradient-primary);
+  position: relative;
+}
+
+.modern-gradient-bg-animated {
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #4facfe);
+  background-size: 300% 300%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ========================================
+   ✨ 动画效果系统
+   ======================================== */
+
+/* 悬浮上升动画 */
+.modern-hover-lift {
+  transition: var(--transition-smooth);
+}
+
+.modern-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-float);
+}
+
+/* 悬浮发光动画 */
+.modern-hover-glow {
+  transition: var(--transition-smooth);
+}
+
+.modern-hover-glow:hover {
+  box-shadow: var(--shadow-glow);
+}
+
+/* 悬浮缩放动画 */
+.modern-hover-scale {
+  transition: var(--transition-bounce);
+}
+
+.modern-hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* 浮动动画 */
+.modern-float {
+  animation: modernFloat 3s ease-in-out infinite;
+}
+
+@keyframes modernFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 脉冲发光动画 */
+.modern-pulse-glow {
+  animation: modernPulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes modernPulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+}
+
+/* 闪烁光效 */
+.modern-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmerEffect 2s infinite;
+}
+
+@keyframes shimmerEffect {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* 进入动画 */
+.modern-fade-in {
+  animation: modernFadeIn 0.3s ease-out;
+}
+
+@keyframes modernFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modern-slide-up {
+  animation: modernSlideUp 0.3s ease-out;
+}
+
+@keyframes modernSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-scale-in {
+  animation: modernScaleIn 0.2s ease-out;
+}
+
+@keyframes modernScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 交错进入动画 */
+.modern-stagger-item {
+  opacity: 0;
+  animation: modernStaggerIn 0.4s ease-out forwards;
+}
+
+.modern-stagger-item:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.modern-stagger-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.modern-stagger-item:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.modern-stagger-item:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.modern-stagger-item:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.modern-stagger-item:nth-child(6) {
+  animation-delay: 0.3s;
+}
+.modern-stagger-item:nth-child(7) {
+  animation-delay: 0.35s;
+}
+.modern-stagger-item:nth-child(8) {
+  animation-delay: 0.4s;
+}
+
+@keyframes modernStaggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   🎯 交互组件样式
+   ======================================== */
+
+/* 现代化输入框 */
+.modern-input {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--showmd-text-color-primary);
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.modern-input:focus {
+  border-color: var(--vibrant-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1), var(--shadow-glow);
+}
+
+.modern-input::placeholder {
+  color: var(--showmd-text-color-weak);
+}
+
+/* 现代化选择器 */
+.modern-select {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  color: var(--showmd-text-color-primary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.modern-select:hover {
+  border-color: var(--vibrant-green);
+}
+
+/* 现代化标签 */
+.modern-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.modern-tag-gradient {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.modern-tag-glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  color: var(--showmd-text-color-primary);
+}
+
+.modern-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-float);
+}
+
+/* 现代化徽章 */
+.modern-badge {
+  position: relative;
+}
+
+.modern-badge::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--gradient-secondary);
+  border-radius: 50%;
+  border: 2px solid var(--showmd-bg-color-primary);
+  animation: modernPulseGlow 2s ease-in-out infinite;
+}
+
+/* 现代化头像 */
+.modern-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: white;
+  font-weight: 600;
+  transition: var(--transition-bounce);
+}
+
+.modern-avatar-ring {
+  position: relative;
+}
+
+.modern-avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  z-index: -1;
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.modern-avatar-ring:hover::before {
+  opacity: 1;
+}
+
+/* ========================================
+   📱 响应式工具类
+   ======================================== */
+
+@media (max-width: 768px) {
+  .modern-glass-card {
+    border-radius: 12px;
+  }
+
+  .modern-btn-gradient {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+/* ========================================
+   🌙 暗色主题适配
+   ======================================== */
+
+.dark .modern-glass,
+.dark .modern-glass-card,
+.dark .modern-glass-nav,
+.dark .modern-glass-sidebar {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .modern-input {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .modern-input:focus {
+  border-color: var(--neon-emerald);
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1), 0 0 20px rgba(5, 150, 105, 0.3);
+}
+
+.dark .modern-tag-glass {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .modern-hover-glow:hover {
+  box-shadow: 0 0 25px rgba(5, 150, 105, 0.4);
+}
+
+.dark .modern-pulse-glow {
+  animation-name: modernPulseGlowDark;
+}
+
+@keyframes modernPulseGlowDark {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(5, 150, 105, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(5, 150, 105, 0.6);
+  }
+}
+
+/* ========================================
+   🔧 工具类
+   ======================================== */
+
+/* 文字溢出省略 */
+.modern-line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.modern-line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.modern-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 滚动条美化 */
+.modern-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 3px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 选中态高亮 */
+.modern-selection::selection {
+  background: rgba(16, 185, 129, 0.3);
+  color: var(--showmd-text-color-primary);
+}
+
+/* 禁用态 */
+.modern-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

@@ -41,7 +41,7 @@ const handleNoticeClick = (e) => {
       </div>
     </template>
   </Header>
-  <div id="main" class="container mt-12">
+  <div id="main" class="container mt-20">
     <router-view />
   </div>
 </template>

@@ -9,8 +9,8 @@ const CONFIRM_DEFAULT_OPTIONS = {
 
 export function confirm(message: any, ...args) {
   if (typeof args[0] === 'string') {
-    messageBox.confirm(message, args[0], { ...CONFIRM_DEFAULT_OPTIONS, ...(args?.[1] ?? {}) });
+    return messageBox.confirm(message, args[0], { ...CONFIRM_DEFAULT_OPTIONS, ...(args?.[1] ?? {}) });
   } else {
-    messageBox.confirm(message, { ...CONFIRM_DEFAULT_OPTIONS, ...(args[0] ?? {}) });
+    return messageBox.confirm(message, { ...CONFIRM_DEFAULT_OPTIONS, ...(args[0] ?? {}) });
   }
 }

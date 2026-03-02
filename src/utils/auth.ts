@@ -2,7 +2,8 @@
 const apis = [
   '/article/new',
   '/article/edit',
-  '/creator'
+  '/creator',
+  '/life/baby-growth'
 ];
 
 export default function(path) {

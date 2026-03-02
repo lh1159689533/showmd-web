@@ -136,4 +136,7 @@
   --showmd-font-weight-400: 400;
   --showmd-font-weight-500: 500;
   --showmd-font-weight-600: 600;
+
+  /* 渐变文字 token */
+  --gradient-text: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
 }

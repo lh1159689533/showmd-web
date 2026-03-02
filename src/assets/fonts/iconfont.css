@@ -1,0 +1,171 @@
+/* 现代化图标字体替代方案 */
+.iconfont {
+  font-family: inherit;
+  font-size: 16px;
+  font-style: normal;
+  display: inline-block;
+  text-align: center;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 使用 Unicode 符号和 Emoji 替代图标字体 */
+.icon-arrow-left:before {
+  content: '←';
+}
+.icon-arrow-right:before {
+  content: '→';
+}
+.icon-plus:before {
+  content: '➕';
+}
+.icon-left:before {
+  content: '‹';
+}
+.icon-upload:before {
+  content: '📤';
+}
+.icon-top:before {
+  content: '🔝';
+}
+.icon-zoom-in:before {
+  content: '🔍';
+}
+.icon-close:before {
+  content: '✖️';
+}
+.icon-author:before {
+  content: '👤';
+}
+.icon-time:before {
+  content: '🕐';
+}
+.icon-up:before {
+  content: '▲';
+}
+.icon-down:before {
+  content: '▼';
+}
+.icon-digg-filled:before {
+  content: '👍';
+  color: var(--primary-400, #3b82f6);
+}
+.icon-comment-del:before {
+  content: '🗑️';
+}
+.icon-qiehuan:before {
+  content: '🔄';
+}
+.icon-jianhao:before {
+  content: '➖';
+}
+.icon-jiahao:before {
+  content: '➕';
+}
+
+/* ContentInteraction 组件图标 - 知乎风格 */
+
+.icon-star:before {
+  content: '🔖';
+  font-style: normal;
+}
+.icon-star.filled:before {
+  content: '🔖';
+  color: var(--warning-color, #f39c12);
+}
+.icon-comment:before {
+  content: '💬';
+  color: var(--text-tertiary, #8a919f);
+}
+.icon-share:before {
+  content: '📤';
+  color: var(--text-tertiary, #8a919f);
+}
+
+/* AddItem 组件图标 */
+.icon-code:before {
+  content: '💻';
+}
+.icon-send:before {
+  content: '📨';
+}
+
+/* Comment 组件图标 */
+.icon-tip:before {
+  content: '💡';
+}
+
+/* 现代化样式增强 */
+.iconfont {
+  transition: all 0.2s ease;
+}
+
+.iconfont:hover {
+  transform: scale(1.1);
+}
+
+/* 特殊样式 */
+.icon-digg-filled {
+  color: var(--primary-400, #3b82f6);
+  filter: drop-shadow(0 0 4px var(--primary-glow, rgba(59, 130, 246, 0.3)));
+}
+
+.icon-star.filled {
+  color: var(--warning-color, #fbbf24);
+  filter: drop-shadow(0 0 4px var(--warning-glow, rgba(251, 191, 36, 0.3)));
+}
+
+.icon-author {
+  color: var(--success-color, #10b981);
+}
+
+.icon-time {
+  color: var(--text-tertiary, #6b7280);
+}
+
+.icon-comment-del {
+  color: var(--error-color, #ef4444);
+}
+
+.icon-comment-del:hover {
+  color: var(--error-hover, #dc2626);
+}
+
+.icon-comment {
+  color: var(--primary-400, #6366f1);
+}
+
+.icon-share {
+  color: var(--primary-400, #8b5cf6);
+}
+
+.icon-tip {
+  color: var(--warning-color, #f59e0b);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .iconfont {
+    font-size: 14px;
+  }
+}
+
+/* 暗色主题适配 */
+@media (prefers-color-scheme: dark) {
+  .icon-author {
+    color: var(--success-color-dark, #34d399);
+  }
+
+  .icon-time {
+    color: var(--text-tertiary-dark, #9ca3af);
+  }
+
+  .icon-comment-del {
+    color: var(--error-color-dark, #f87171);
+  }
+
+  .icon-comment-del:hover {
+    color: var(--error-hover-dark, #ef4444);
+  }
+}

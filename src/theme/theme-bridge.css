@@ -1,0 +1,122 @@
+/**
+ * 🌉 主题变量桥接文件
+ * 将旧的 --showmd-* 变量系统映射到新的珊瑚红主题系统
+ * 确保向后兼容性的同时统一主题变量
+ */
+
+:root,
+:root.light {
+  /* 🎨 背景色映射 */
+  --showmd-bg-color-primary: var(--bg-primary);
+  --showmd-bg-color-secondary: var(--bg-secondary);
+  --showmd-bg-color-hover: var(--bg-hover);
+  --showmd-bg-color-weak: var(--bg-tertiary);
+
+  /* 📝 文本色映射 */
+  --showmd-text-color-primary: var(--text-primary);
+  --showmd-text-color-secondary: var(--text-secondary);
+  --showmd-text-color-weak: var(--text-tertiary);
+  --showmd-text-color-hover: var(--text-link-hover);
+
+  /* 🖼️ 边框色映射 */
+  --showmd-border-color: var(--border-primary);
+  --showmd-border-color-hover: var(--border-focus);
+
+  /* 🎯 功能色映射 */
+  --vibrant-coral: var(--coral-400);
+  --vibrant-green: var(--success-color);
+  --vibrant-blue: var(--info-color);
+  --vibrant-orange: var(--warning-color);
+  --vibrant-red: var(--error-color);
+  --vibrant-purple: var(--pink-400);
+
+  /* 🌈 霓虹色映射 (与珊瑚红协调的颜色) */
+  --neon-coral: var(--coral-400);
+  --neon-emerald: var(--cyan-400);  /* 互补色 */
+  --neon-blue: var(--cyan-500);
+  --neon-purple: var(--pink-400);   /* 类似色 */
+  --neon-cyan: var(--cyan-300);
+
+  /* 🌊 阴影系统映射 */
+  --shadow-float: var(--shadow-lg);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  --shadow-press: var(--shadow-sm);
+
+  /* 🎪 过渡动画映射 */
+  --transition-smooth: var(--transition-normal);
+  --transition-fast: var(--transition-fast);
+  --transition-slow: var(--transition-slow);
+}
+
+:root.dark {
+  /* 🎨 背景色映射 - 深色模式 */
+  --showmd-bg-color-primary: var(--bg-primary);
+  --showmd-bg-color-secondary: var(--bg-secondary);
+  --showmd-bg-color-hover: var(--bg-hover);
+  --showmd-bg-color-weak: var(--bg-tertiary);
+
+  /* 📝 文本色映射 - 深色模式 */
+  --showmd-text-color-primary: var(--text-primary);
+  --showmd-text-color-secondary: var(--text-secondary);
+  --showmd-text-color-weak: var(--text-tertiary);
+  --showmd-text-color-hover: var(--text-link-hover);
+
+  /* 🖼️ 边框色映射 - 深色模式 */
+  --showmd-border-color: var(--border-primary);
+  --showmd-border-color-hover: var(--border-focus);
+
+  /* 🎯 功能色映射 - 深色模式 */
+  --vibrant-coral: var(--coral-400);
+  --vibrant-green: var(--success-color);
+  --vibrant-blue: var(--info-color);
+  --vibrant-orange: var(--warning-color);
+  --vibrant-red: var(--error-color);
+  --vibrant-purple: var(--pink-400);
+
+  /* 🌈 霓虹色映射 - 深色模式 */
+  --neon-coral: var(--coral-400);
+  --neon-emerald: var(--cyan-400);
+  --neon-blue: var(--cyan-400);
+  --neon-purple: var(--pink-400);
+  --neon-cyan: var(--cyan-300);
+
+  /* 🌊 阴影系统映射 - 深色模式 */
+  --shadow-float: var(--shadow-lg);
+  --shadow-glow: 0 0 25px var(--primary-glow);
+  --shadow-press: var(--shadow-sm);
+}
+
+/* 🎨 兼容性工具类 */
+.coral-primary {
+  color: var(--vibrant-coral) !important;
+}
+
+.coral-bg {
+  background-color: var(--coral-50) !important;
+}
+
+.coral-border {
+  border-color: var(--vibrant-coral) !important;
+}
+
+/* 🌟 现代化增强效果 */
+.modern-coral-glow {
+  box-shadow: 0 0 20px var(--primary-glow);
+  transition: box-shadow var(--transition-smooth);
+}
+
+.modern-coral-glow:hover {
+  box-shadow: 0 0 30px var(--primary-glow);
+}
+
+/* 🎯 渐变背景增强 */
+.coral-gradient-bg {
+  background: var(--gradient-primary);
+}
+
+.coral-gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

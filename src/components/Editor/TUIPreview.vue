@@ -18,6 +18,8 @@ const props = defineProps<{
   data: any;
 }>();
 
+const emit = defineEmits<{ (e: 'onLoaded', catalogList: any[]): void }>();
+
 const { data } = toRefs<Props>(props);
 
 const tuiPreviewRef = ref();
@@ -40,6 +42,7 @@ const loadCatalog = () => {
       contentSelector: `${h.nodeName}[data-nodeid="${h.dataset?.nodeid}"]`
     }));
   }
+  emit('onLoaded', catalogList.value)
 };
 
 onMounted(() => {
@@ -62,9 +65,9 @@ onMounted(() => {
 <template>
   <div v-bind="$attrs" class="tui-preview-container w-full flex flex-row">
     <div ref="tuiPreviewRef" class="tui-preview px-12 pb-10 pt-2"></div>
-    <div class="catalog relative w-1/4">
+    <!-- <div class="catalog relative w-1/4">
       <slot :catalog-list="catalogList"></slot>
-    </div>
+    </div> -->
   </div>
 </template>
 <style>
@@ -78,7 +81,7 @@ onMounted(() => {
 }
 
 .tui-preview-container .tui-preview {
-  width: calc(100% - 260px);
+  width: 100%;
   background-color: var(--showmd-bg-color-primary);
 }
 

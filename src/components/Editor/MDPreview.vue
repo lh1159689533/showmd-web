@@ -245,7 +245,7 @@ function previewImg() {
         imgPreview.style.transform = `scale(1) translate(0,0)`;
         imgWrapper.removeEventListener('click', close);
         imgPreview.removeEventListener('click', close);
-        document.removeEventListener('scroll', close);
+        document.body.removeEventListener('scroll', close);
         setTimeout(() => {
           img.style.visibility = 'visible';
           document.body.removeChild(imgWrapper);
@@ -254,7 +254,7 @@ function previewImg() {
       }
       imgWrapper.addEventListener('click', close);
       imgPreview.addEventListener('click', close);
-      document.addEventListener('scroll', close);
+      document.body.addEventListener('scroll', close);
     });
   });
 }

@@ -108,89 +108,60 @@
 }
 
 .toastui-editor-defaultUI-toolbar button:not(:disabled):hover {
-  background-color: var(--el-color-primary-light-9) !important;
-  border: 1px solid #e4e7ee;
+  background: var(--glass-hover) !important;
+  border: 1px solid var(--neon-blue) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--neon-blue-alpha);
 }
 
+/* 复制按钮样式 */
 .showmd .code-block pre:hover .code-block-copy {
   display: block;
 }
 
 .showmd .code-block .code-block-copy {
-  position: relative;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   display: none;
-  z-index: 1;
-  top: 8px;
+  z-index: 10;
 }
 
 .showmd .code-block-copy .copy-btn {
-  position: fixed;
-  top: 2em;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 8px 12px;
   cursor: pointer;
-  right: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.code-block-copy .copy-btn::after {
-  position: absolute;
-  z-index: 1000000;
-  display: none;
-  padding: 5px 8px;
-  font-size: 11px;
-  font-weight: 400;
-  -webkit-font-smoothing: subpixel-antialiased;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  text-shadow: none;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: break-word;
-  white-space: pre;
-  pointer-events: none;
-  content: attr(aria-label);
-  background: #3b3e43;
-  border-radius: 3px;
-  line-height: 16px;
-  right: 100%;
-  bottom: 50%;
-  margin-right: 5px;
-  transform: translateY(50%);
-}
-
-.code-block-copy .copy-btn::before {
-  top: 50%;
-  bottom: 50%;
-  left: -5px;
-  margin-top: -5px;
-  position: absolute;
-  z-index: 1000001;
-  display: none;
-  width: 0;
-  height: 0;
-  color: #3b3e43;
-  pointer-events: none;
-  content: '';
-  border: 5px solid transparent;
-  border-left-color: #3b3e43;
-}
-
-.code-block-copy .copy-btn:hover::before,
-.code-block-copy .copy-btn:hover::after {
-  display: inline-block;
+.showmd .code-block-copy .copy-btn:hover {
+  background: var(--neon-blue);
+  color: white;
+  border-color: var(--neon-blue);
+  box-shadow: 0 4px 16px var(--neon-blue-alpha);
+  transform: translateY(-2px);
 }
 
 .showmd .code-block-copy .copy-btn svg {
-  height: 14px;
   width: 14px;
-  display: block;
+  height: 14px;
   fill: currentColor;
-  stroke-width: initial;
+  transition: fill 0.3s ease;
 }
 
 .showmd .code-block-copy span.copy-value {
   position: absolute;
-  left: -100000px;
-  height: 10px;
+  left: -9999px;
+  opacity: 0;
 }
 
 .toastui-editor-md-splitter {
@@ -198,74 +169,166 @@
 }
 
 .toastui-editor-md-preview.showmd {
-  background-color: #fff;
+  background-color: var(--showmd-bg-color-primary, #fff);
 }
 
+/* 现代化代码块样式 */
 .showmd .code-block {
-  border: 1px solid #555;
-  box-shadow: 0px 3px 10px -6px #666;
-  border-radius: 3px;
-  margin: 10px 0 10px 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  margin: 1.5rem 0;
   overflow: hidden;
-  transform: scale(1);
+  box-shadow: var(--shadow-elevated);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.showmd .code-block:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 8px 32px var(--neon-cyan-alpha);
+  transform: translateY(-2px);
+}
+
+.showmd .code-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: left 0.5s;
+}
+
+.showmd .code-block:hover::before {
+  left: 100%;
 }
 
 .showmd .code-block .code-block-menus {
   display: flex;
-  background-color: #555;
-  height: 1.2em;
   align-items: center;
+  height: 3rem;
+  background: linear-gradient(135deg, var(--glass-bg), var(--glass-border));
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 1rem;
 }
 
 .showmd .code-block .code-block-menus > i {
-  margin-left: 4px;
-  margin-right: 4px;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  font-size: 12px;
+  margin-right: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.showmd .code-block .code-block-menus > i:nth-child(1) {
-  margin-left: 16px;
-  background-color: #f87171;
+.showmd .code-block .code-block-menus > i:first-child {
+  background: linear-gradient(135deg, var(--coral-400, #ff5f56), var(--coral-500, #ff4444));
+  box-shadow: 0 2px 8px var(--coral-glow, rgba(255, 68, 68, 0.3));
 }
 
 .showmd .code-block .code-block-menus > i:nth-child(2) {
-  background-color: #fbbf24;
-  cursor: pointer;
+  background: linear-gradient(135deg, var(--orange-400, #ffbd2e), var(--orange-500, #ffa500));
+  box-shadow: 0 2px 8px var(--orange-glow, rgba(255, 165, 0, 0.3));
+}
+
+.showmd .code-block .code-block-menus > i:nth-child(2):hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 16px rgba(255, 165, 0, 0.5);
 }
 
 .showmd .code-block .code-block-menus > i:nth-child(3) {
-  background-color: #34d399;
-  cursor: pointer;
+  background: linear-gradient(135deg, var(--cyan-400, #27ca3f), var(--cyan-500, #00d4aa));
+  box-shadow: 0 2px 8px var(--cyan-glow, rgba(0, 212, 170, 0.3));
+}
+
+.showmd .code-block .code-block-menus > i:nth-child(3):hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 16px rgba(0, 212, 170, 0.5);
 }
 
 .showmd .code-block .code-content {
   position: relative;
   overflow: auto;
-  max-height: 800px;
-  transition: max-height 300ms;
+  max-height: 600px;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.95), 
+    rgba(30, 41, 59, 0.9)
+  );
+}
+
+.showmd .code-block .code-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.showmd .code-block .code-content::-webkit-scrollbar-track {
+  background: var(--glass-bg);
+  border-radius: 4px;
+}
+
+.showmd .code-block .code-content::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.showmd .code-block .code-content::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-blue);
 }
 
 .showmd pre {
-  line-height: 1.75;
+  line-height: 1.6;
   margin: 0;
   padding: 0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Consolas, monospace;
 }
 
 .showmd pre > code {
-  font-size: 0.87em;
-  padding: 15px 12px;
+  font-size: 0.875rem;
+  padding: 1.5rem;
   margin: 0;
   word-break: normal;
   display: block;
   overflow-x: auto;
-  background: linear-gradient(180deg, rgba(66, 185, 131, 0.1), transparent) !important;
-  max-height: fit-content !important;
+  background: transparent !important;
+  color: var(--text-secondary, #e2e8f0);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* 代码高亮增强 */
+.showmd pre > code .hljs-keyword {
+  color: var(--neon-purple);
+  font-weight: 600;
+}
+
+.showmd pre > code .hljs-string {
+  color: var(--neon-green);
+}
+
+.showmd pre > code .hljs-number {
+  color: var(--neon-orange);
+}
+
+.showmd pre > code .hljs-comment {
+  color: var(--text-tertiary, #64748b);
+  font-style: italic;
+}
+
+.showmd pre > code .hljs-function {
+  color: var(--neon-blue);
+}
+
+.showmd pre > code .hljs-variable {
+  color: var(--neon-cyan);
 }
 
 .showmd .file-container {
@@ -296,10 +359,10 @@
   &::after {
     content: attr(data-tooltip);
     position: absolute;
-    background: #444;
+    background: var(--showmd-bg-color-secondary, #444);
     padding: 4px 7px;
     border-radius: 3px;
-    color: #fff;
+    color: var(--showmd-text-color-primary, #fff);
     font-size: 12px;
     z-index: 140;
     display: none;

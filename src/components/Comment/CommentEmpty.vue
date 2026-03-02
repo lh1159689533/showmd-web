@@ -1,56 +1,252 @@
+<script setup>
+import { MessageCircle, ArrowDown } from 'lucide-vue-next';
+</script>
+
 <template>
-  <div class="comment-empty flex flex-col justify-center items-center py-6">
-    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="406" height="306" class="illustration styles_illustrationTablet__1DWOa">
-      <path
-        d="M180.23,137.5s-.28,6,.88,9.93a3,3,0,0,0,3.76,2,6.65,6.65,0,0,0,5-5.21l1.59-5.31a5.39,5.39,0,0,0-2.59-5.66C185.4,131,180.23,133.83,180.23,137.5Z"
-        fill="#f4a28c"
-      ></path>
-      <polygon points="191.19 139.91 195.02 159.21 184.24 160.56 185.77 145.97 191.19 139.91" fill="#f4a28c"></polygon>
-      <path d="M180.25,141.29l-1.59,2.37a1,1,0,0,0,.66,1.49l2.31.34Z" fill="#f4a28c"></path>
-      <path d="M185.3,149.15a7.07,7.07,0,0,0,3.43-2.23s0,3.61-3.83,7.31Z" fill="#ce8172" opacity="0.31"></path>
-      <rect x="80.59" y="169.47" width="26.22" height="3.54" transform="translate(-36.8 26.07) rotate(-13.27)" fill="#24285b"></rect>
-      <path d="M174.38,163.45s-23.12,8.6-26.26,24-20.68,39.81-45.45-7.84l-8.14,3.14s22.56,76.48,62.37,39.18S174.38,163.45,174.38,163.45Z" fill="#f4a28c"></path>
-      <path d="M102.67,179.57s-2.83-8.84-7.72-11.43a.89.89,0,0,0-1.27,1l.85,4.31s-6.38,4.18,0,9.3Z" fill="#f4a28c"></path>
-      <path d="M177.79,161.7s-29.88,7.44-34.69,36.09l25.06,14Z" fill="#D1D5DB"></path>
-      <path d="M177.79,161.7s-29.88,7.44-34.69,36.09l25.06,14Z" fill="#fff" opacity="0.46"></path>
-      <ellipse cx="200.04" cy="263.42" rx="121.72" ry="11.49" fill="#e6e6e6" opacity="0.45"></ellipse>
-      <path d="M215.2,160.06s-25-9.71-48,7.95S174,248,174,248l43.15,1.44S273.75,197.65,215.2,160.06Z" fill="#D1D5DB"></path>
-      <path
-        d="M179.05,129.44c-3.37,1.61-2.68,6.72,1,7.11a8,8,0,0,0,1.55,0c5.32-.44,3.58,3.45,7.1,6.09s4,4.93,4,4.93,3.32-2.28,1.26-8.84-.88-10.19-7.15-10.92A14.54,14.54,0,0,0,179.05,129.44Z"
-        fill="#24285b"
-      ></path>
-      <path d="M205,163.45s-19.66,17.43-11,37.85c13.09,30.84,1.47,33.54-25.21,34.32l7.16,17.16,60.77-19.33-3.94-25Z" opacity="0.08"></path>
-      <path
-        d="M180.45,245.8c16.56.56,20.83-.68,36.14-7,9.28-3.86,20.31-6.59,28.74-3.1,17.87,7.39,3.62,36.42-42.21,29.4l-42.32-1.91s-16.24,0-19.11-5.83c-3.5-7.11,3.83-14.49,37.65-11.55Z"
-        fill="#24285b"
-      ></path>
-      <rect x="177.17" y="201.32" width="26.88" height="37.38" transform="translate(-62.66 76.51) rotate(-19.56)" fill="#ffd200"></rect>
-      <rect x="179.92" y="200.9" width="10.13" height="5.63" transform="translate(-57.53 73.68) rotate(-19.56)" fill="#24285b"></rect>
-      <path d="M211.53,259.45s-15.76,2.13-12,5.78,13.12.92,13.12.92Z" fill="#D1D5DB"></path>
-      <path d="M184.58,264.12l3.24-4.88s10,6.79,9,9.82C194.94,275.12,184.58,264.12,184.58,264.12Z" fill="#D1D5DB"></path>
-      <path
-        d="M203,172.11a11.46,11.46,0,0,1,15.31-10.69c8,2.87,18.13,8.55,24.8,19.72,12.54,21,34.6,77-44.11,61.11l.72-8.2s30.67,3.24,33.58-10.57C235.79,211.59,203,198,203,172.11Z"
-        fill="#f4a28c"
-      ></path>
-      <path d="M281.54,251.76s-7.92-2.16-9.64-9.53c0,0,12.27-2.48,12.62,10.18Z" fill="#D1D5DB" opacity="0.58"></path>
-      <path d="M282.51,251s-5.53-8.75-.66-16.93c0,0,9.33,5.93,5.18,16.95Z" fill="#D1D5DB" opacity="0.73"></path>
-      <path d="M283.93,251s2.93-9.23,11.77-11c0,0,1.65,6-5.73,11Z" fill="#D1D5DB"></path>
-      <polygon points="278.19 250.78 279.8 261.76 289.91 261.8 291.4 250.83 278.19 250.78" fill="#24285b"></polygon>
-      <polygon points="80.54 172.53 77.21 175.38 81.35 175.97 80.54 172.53" fill="#ffd200"></polygon>
-      <path d="M215.36,202.27s-24.18-32.8-6.85-41.53,36.26,17,39.19,26.38C247.7,187.12,237.79,201.1,215.36,202.27Z" fill="#D1D5DB"></path>
-      <path d="M215.36,202.27s-24.18-32.8-6.85-41.53,36.26,17,39.19,26.38C247.7,187.12,237.79,201.1,215.36,202.27Z" fill="#fff" opacity="0.46"></path>
-      <path d="M199.7,234.05s-3.89-7.7-8.95-6.72-2.54,13.1,8.23,14.92Z" fill="#f4a28c"></path>
-      <path d="M186.42,141.3s0-2.31,1.7-2.2,1.83,3.45-.52,3.85Z" fill="#f4a28c"></path>
-      <path
-        d="M133.12,112.35c7.73-5.44,12.64-13.5,12.64-22.51,0-16.38-16.21-29.67-36.21-29.67s-36.2,13.29-36.2,29.67,16.21,29.67,36.2,29.67a42.52,42.52,0,0,0,17.29-3.59c3.18,6,9.56,12.3,22.27,11.86C149.11,127.78,136.7,124,133.12,112.35Z"
-        fill="#e6e6e6"
-      ></path>
-      <circle cx="93.31" cy="89.03" r="4.17" fill="#c9c9c9"></circle>
-      <circle cx="109.61" cy="89.03" r="4.17" fill="#c9c9c9"></circle>
-      <circle cx="124.95" cy="89.03" r="4.17" fill="#c9c9c9"></circle>
-    </svg>
-    <span class="text-sm mt-4" style="color: var(--showmd-text-color-weak)">还没有评论，快来发表第一条评论吧</span>
+  <div class="modern-comment-empty">
+    <!-- 背景装饰 -->
+    <div class="empty-bg-decoration">
+      <div class="floating-bubble bubble-1">💬</div>
+      <div class="floating-bubble bubble-2">💭</div>
+      <div class="floating-bubble bubble-3">✨</div>
+      <div class="glow-orb orb-1"></div>
+      <div class="glow-orb orb-2"></div>
+    </div>
+
+    <!-- 主图标 -->
+    <div class="empty-icon-wrapper">
+      <div class="icon-container">
+        <MessageCircle :size="80" class="comment-icon" />
+        <div class="icon-ring"></div>
+      </div>
+    </div>
+
+    <!-- 文字内容 -->
+    <div class="empty-content">
+      <h3 class="empty-title">还没有评论</h3>
+      <p class="empty-description">快来发表第一条评论，开启精彩讨论！</p>
+    </div>
+
+    <!-- 引导提示 -->
+    <div class="empty-hint">
+      <div class="hint-arrow">
+        <ArrowDown :size="20" />
+      </div>
+      <span>在上方输入框写下你的想法</span>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.modern-comment-empty {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  overflow: hidden;
+}
+
+/* 背景装饰 */
+.empty-bg-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floating-bubble {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.3;
+  animation: float 4s ease-in-out infinite;
+}
+
+.bubble-1 {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  top: 30%;
+  right: 20%;
+  animation-delay: 1s;
+}
+
+.bubble-3 {
+  bottom: 25%;
+  left: 25%;
+  animation-delay: 2s;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.15;
+}
+
+.orb-1 {
+  width: 150px;
+  height: 150px;
+  top: 10%;
+  left: 10%;
+  background: var(--gradient-start, #667eea);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 120px;
+  height: 120px;
+  bottom: 20%;
+  right: 15%;
+  background: var(--gradient-end, #764ba2);
+  animation: pulse 4s ease-in-out infinite 2s;
+}
+
+/* 图标区域 */
+.empty-icon-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.icon-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-icon {
+  width: 80px;
+  height: 80px;
+  z-index: 1;
+  color: #667eea;
+  opacity: 0.8;
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+.icon-ring {
+  position: absolute;
+  inset: -10px;
+  border: 2px dashed rgba(99, 102, 241, 0.3);
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+
+/* 动画 */
+.empty-content {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.empty-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--showmd-text-color-primary) 0%, var(--gradient-start, #667eea) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.empty-description {
+  font-size: 0.875rem;
+  color: var(--showmd-text-color-weak);
+}
+
+/* 引导提示 */
+.empty-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  color: var(--showmd-text-color-weak);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.hint-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, var(--gradient-start, #667eea), var(--gradient-end, #764ba2));
+  border-radius: 50%;
+  color: white;
+  animation: arrowBounce 1.5s ease-in-out infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* 动画 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 暗色主题适配 */
+.dark .glow-orb {
+  opacity: 0.1;
+}
+
+.dark .empty-hint {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+}
+</style>

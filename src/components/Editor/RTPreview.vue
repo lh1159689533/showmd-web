@@ -5,6 +5,8 @@ import { IEditorConfig, IDomEditor, SlateNode } from '@wangeditor/editor';
 
 const props = defineProps<{ data: { name: string; content: string } }>();
 
+const emit = defineEmits<{ (e: 'onLoaded', catalogList: any[]): void }>();
+
 const { data } = toRefs(props);
 const content = ref(data.value?.content ?? '');
 const headerList = ref([]);
@@ -25,6 +27,7 @@ const handleCreate = (editor: IDomEditor) => {
     const { id, type } = header as any;
     return { id: `catalog-${id}`, indent: type, title: text };
   });
+  emit('onLoaded', headerList.value)
 };
 
 onBeforeUnmount(() => {
@@ -37,15 +40,16 @@ onBeforeUnmount(() => {
   <div class="richtext-preview px-16 rounded-b-md">
     <Editor @on-created="handleCreate" :default-config="editorConfig" />
   </div>
-  <div class="rightSider absolute top-0 right-0" style="width: 260px; padding-left: 20px">
+  <!-- <div class="rightSider absolute top-0 right-0" style="width: 260px; padding-left: 20px">
     <slot :catalog-list="headerList"></slot>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
 .richtext-preview {
-  width: calc(100% - 260px);
+  width: 100%;
   background-color: var(--showmd-bg-color-primary);
+  border-radius: 3px;
 }
 
 .outline-sider {

@@ -162,7 +162,7 @@ const createCodeThemeBtn = (defaultTheme: string, cb?: (codeTheme: string) => vo
         addClass(e.target, 'active');
         visible(node);
         const activeItem = findNodeByClassName(querySelectorAll('ul > li', node), 'active');
-        activeItem?.scrollIntoView({ block: 'center' });
+        activeItem?.scrollIntoView({ block: 'center', behavior: 'auto' });
       }
 
       addEventListener(
@@ -223,7 +223,7 @@ const createContentThemeBtn = (
         addClass(e.target, 'active');
         visible(node);
         const activeItem = findNodeByClassName(querySelectorAll('ul > li', node), 'active');
-        activeItem?.scrollIntoView({ block: 'center' });
+        activeItem?.scrollIntoView({ block: 'center', behavior: 'auto' });
       }
 
       addEventListener(

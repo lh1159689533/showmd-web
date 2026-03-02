@@ -22,33 +22,50 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/published',
-        component: () => import('@views/article/Published.vue')
+        component: () => import('@views/article/Published.vue'),
+      },
+      {
+        path: '/life',
+        component: () => import('@views/life/Life.vue'),
       },
       {
         path: '/column/:id',
         component: () => import('@views/creator/manage/column/ColumnDetail.vue'),
-        props: true
+        props: true,
       },
       {
         path: '/article/preview/:id',
         component: () => import('@views/article/ArticlePreview.vue'),
-        props: true
+        props: true,
+      },
+      {
+        path: '/life/baby-growth',
+        component: () => import('@views/life/BabyGrowth.vue'),
+      },
+      {
+        path: '/life/baby-growth/new',
+        component: () => import('@views/life/BabyGrowthDetail.vue'),
+      },
+      {
+        path: '/life/baby-growth/:id',
+        component: () => import('@views/life/BabyGrowthDetail.vue'),
+        props: true,
       },
       {
         path: '/404',
         component: () => import('@components/404.vue'),
-        props: true
+        props: true,
       },
-    ]
+    ],
   },
   {
     path: '/article/new',
-    component: () => import('@views/article/ArticleEdit.vue')
+    component: () => import('@views/article/ArticleEdit.vue'),
   },
   {
     path: '/article/edit/:id',
     component: () => import('@views/article/ArticleEdit.vue'),
-    props: true
+    props: true,
   },
   {
     path: '/creator',
@@ -66,23 +83,36 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/creator/manage/column',
         component: () => import('@views/creator/manage/column/Column.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/login',
     component: () => import('@views/main/Login.vue'),
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // scrollBehavior(to, from, savedPosition) {
+  //   // 如果有保存的位置（如浏览器前进/后退），使用保存的位置
+  //   if (savedPosition) {
+  //     return savedPosition;
+  //   }
+  //   // 如果是同一个路由的不同参数（如不同文章），保持当前滚动位置
+  //   if (to.name === from.name) {
+  //     return false; // 不改变滚动位置
+  //   }
+  //   // 其他情况滚动到顶部
+  //   return { top: 0 };
+  // },
 });
 
 router.beforeEach((to, from, next) => {
   const isLogin = Cookies.get('token');
-  if (to.matched.length === 0) {  //如果未匹配到路由
+  if (to.matched.length === 0) {
+    //如果未匹配到路由
     next('/404');
   } else if (!isLogin && auth(to.path)) {
     next('/blog');
@@ -91,4 +121,4 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-export default router
+export default router;
